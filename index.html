@@ -183,8 +183,15 @@
                     <input type="text" id="fileName" placeholder="مثال: سجل الأنشطة">
                 </div>
                 <div class="form-group">
-                    <label>كود HTML:</label>
-                    <textarea id="htmlCode" placeholder="الصق كود HTML هنا..."></textarea>
+                    <label>رفع ملف HTML:</label>
+                    <div style="display:flex; gap:10px;">
+                        <input type="file" id="htmlFileInput" accept=".html" style="display:none;">
+                        <button onclick="document.getElementById('htmlFileInput').click()" style="background:var(--surface2); color:var(--primary); border:2px dashed var(--primary); flex:1;">
+                            <i class="fas fa-file-upload"></i> اختر ملف HTML من جهازك
+                        </button>
+                    </div>
+                    <div id="fileStatus" style="font-size:0.75rem; color:var(--success); margin-top:5px; display:none;"></div>
+                    <textarea id="htmlCode" style="display:none;"></textarea>
                 </div>
                 <div class="form-group">
                     <label>بيانات JSON:</label>
@@ -295,9 +302,27 @@
             document.getElementById('htmlCode').value = file.html;
             document.getElementById('jsonCode').value = file.json;
             document.getElementById('uploadBtn').style.display = 'flex';
+            document.getElementById('fileStatus').textContent = "تم تحميل الملف المخزن: " + name;
+            document.getElementById('fileStatus').style.display = 'block';
             renderFileList();
             updatePreview();
         }
+
+        document.getElementById('htmlFileInput').onchange = function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('htmlCode').value = e.target.result;
+                document.getElementById('fileStatus').textContent = "تم اختيار الملف: " + file.name;
+                document.getElementById('fileStatus').style.display = 'block';
+                if (!document.getElementById('fileName').value) {
+                    document.getElementById('fileName').value = file.name.replace('.html', '');
+                }
+                updatePreview();
+            };
+            reader.readAsText(file);
+        };
 
         function updatePreview() {
             const html = document.getElementById('htmlCode').value;
