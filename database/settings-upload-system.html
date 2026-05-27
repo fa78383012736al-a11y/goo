@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>نظام GOO • إدارة الملفات والإعدادات</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0062cc;
+            --primary-light: #1a8cff;
+            --primary-dark: #004a9e;
+            --accent: #00c896;
+            --bg: #dde6f0;
+            --surface: #ffffff;
+            --surface2: #f4f8fd;
+            --border: #e2ecf7;
+            --text-main: #0a2540;
+            --text-sec: #4a6a8a;
+            --text-muted: #8aaac8;
+            --shadow-sm: 0 2px 12px rgba(0, 98, 204, 0.07);
+            --shadow-md: 0 6px 24px rgba(0, 98, 204, 0.12);
+            --radius-sm: 14px;
+            --radius-md: 22px;
+            --radius-lg: 32px;
+            --danger: #e03c3c;
+            --success: #00a87a;
+            --warning: #e07000;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+            background: var(--bg);
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .app-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .app-header {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 60%, var(--primary-light) 100%);
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #fff;
+            box-shadow: var(--shadow-md);
+            flex-shrink: 0;
+        }
+
+        .header-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-title i {
+            font-size: 1.3rem;
+        }
+
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            padding: 16px;
+            gap: 16px;
+        }
+
+        .content-area::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .content-area::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .content-area::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+
+        /* ==================== البحث والتصفية ==================== */
+        .search-filter-bar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+            background: var(--surface);
+            padding: 14px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 10px 14px;
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            background: var(--surface2);
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(0, 98, 204, 0.1);
+        }
+
+        .filter-select {
+            padding: 10px 12px;
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            background: var(--surface2);
+            font-size: 0.85rem;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.3s;
+            color: var(--text-main);
+        }
+
+        .filter-select:focus {
+            border-color: var(--primary);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.95);
+        }
+
+        .btn-secondary {
+            background: var(--surface2);
+            color: var(--primary);
+            border: 2px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        /* ==================== قسم الرفع ==================== */
+        .upload-section {
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+
+        .upload-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .upload-title i {
+            width: 28px;
+            height: 28px;
+            background: var(--primary);
+            color: #fff;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+        }
+
+        .upload-dropzone {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius-md);
+            padding: 28px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: var(--surface2);
+            position: relative;
+        }
+
+        .upload-dropzone:hover {
+            border-color: var(--primary);
+            background: rgba(0, 98, 204, 0.03);
+        }
+
+        .upload-dropzone.dragover {
+            border-color: var(--primary);
+            background: rgba(0, 98, 204, 0.08);
+            box-shadow: 0 0 0 8px rgba(0, 98, 204, 0.1);
+        }
+
+        .upload-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .upload-text {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+
+        .upload-subtext {
+            font-size: 0.8rem;
+            color: var(--text-sec);
+        }
+
+        .upload-input {
+            display: none;
+        }
+
+        .upload-progress {
+            margin-top: 12px;
+            padding: 10px;
+            background: var(--surface2);
+            border-radius: var(--radius-sm);
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 6px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            width: 0%;
+            transition: width 0.3s;
+            border-radius: 3px;
+        }
+
+        .progress-text {
+            font-size: 0.75rem;
+            color: var(--text-sec);
+            text-align: center;
+        }
+
+        /* ==================== قائمة الملفات ==================== */
+        .files-container {
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .files-header {
+            padding: 14px;
+            background: var(--surface2);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .files-count {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-sec);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .files-count i {
+            width: 24px;
+            height: 24px;
+            background: var(--primary);
+            color: #fff;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+        }
+
+        .files-list {
+            max-height: 500px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .files-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .files-list::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+
+        .file-item:last-child {
+            border-bottom: none;
+        }
+
+        .file-item:hover {
+            background: var(--surface2);
+        }
+
+        .file-item:active {
+            background: #e8f0ff;
+        }
+
+        .file-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--surface2);
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            color: var(--primary);
+        }
+
+        .file-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .file-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-main);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 2px;
+        }
+
+        .file-meta {
+            font-size: 0.75rem;
+            color: var(--text-sec);
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .file-action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--surface2);
+            color: var(--text-sec);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+
+        .file-action-btn:hover {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+
+        .file-action-btn:active {
+            transform: scale(0.9);
+        }
+
+        /* ==================== الحالة الفارغة ==================== */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-sec);
+        }
+
+        .empty-icon {
+            font-size: 3rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .empty-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+
+        .empty-text {
+            font-size: 0.8rem;
+            color: var(--text-sec);
+        }
+
+        /* ==================== المعاينة ==================== */
+        .preview-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 16px;
+        }
+
+        .preview-modal.active {
+            display: flex;
+        }
+
+        .preview-content {
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            max-width: 90%;
+            max-height: 90vh;
+            overflow: auto;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .preview-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface2);
+            position: sticky;
+            top: 0;
+        }
+
+        .preview-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-main);
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .preview-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: var(--border);
+            border: none;
+            color: var(--text-main);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .preview-close:hover {
+            background: var(--danger);
+            color: #fff;
+        }
+
+        .preview-body {
+            padding: 20px;
+            max-height: calc(90vh - 60px);
+            overflow-y: auto;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: var(--radius-sm);
+        }
+
+        .preview-text {
+            white-space: pre-wrap;
+            word-break: break-word;
+            font-family: monospace;
+            font-size: 0.85rem;
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        /* ==================== الإحصائيات ==================== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-sec);
+            font-weight: 600;
+        }
+
+        /* ==================== الاستجابة ==================== */
+        @media (max-width: 768px) {
+            .app-header {
+                padding: 12px;
+            }
+
+            .header-title {
+                font-size: 0.95rem;
+            }
+
+            .content-area {
+                padding: 12px;
+                gap: 12px;
+            }
+
+            .search-filter-bar {
+                flex-direction: column;
+            }
+
+            .search-input {
+                min-width: 100%;
+            }
+
+            .action-buttons {
+                width: 100%;
+            }
+
+            .btn {
+                flex: 1;
+                justify-content: center;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .file-item {
+                flex-wrap: wrap;
+            }
+
+            .file-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .file-meta {
+                flex-direction: column;
+                gap: 2px;
+            }
+
+            .preview-content {
+                max-width: 100%;
+                max-height: 100%;
+                border-radius: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- رأس التطبيق -->
+        <div class="app-header">
+            <div class="header-title">
+                <i class="fas fa-cog"></i>
+                <span>إدارة الملفات والإعدادات</span>
+            </div>
+            <div style="font-size: 0.85rem; opacity: 0.9;">
+                <i class="fas fa-cloud"></i> متصل
+            </div>
+        </div>
+
+        <!-- منطقة المحتوى -->
+        <div class="content-area">
+            <!-- الإحصائيات -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="total-files">0</div>
+                    <div class="stat-label">إجمالي الملفات</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="total-size">0 MB</div>
+                    <div class="stat-label">الحجم الإجمالي</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="total-views">0</div>
+                    <div class="stat-label">عدد المشاهدات</div>
+                </div>
+            </div>
+
+            <!-- البحث والتصفية -->
+            <div class="search-filter-bar">
+                <input 
+                    type="text" 
+                    class="search-input" 
+                    id="search-input" 
+                    placeholder="ابحث عن ملف..."
+                >
+                <select class="filter-select" id="type-filter">
+                    <option value="">جميع الأنواع</option>
+                    <option value="image">صور</option>
+                    <option value="document">مستندات</option>
+                    <option value="video">فيديو</option>
+                    <option value="audio">صوت</option>
+                    <option value="other">أخرى</option>
+                </select>
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" id="refresh-btn">
+                        <i class="fas fa-sync"></i> تحديث
+                    </button>
+                    <button class="btn btn-secondary" id="clear-btn">
+                        <i class="fas fa-trash"></i> حذف الكل
+                    </button>
+                </div>
+            </div>
+
+            <!-- قسم الرفع -->
+            <div class="upload-section">
+                <div class="upload-title">
+                    <i class="fas fa-upload"></i>
+                    رفع الملفات
+                </div>
+                <div class="upload-dropzone" id="dropzone">
+                    <div class="upload-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <div class="upload-text">اسحب الملفات هنا أو انقر للاختيار</div>
+                    <div class="upload-subtext">يمكنك رفع صور ومستندات وفيديوهات وملفات صوتية</div>
+                    <input type="file" id="file-input" class="upload-input" multiple accept="*">
+                </div>
+                <div class="upload-progress" id="upload-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                    <div class="progress-text" id="progress-text">جاري الرفع...</div>
+                </div>
+            </div>
+
+            <!-- قائمة الملفات -->
+            <div class="files-container">
+                <div class="files-header">
+                    <div class="files-count">
+                        <i class="fas fa-file"></i>
+                        <span id="files-count-text">0 ملف</span>
+                    </div>
+                </div>
+                <div class="files-list" id="files-list">
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-inbox"></i>
+                        </div>
+                        <div class="empty-title">لا توجد ملفات</div>
+                        <div class="empty-text">ابدأ برفع ملفاتك الأولى</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- معاينة الملف -->
+    <div class="preview-modal" id="preview-modal">
+        <div class="preview-content">
+            <div class="preview-header">
+                <div class="preview-title" id="preview-title">معاينة الملف</div>
+                <button class="preview-close" onclick="closePreview()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="preview-body" id="preview-body"></div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== متغيرات عامة ====================
+        let uploadedFiles = [];
+        const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50 MB
+
+        // ==================== أنواع الملفات ====================
+        const FILE_TYPES = {
+            image: ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg'],
+            document: ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt'],
+            video: ['mp4', 'avi', 'mov', 'mkv', 'webm', 'flv'],
+            audio: ['mp3', 'wav', 'aac', 'flac', 'm4a', 'ogg'],
+        };
+
+        // ==================== دوال مساعدة ====================
+        function getFileType(filename) {
+            const ext = filename.split('.').pop().toLowerCase();
+            for (const [type, extensions] of Object.entries(FILE_TYPES)) {
+                if (extensions.includes(ext)) return type;
+            }
+            return 'other';
+        }
+
+        function getFileIcon(type) {
+            const icons = {
+                image: 'fa-image',
+                document: 'fa-file-pdf',
+                video: 'fa-video',
+                audio: 'fa-music',
+                other: 'fa-file'
+            };
+            return icons[type] || icons.other;
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+        }
+
+        function formatDate(date) {
+            return new Date(date).toLocaleDateString('ar-SA', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // ==================== إدارة الملفات ====================
+        function addFile(file) {
+            if (file.size > MAX_FILE_SIZE) {
+                alert('الملف كبير جداً! الحد الأقصى: 50 MB');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const fileObj = {
+                    id: Date.now() + Math.random(),
+                    name: file.name,
+                    type: getFileType(file.name),
+                    size: file.size,
+                    data: e.target.result,
+                    uploadedAt: new Date(),
+                    views: 0
+                };
+                uploadedFiles.unshift(fileObj);
+                saveToLocalStorage();
+                renderFiles();
+                updateStats();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function deleteFile(fileId) {
+            if (confirm('هل تريد حذف هذا الملف؟')) {
+                uploadedFiles = uploadedFiles.filter(f => f.id !== fileId);
+                saveToLocalStorage();
+                renderFiles();
+                updateStats();
+            }
+        }
+
+        function deleteAllFiles() {
+            if (confirm('هل تريد حذف جميع الملفات؟ هذا الإجراء لا يمكن التراجع عنه.')) {
+                uploadedFiles = [];
+                saveToLocalStorage();
+                renderFiles();
+                updateStats();
+            }
+        }
+
+        // ==================== البحث والتصفية ====================
+        function filterFiles() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const typeFilter = document.getElementById('type-filter').value;
+
+            return uploadedFiles.filter(file => {
+                const matchesSearch = file.name.toLowerCase().includes(searchTerm);
+                const matchesType = !typeFilter || file.type === typeFilter;
+                return matchesSearch && matchesType;
+            });
+        }
+
+        function renderFiles() {
+            const filesList = document.getElementById('files-list');
+            const filteredFiles = filterFiles();
+
+            if (filteredFiles.length === 0) {
+                filesList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-inbox"></i>
+                        </div>
+                        <div class="empty-title">لا توجد ملفات</div>
+                        <div class="empty-text">${uploadedFiles.length === 0 ? 'ابدأ برفع ملفاتك الأولى' : 'لا توجد نتائج للبحث'}</div>
+                    </div>
+                `;
+                document.getElementById('files-count-text').textContent = '0 ملف';
+                return;
+            }
+
+            filesList.innerHTML = filteredFiles.map(file => `
+                <div class="file-item">
+                    <div class="file-icon">
+                        <i class="fas ${getFileIcon(file.type)}"></i>
+                    </div>
+                    <div class="file-info">
+                        <div class="file-name">${file.name}</div>
+                        <div class="file-meta">
+                            <span>${formatFileSize(file.size)}</span>
+                            <span>${formatDate(file.uploadedAt)}</span>
+                            <span><i class="fas fa-eye"></i> ${file.views}</span>
+                        </div>
+                    </div>
+                    <div class="file-actions">
+                        <button class="file-action-btn" onclick="viewFile(${file.id})" title="معاينة">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="file-action-btn" onclick="downloadFile(${file.id})" title="تحميل">
+                            <i class="fas fa-download"></i>
+                        </button>
+                        <button class="file-action-btn" onclick="deleteFile(${file.id})" title="حذف">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('files-count-text').textContent = `${filteredFiles.length} ملف`;
+        }
+
+        // ==================== المعاينة والتحميل ====================
+        function viewFile(fileId) {
+            const file = uploadedFiles.find(f => f.id === fileId);
+            if (!file) return;
+
+            file.views++;
+            saveToLocalStorage();
+            updateStats();
+
+            const previewBody = document.getElementById('preview-body');
+            document.getElementById('preview-title').textContent = file.name;
+
+            if (file.type === 'image') {
+                previewBody.innerHTML = `<img src="${file.data}" class="preview-image" alt="${file.name}">`;
+            } else if (file.type === 'document' && file.name.endsWith('.txt')) {
+                previewBody.innerHTML = `<div class="preview-text">${file.data.split(',')[1] ? atob(file.data.split(',')[1]) : 'لا يمكن عرض المحتوى'}</div>`;
+            } else if (file.type === 'video') {
+                previewBody.innerHTML = `<video controls style="max-width: 100%; border-radius: 8px;"><source src="${file.data}"></video>`;
+            } else if (file.type === 'audio') {
+                previewBody.innerHTML = `<audio controls style="width: 100%;"><source src="${file.data}"></audio>`;
+            } else {
+                previewBody.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: var(--text-sec);">
+                        <i class="fas fa-file" style="font-size: 3rem; margin-bottom: 12px;"></i>
+                        <p>لا يمكن عرض معاينة لهذا نوع الملف</p>
+                        <p style="font-size: 0.85rem; margin-top: 8px;">اسم الملف: ${file.name}</p>
+                        <p style="font-size: 0.85rem;">الحجم: ${formatFileSize(file.size)}</p>
+                    </div>
+                `;
+            }
+
+            document.getElementById('preview-modal').classList.add('active');
+        }
+
+        function closePreview() {
+            document.getElementById('preview-modal').classList.remove('active');
+        }
+
+        function downloadFile(fileId) {
+            const file = uploadedFiles.find(f => f.id === fileId);
+            if (!file) return;
+
+            const link = document.createElement('a');
+            link.href = file.data;
+            link.download = file.name;
+            link.click();
+        }
+
+        // ==================== الإحصائيات ====================
+        function updateStats() {
+            document.getElementById('total-files').textContent = uploadedFiles.length;
+            
+            const totalSize = uploadedFiles.reduce((sum, f) => sum + f.size, 0);
+            document.getElementById('total-size').textContent = formatFileSize(totalSize);
+            
+            const totalViews = uploadedFiles.reduce((sum, f) => sum + f.views, 0);
+            document.getElementById('total-views').textContent = totalViews;
+        }
+
+        // ==================== التخزين المحلي ====================
+        function saveToLocalStorage() {
+            const dataToSave = uploadedFiles.map(f => ({
+                ...f,
+                data: f.data // حفظ البيانات المشفرة
+            }));
+            localStorage.setItem('goo-uploaded-files', JSON.stringify(dataToSave));
+        }
+
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem('goo-uploaded-files');
+            if (saved) {
+                try {
+                    uploadedFiles = JSON.parse(saved);
+                    renderFiles();
+                    updateStats();
+                } catch (e) {
+                    console.error('خطأ في تحميل الملفات:', e);
+                }
+            }
+        }
+
+        // ==================== أحداث الرفع ====================
+        const dropzone = document.getElementById('dropzone');
+        const fileInput = document.getElementById('file-input');
+
+        dropzone.addEventListener('click', () => fileInput.click());
+
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.classList.add('dragover');
+        });
+
+        dropzone.addEventListener('dragleave', () => {
+            dropzone.classList.remove('dragover');
+        });
+
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropzone.classList.remove('dragover');
+            const files = Array.from(e.dataTransfer.files);
+            files.forEach(addFile);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            const files = Array.from(e.target.files);
+            files.forEach(addFile);
+            fileInput.value = '';
+        });
+
+        // ==================== أحداث البحث والتصفية ====================
+        document.getElementById('search-input').addEventListener('input', renderFiles);
+        document.getElementById('type-filter').addEventListener('change', renderFiles);
+        document.getElementById('refresh-btn').addEventListener('click', () => {
+            renderFiles();
+            updateStats();
+        });
+        document.getElementById('clear-btn').addEventListener('click', deleteAllFiles);
+
+        // ==================== إغلاق المعاينة ====================
+        document.getElementById('preview-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'preview-modal') {
+                closePreview();
+            }
+        });
+
+        // ==================== التهيئة ====================
+        window.addEventListener('load', () => {
+            loadFromLocalStorage();
+            updateStats();
+        });
+    </script>
+</body>
+</html>
