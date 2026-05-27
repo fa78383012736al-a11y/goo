@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تقرير تنفيذ تطبيق البادلت</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=El+Messiri:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --primary-deep: #0B2F4E;
+      --primary-gold: #D4AF37;
+      --accent-teal: #1A7F7A;
+      --light-bg: #F9F7F3;
+      --border-light: #E2D9C5;
+      --text-dark: #1E2A38;
+      --white: #ffffff;
+      --shadow-sm: 0 6px 12px -6px rgba(0,0,0,0.08);
+      --shadow-lux: 0 12px 20px -8px rgba(11, 47, 78, 0.1);
+    }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: #e8e3d9;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: var(--text-dark);
+    }
+
+    .luxury-report {
+      width: 210mm;
+      height: 297mm; /* تثبيت الارتفاع ليكون صفحة واحدة A4 */
+      margin: 0 auto;
+      background: var(--white);
+      box-shadow: var(--shadow-lux), 0 0 0 1px rgba(212, 175, 55, 0.15);
+      position: relative;
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+    }
+
+    .luxury-report::before {
+      content: "";
+      position: absolute;
+      top: 10mm;
+      left: 10mm;
+      right: 10mm;
+      bottom: 10mm;
+      border: 2.5px solid var(--primary-gold);
+      border-radius: 6px;
+      pointer-events: none;
+      z-index: 5;
+      opacity: 0.4;
+    }
+
+    .report-content {
+      position: relative;
+      z-index: 10;
+      padding: 5mm 12mm 5mm 12mm;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 5px; /* إضافة فجوة صغيرة بين العناصر لمنع التداخل */
+    }
+
+    @media print {
+      @page {
+        size: A4;
+        margin: 0;
+      }
+      body {
+        padding: 0;
+        background: white;
+      }
+      .luxury-report {
+        width: 210mm;
+        height: 297mm;
+        border: none;
+        box-shadow: none;
+        margin: 0;
+      }
+      .luxury-report::before {
+        top: 5mm;
+        left: 5mm;
+        right: 5mm;
+        bottom: 5mm;
+      }
+      .control-bar {
+        display: none;
+      }
+      .signatures-lux {
+        page-break-inside: avoid;
+      }
+      .page-footer {
+        position: relative; /* تغيير من مطلق إلى نسبي لمنع التداخل */
+        margin-top: 10px;
+        padding-top: 5px;
+      }
+    }
+
+    .luxury-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      border-bottom: 2px solid var(--primary-gold);
+      padding-bottom: 8px;
+      background: linear-gradient(to bottom, rgba(11,47,78,0.02), transparent);
+    }
+
+    .kingdom-info {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--primary-deep);
+      line-height: 1.6;
+      border-right: 3px solid var(--primary-gold);
+      padding-right: 12px;
+      text-align: right;
+    }
+
+    .kingdom-info i {
+      color: var(--primary-gold);
+      margin-left: 5px;
+    }
+
+    .logo-area {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .luxury-logo {
+      max-height: 50px; /* تقليل حجم الشعار لتوفير مساحة */
+      max-width: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05));
+      border-radius: 10px;
+      padding: 2px;
+    }
+
+    .ministry-text {
+      font-size: 9px;
+      font-weight: 800;
+      color: var(--accent-teal);
+      margin-top: 3px;
+      background: rgba(212,175,55,0.1);
+      padding: 2px 10px;
+      border-radius: 30px;
+    }
+
+    .school-info {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--primary-deep);
+      line-height: 1.6;
+      border-left: 3px solid var(--primary-gold);
+      padding-left: 12px;
+      text-align: left;
+    }
+
+    .school-info i {
+      color: var(--primary-gold);
+      margin-right: 5px;
+    }
+
+    .title-bar-lux {
+      background: linear-gradient(135deg, #0B2F4E 0%, #1A4A6B 100%);
+      margin: 10px 0 18px 0;
+      padding: 12px 20px;
+      border-radius: 30px 6px 30px 6px;
+      box-shadow: 0 8px 12px -4px rgba(11,47,78,0.25);
+      text-align: center;
+      border-bottom: 3px solid var(--primary-gold);
+    }
+
+    .title-bar-lux h1 {
+      color: white;
+      font-size: 24px;
+      font-weight: 900;
+      font-family: 'El Messiri', sans-serif;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 16px; /* تقليل الفجوة */
+      margin-bottom: 10px; /* تقليل الهامش السفلي */
+      background: rgba(249,247,243,0.5);
+      padding: 8px 14px; /* تقليل الحشوة */
+      border-radius: 20px;
+      box-shadow: var(--shadow-sm);
+  
