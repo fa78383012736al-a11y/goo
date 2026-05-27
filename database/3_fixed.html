@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>سجل الأنشطة اللاصفية - طباعة مثالية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-purple: #5a2d7a;
+            --accent-green: #3d4d1d;
+            --bg-gradient: linear-gradient(135deg, #f8f9fb 0%, #f0f2f5 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --border-gold: #c5a059;
+            --text-dark: #2c3e50;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: #cbd3da;
+            color: var(--text-dark);
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        /* حاوية الصفحة الأساسية */
+        .page {
+            width: 210mm;
+            height: 297mm; /* تثبيت الارتفاع لمنع الانقسام */
+            padding: 5mm; /* تقليل الحشو قليلاً لتوفير مساحة */
+            margin: 10mm auto;
+            background: var(--bg-gradient);
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 10px solid transparent;
+            border-image: url('https://www.transparenttextures.com/patterns/gold-glitter.png') 30 stretch;
+            outline: 1.5px solid var(--border-gold);
+            outline-offset: -7px;
+            page-break-after: always;
+            break-after: page;
+        }
+
+        @media print {
+            @page {
+                size: A4;
+                margin: 0;
+            }
+            body { 
+                background: white; 
+                padding: 0; 
+                margin: 0;
+            }
+            .page {
+                margin: 0;
+                width: 210mm;
+                height: 297mm;
+                box-shadow: none !important;
+                border: 10px solid transparent !important;
+                border-image: url('https://www.transparenttextures.com/patterns/gold-glitter.png') 30 stretch !important;
+                background: var(--bg-gradient) !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .no-print { display: none !important; }
+        }
+
+        /* الترويسة الموحدة */
+        .global-header-display {
+            width: 100%;
+            height: 100px; /* تقليل الارتفاع قليلاً */
+            margin-bottom: 5px;
+            display: none;
+            border-bottom: 2px solid var(--border-gold);
+            flex-shrink: 0;
+        }
+        .global-header-display img {
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+
+        /* محتوى مرن */
+        .flex-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* منع التمدد خارج الصفحة */
+            padding: 5px 10px;
+        }
+
+        /* التذييل (ثابت في الأسفل) */
+        .page-footer {
+            margin-top: auto;
+            width: 100%;
+            flex-shrink: 0;
+            padding-bottom: 5px;
+        }
+        .signature-section {
+            display: flex;
+            justify-content: space-around;
+            font-weight: bold;
+            font-size: 12px;
+            color: var(--primary-purple);
+            padding: 5px 0;
+            background: rgba(255,255,255,0.6);
+            border-radius: 8px;
+            margin-bottom: 2px;
+        }
+        .footer-border {
+            height: 30px;
+            background: linear-gradient(to top, rgba(197, 160, 89, 0.2), transparent);
+            border-top: 1px solid rgba(197, 160, 89, 0.3);
+        }
+
+        /* الجداول (تصغير المسافات للطباعة) */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid var(--border-gold);
+            margin: 2px 0;
+            table-layout: fixed;
+        }
+        th {
+            background: var(--primary-purple);
+            color: white;
+            padding: 4px;
+            font-size: 11px;
+        }
+        td {
+            background: white;
+            padding: 3px;
+            border: 0.5px solid #ddd;
+            text-align: center;
+            font-size: 10.5px;
+            word-wrap: break-word;
+        }
+        .day-header-cell {
+            background: var(--accent-green) !important;
+            color: white;
+            width: 55px;
+            font-weight: bold;
+        }
+        .activity-type-cell {
+            background: #f8f9fa !important;
+            width: 75px;
+            color: var(--primary-purple);
+            font-weight: bold;
+        }
+
+        .week-info-bar {
+            display: flex;
+            background: var(--card-bg);
+            border: 1.5px solid var(--border-gold);
+            border-radius: 6px;
+            margin-bottom: 5px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .week-info-date { flex: 2; padding: 5px; text-align: center; font-weight: bold; font-size: 13px; background: #fdfbf7; }
+        .week-info-label { flex: 1; padding: 5px; background: var(--primary-purple); color: white; text-align: center; font-weight: 900; font-size: 15px; }
+
+        h1.page-title {
+            font-size: 24px;
+            color: var(--primary-purple);
+            text-align: center;
+            margin: 5px 0 10px 0;
+            flex-shrink: 0;
+        }
+
+        /* لوحة التحكم */
+        .no-print-panel {
+            max-width: 1100px;
+            margin: 10px auto;
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            border: 2px solid var(--border-gold);
+        }
+        .json-area { width: 100%; height: 120px; margin: 10px 0; font-family: monospace; padding: 10px; }
+        .btn { padding: 8px 20px; cursor: pointer; border-radius: 20px; border: none; background: var(--primary-purple); color: white; font-weight: bold; }
+
+        /* الغلاف */
+        .cover-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .cover-logo { width: 140px; margin-bottom: 20px; }
+        .cover-main-title { font-size: 40px; font-weight: 900; color: var(--primary-purple); }
+        .cover-sub-title { font-size: 22px; color: var(--accent-green); margin-bottom: 30px; }
+        .cover-details {
+            width: 85%;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            border-right: 8px solid var(--border-gold);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        .cover-details p { font-size: 17px; margin: 8px 0; display: flex; justify-content: space-between; border-bottom: 1px dashed #eee; }
+        .cover-details span { font-weight: bold; color: var(--primary-purple); }
+    </style>
+</head>
+<body>
+
+    <div class="no-print-panel no-print">
+        <h3 style="color:var(--primary-purple)">⚙️ لوحة التحكم في السجل</h3>
+        <textarea id="jsonInput" class="json-area"></textarea>
+        <div style="display:flex; gap:10px;">
+            <button class="btn" id="applyBtn">تطبيق البيانات</button>
+            <button class="btn" onclick="window.print()">🖨️ طباعة السجل</button>
+            <div style="border:1px dashed var(--border-gold); padding:5px; border-radius:10px;">
+                <label>رفع ترويسة:</label>
+                <input type="file" accept="image/*" onchange="uploadGlobalHeader(this)">
+            </div>
+        </div>
+    </div>
+
+    <div id="report-container"></div>
+
+    <script>
+        const DEFAULT_JSON = {
+            schoolName: "مدرسة مريم بنت عمران",
+            activityLeader: "مريم عوض العنزي",
+            principal: "مريم صنهات المطيري",
+            educationDept: "إدارة تعليم حفر الباطن",
+            semester: "الفصل الدراسي الثاني",
+            year: "1447 هـ",
+            cover: { mainTitle: "سجل الأنشطة اللاصفية", subTitle: "خطة البرامج والفعاليات" },
+            weeks: [
+                { week: "الثاني", range: "06/08/1447 إلى 10/08/1447", days: ["06/08/1447", "07/08/1447", "08/08/1447", "09/08/1447", "10/08/1447"] }
+            ]
+        };
+
+        const dayNames = ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس"];
+
+        function buildReport(data) {
+            const container = document.getElementById('report-container');
+            container.innerHTML = '';
+
+            // صفحة الغلاف
+            const cover = document.createElement('div');
+            cover.className = 'page';
+            cover.innerHTML = `
+                <div class="cover-content">
+                    <img src="https://upload.wikimedia.org/wikipedia/ar/thumb/2/22/Ministry_of_Education_Saudi_Arabia.svg/1200px-Ministry_of_Education_Saudi_Arabia.svg.png" class="cover-logo">
+                    <div class="cover-main-title">${data.cover.mainTitle}</div>
+                    <div class="cover-sub-title">${data.cover.subTitle}</div>
+                    <div class="cover-details">
+                        <p>الإدارة: <span>${data.educationDept}</span></p>
+                        <p>المدرسة: <span>${data.schoolName}</span></p>
+                        <p>رائدة النشاط: <span>${data.activityLeader}</span></p>
+                        <p>مديرة المدرسة: <span>${data.principal}</span></p>
+                    </div>
+                </div>
+                <div class="page-footer"><div class="footer-border"></div></div>
+            `;
+            container.appendChild(cover);
+
+            // صفحات الأسابيع
+            data.weeks.forEach(week => {
+                const page = document.createElement('div');
+                page.className = 'page';
+                
+                let tables = '';
+                dayNames.forEach((name, i) => {
+                    tables += `
+                    <table>
+                        <thead>
+                            <tr><th style="width:12%">اليوم</th><th style="width:15%">وقت التنفيذ</th><th style="width:43%">اسم البرنامج</th><th style="width:15%">مدة التنفيذ</th><th style="width:15%">اسم المنفذة</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td rowspan="3" class="day-header-cell">${name}<br><span style="font-size:8px">${week.days[i]}</span></td><td class="activity-type-cell">الاصطفاف</td><td></td><td></td><td></td></tr>
+                            <tr><td class="activity-type-cell">الفسحة</td><td></td><td></td><td></td></tr>
+                            <tr><td class="activity-type-cell">الصلاة</td><td></td><td></td><td></td></tr>
+                        </tbody>
+                    </table>`;
+                });
+
+                page.innerHTML = `
+                    <div class="global-header-display"></div>
+                    <div class="week-info-bar">
+                        <div class="week-info-date">من ${week.range}</div>
+                        <div class="week-info-label">الأسبوع ${week.week}</div>
+                    </div>
+                    <div class="flex-content">${tables}</div>
+                    <div class="page-footer">
+                        <div class="signature-section">
+                            <div>رائدة النشاط: ${data.activityLeader}</div>
+                            <div>مديرة المدرسة: ${data.principal}</div>
+                        </div>
+                        <div class="footer-border"></div>
+                    </div>
+                `;
+                container.appendChild(page);
+            });
+        }
+
+        window.uploadGlobalHeader = function(input) {
+            const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imgUrl = e.target.result;
+                document.querySelectorAll('.global-header-display').forEach(div => {
+                    div.style.display = 'block';
+                    div.innerHTML = `<img src="${imgUrl}">`;
+                });
+            };
+            reader.readAsDataURL(file);
+        };
+
+        document.getElementById('applyBtn').onclick = () => {
+            const data = JSON.parse(document.getElementById('jsonInput').value);
+            buildReport(data);
+        };
+
+        window.onload = () => {
+            document.getElementById('jsonInput').value = JSON.stringify(DEFAULT_JSON, null, 2);
+            buildReport(DEFAULT_JSON);
+        };
+    </script>
+</body>
+</html>
