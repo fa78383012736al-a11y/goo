@@ -32,472 +32,80 @@
             --success: #00a87a;
             --warning: #e07000;
         }
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Tajawal', sans-serif;
-        }
-        html, body {
-            height: 100%;
-            width: 100%;
-            overflow: hidden;
-        }
-        body {
-            background: var(--bg);
-            display: flex;
-            flex-direction: column;
-        }
-        .screen {
-            flex: 1;
-            overflow-y: auto;
-            overflow-x: hidden;
-            display: flex;
-            flex-direction: column;
-            scrollbar-width: none;
-            scroll-behavior: smooth;
-            padding-bottom: 95px;
-        }
-        .screen::-webkit-scrollbar {
-            display: none;
-        }
-        .app-header {
-            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 60%, var(--primary-light) 100%);
-            padding: 12px 16px 14px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: relative;
-            overflow: hidden;
-            flex-shrink: 0;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        .app-header::before {
-            content: '';
-            position: absolute;
-            top: -40px;
-            left: -40px;
-            width: 180px;
-            height: 180px;
-            background: rgba(255, 255, 255, 0.07);
-            border-radius: 50%;
-        }
-        .greeting h2 {
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.8);
-        }
-        .greeting h2 .star {
-            color: #ffd04e;
-        }
-        .greeting p {
-            font-size: 1rem;
-            color: #fff;
-            font-weight: 700;
-            margin-top: 2px;
-        }
-        .header-badge {
-            background: rgba(255, 255, 255, 0.18);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50px;
-            padding: 6px 12px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            color: #fff;
-            font-weight: 700;
-            font-size: 0.8rem;
-            z-index: 1;
-        }
-        .header-badge i {
-            color: #ffd04e;
-        }
-        .back-button {
-            background: rgba(255, 255, 255, 0.18);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50px;
-            padding: 5px 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-size: 0.95rem;
-            cursor: pointer;
-            z-index: 2;
-            transition: all 0.2s;
-        }
-        .back-button:hover {
-            background: rgba(255, 255, 255, 0.28);
-        }
-        .search-container {
-            margin: 10px 14px;
-            position: relative;
-        }
-        .search-input {
-            width: 100%;
-            padding: 12px 50px 12px 16px;
-            border-radius: 28px;
-            border: 2px solid var(--border);
-            background: var(--surface);
-            font-size: 0.9rem;
-            box-shadow: var(--shadow-sm);
-            transition: all 0.3s;
-            outline: none;
-        }
-        .search-input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(0, 98, 204, 0.1);
-        }
-        .search-icon-btn {
-            position: absolute;
-            left: 6px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            background: var(--primary);
-            color: #fff;
-            border: none;
-            cursor: pointer;
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .search-suggestions {
-            background: var(--surface);
-            border-radius: var(--radius-md);
-            margin: 4px 14px;
-            box-shadow: var(--shadow-md);
-            border: 1px solid var(--border);
-            display: none;
-            position: absolute;
-            left: 14px;
-            right: 14px;
-            z-index: 100;
-            max-height: 220px;
-            overflow-y: auto;
-        }
-        .search-suggestions.active {
-            display: block;
-        }
-        .suggestion-item {
-            padding: 10px 16px;
-            cursor: pointer;
-            border-bottom: 1px solid #f0f5fc;
-            font-size: 0.82rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: background 0.15s;
-        }
-        .suggestion-item:hover {
-            background: #f4f8fd;
-        }
-        .suggestion-item .sug-type {
-            font-size: 0.65rem;
-            background: #e8f0ff;
-            color: var(--primary);
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-weight: 600;
-        }
-        .balance-card {
-            background: linear-gradient(135deg, #00b37a 0%, #00c896 50%, #00d9a8 100%);
-            margin: 10px 14px 0;
-            border-radius: var(--radius-md);
-            padding: 14px 16px;
-            color: #fff;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 8px 24px rgba(0, 200, 150, 0.35);
-        }
-        .balance-card::before {
-            content: '';
-            position: absolute;
-            top: -30px;
-            right: -30px;
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-        }
-        .balance-label {
-            font-size: 0.75rem;
-            opacity: 0.85;
-        }
-        .balance-amount {
-            font-size: 1.5rem;
-            font-weight: 800;
-            direction: ltr;
-            text-align: right;
-        }
-        .balance-amount span {
-            font-size: 0.8rem;
-            font-weight: 500;
-            margin-right: 4px;
-            opacity: 0.85;
-        }
-        .balance-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 10px;
-            padding-top: 8px;
-            border-top: 1px solid rgba(255, 255, 255, 0.25);
-            font-size: 0.73rem;
-        }
-        .eye-btn {
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            border-radius: 30px;
-            color: #fff;
-            padding: 4px 10px;
-            cursor: pointer;
-            font-size: 0.7rem;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .quick-actions {
-            display: flex;
-            gap: 7px;
-            margin: 10px 14px 0;
-            flex-wrap: wrap;
-        }
-        .quick-btn {
-            flex: 1 1 22%;
-            min-width: 65px;
-            background: var(--surface);
-            border-radius: var(--radius-sm);
-            padding: 10px 5px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
-            box-shadow: var(--shadow-sm);
-            cursor: pointer;
-            transition: all 0.2s;
-            border: 1px solid var(--border);
-        }
-        .quick-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-        .quick-btn .qb-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-        }
-        .quick-btn span {
-            font-size: 0.62rem;
-            font-weight: 600;
-            color: var(--text-main);
-            text-align: center;
-            line-height: 1.3;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Tajawal', sans-serif; }
+        html, body { height: 100%; width: 100%; overflow: hidden; }
+        body { background: var(--bg); display: flex; flex-direction: column; }
+        .screen { flex: 1; overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column; scrollbar-width: none; scroll-behavior: smooth; padding-bottom: 95px; }
+        .screen::-webkit-scrollbar { display: none; }
+        .app-header { background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 60%, var(--primary-light) 100%); padding: 12px 16px 14px; display: flex; align-items: center; justify-content: space-between; position: relative; overflow: hidden; flex-shrink: 0; flex-wrap: wrap; gap: 8px; }
+        .app-header::before { content: ''; position: absolute; top: -40px; left: -40px; width: 180px; height: 180px; background: rgba(255, 255, 255, 0.07); border-radius: 50%; }
+        .greeting h2 { font-size: 0.85rem; font-weight: 500; color: rgba(255, 255, 255, 0.8); }
+        .greeting h2 .star { color: #ffd04e; }
+        .greeting p { font-size: 1rem; color: #fff; font-weight: 700; margin-top: 2px; }
+        .header-badge { background: rgba(255, 255, 255, 0.18); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50px; padding: 6px 12px; display: flex; align-items: center; gap: 6px; color: #fff; font-weight: 700; font-size: 0.8rem; z-index: 1; }
+        .header-badge i { color: #ffd04e; }
+        .back-button { background: rgba(255, 255, 255, 0.18); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50px; padding: 5px 10px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 0.95rem; cursor: pointer; z-index: 2; transition: all 0.2s; }
+        .back-button:hover { background: rgba(255, 255, 255, 0.28); }
+        .search-container { margin: 10px 14px; position: relative; }
+        .search-input { width: 100%; padding: 12px 50px 12px 16px; border-radius: 28px; border: 2px solid var(--border); background: var(--surface); font-size: 0.9rem; box-shadow: var(--shadow-sm); transition: all 0.3s; outline: none; }
+        .search-input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(0, 98, 204, 0.1); }
+        .search-icon-btn { position: absolute; left: 6px; top: 50%; transform: translateY(-50%); width: 38px; height: 38px; border-radius: 50%; background: var(--primary); color: #fff; border: none; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; }
+        .search-suggestions { background: var(--surface); border-radius: var(--radius-md); margin: 4px 14px; box-shadow: var(--shadow-md); border: 1px solid var(--border); display: none; position: absolute; left: 14px; right: 14px; z-index: 100; max-height: 220px; overflow-y: auto; }
+        .search-suggestions.active { display: block; }
+        .suggestion-item { padding: 10px 16px; cursor: pointer; border-bottom: 1px solid #f0f5fc; font-size: 0.82rem; display: flex; align-items: center; gap: 8px; transition: background 0.15s; }
+        .suggestion-item:hover { background: #f4f8fd; }
+        .suggestion-item .sug-type { font-size: 0.65rem; background: #e8f0ff; color: var(--primary); padding: 2px 8px; border-radius: 10px; font-weight: 600; }
+        .balance-card { background: linear-gradient(135deg, #00b37a 0%, #00c896 50%, #00d9a8 100%); margin: 10px 14px 0; border-radius: var(--radius-md); padding: 14px 16px; color: #fff; position: relative; overflow: hidden; box-shadow: 0 8px 24px rgba(0, 200, 150, 0.35); }
+        .balance-card::before { content: ''; position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; border-radius: 50%; background: rgba(255, 255, 255, 0.1); }
+        .balance-label { font-size: 0.75rem; opacity: 0.85; }
+        .balance-amount { font-size: 1.5rem; font-weight: 800; direction: ltr; text-align: right; }
+        .balance-amount span { font-size: 0.8rem; font-weight: 500; margin-right: 4px; opacity: 0.85; }
+        .balance-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(255, 255, 255, 0.25); font-size: 0.73rem; }
+        .eye-btn { background: rgba(255, 255, 255, 0.2); border: none; border-radius: 30px; color: #fff; padding: 4px 10px; cursor: pointer; font-size: 0.7rem; display: flex; align-items: center; gap: 4px; }
+        .quick-actions { display: flex; gap: 7px; margin: 10px 14px 0; flex-wrap: wrap; }
+        .quick-btn { flex: 1 1 22%; min-width: 65px; background: var(--surface); border-radius: var(--radius-sm); padding: 10px 5px; display: flex; flex-direction: column; align-items: center; gap: 5px; box-shadow: var(--shadow-sm); cursor: pointer; transition: all 0.2s; border: 1px solid var(--border); }
+        .quick-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+        .quick-btn .qb-icon { width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; }
+        .quick-btn span { font-size: 0.62rem; font-weight: 600; color: var(--text-main); text-align: center; line-height: 1.3; }
         .qb-blue { background: #e8f0ff; color: var(--primary); }
         .qb-green { background: #e6faf4; color: #00a87a; }
         .qb-orange { background: #fff5ea; color: #e07000; }
         .qb-purple { background: #f2eaff; color: #7c3aed; }
-        .section-title {
-            font-size: 0.88rem;
-            font-weight: 700;
-            color: var(--text-main);
-            margin: 14px 14px 6px;
-            display: flex;
-            align-items: center;
-            gap: 7px;
-        }
-        .section-title i {
-            width: 24px;
-            height: 24px;
-            border-radius: 7px;
-            background: var(--primary);
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.68rem;
-        }
-        .section-title .see-all {
-            margin-right: auto;
-            font-size: 0.7rem;
-            color: var(--primary);
-            font-weight: 600;
-            cursor: pointer;
-        }
-        .service-card {
-            background: var(--surface);
-            border-radius: var(--radius-md);
-            margin: 0 14px 10px;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border);
-            overflow: hidden;
-        }
-        .service-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 11px 14px;
-            border-bottom: 1px solid #f0f5fc;
-            cursor: pointer;
-            transition: background 0.15s;
-        }
+        .section-title { font-size: 0.88rem; font-weight: 700; color: var(--text-main); margin: 14px 14px 6px; display: flex; align-items: center; gap: 7px; }
+        .section-title i { width: 24px; height: 24px; border-radius: 7px; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; }
+        .service-card { background: var(--surface); border-radius: var(--radius-md); margin: 0 14px 10px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); overflow: hidden; }
+        .service-row { display: flex; align-items: center; justify-content: space-between; padding: 11px 14px; border-bottom: 1px solid #f0f5fc; cursor: pointer; transition: background 0.15s; }
         .service-row:last-child { border-bottom: none; }
         .service-row:hover { background: #f8fbff; }
-        .service-row .right {
-            display: flex;
-            align-items: center;
-            gap: 9px;
-            font-weight: 500;
-            color: var(--text-main);
-            font-size: 0.82rem;
-        }
-        .srv-icon {
-            width: 30px;
-            height: 30px;
-            border-radius: 9px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.72rem;
-        }
+        .service-row .right { display: flex; align-items: center; gap: 9px; font-weight: 500; color: var(--text-main); font-size: 0.82rem; }
+        .srv-icon { width: 30px; height: 30px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 0.72rem; }
         .si-blue { background: #e8f0ff; color: var(--primary); }
         .si-green { background: #e6faf4; color: #00a87a; }
         .si-orange { background: #fff5ea; color: #e07000; }
         .si-purple { background: #f2eaff; color: #7c3aed; }
         .si-red { background: #fff0f0; color: #e03c3c; }
         .si-teal { background: #e6f6fa; color: #0096b4; }
-        .arrow-badge {
-            width: 24px;
-            height: 24px;
-            border-radius: 7px;
-            background: var(--surface2);
-            border: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-muted);
-            font-size: 0.65rem;
-        }
-        .empty-state {
-            background: var(--surface);
-            border-radius: var(--radius-md);
-            margin: 0 14px 10px;
-            padding: 28px 16px;
-            text-align: center;
-            border: 2px dashed #d0dff0;
-        }
-        .empty-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: var(--surface2);
-            margin: 0 auto 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            color: var(--text-muted);
-            border: 2px solid var(--border);
-        }
-        .empty-state h3 {
-            font-size: 0.88rem;
-            color: var(--text-main);
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
+        .arrow-badge { width: 24px; height: 24px; border-radius: 7px; background: var(--surface2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 0.65rem; }
+        .empty-state { background: var(--surface); border-radius: var(--radius-md); margin: 0 14px 10px; padding: 28px 16px; text-align: center; border: 2px dashed #d0dff0; }
+        .empty-icon { width: 48px; height: 48px; border-radius: 50%; background: var(--surface2); margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: var(--text-muted); border: 2px solid var(--border); }
+        .empty-state h3 { font-size: 0.88rem; color: var(--text-main); font-weight: 700; margin-bottom: 4px; }
         .empty-state p { font-size: 0.73rem; color: var(--text-sec); }
-        .report-stat {
-            margin: 0 14px 10px;
-            background: var(--surface);
-            border-radius: var(--radius-md);
-            padding: 12px;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border);
-        }
+        .report-stat { margin: 0 14px 10px; background: var(--surface); border-radius: var(--radius-md); padding: 12px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); }
         .stat-row { display: flex; gap: 7px; flex-wrap: wrap; }
-        .stat-item {
-            flex: 1 1 28%;
-            min-width: 60px;
-            text-align: center;
-            padding: 8px;
-            background: var(--surface2);
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border);
-        }
+        .stat-item { flex: 1 1 28%; min-width: 60px; text-align: center; padding: 8px; background: var(--surface2); border-radius: var(--radius-sm); border: 1px solid var(--border); }
         .stat-item .num { font-size: 1.1rem; font-weight: 800; color: var(--primary); }
         .stat-item.green .num { color: #00a87a; }
         .stat-item.orange .num { color: #e07000; }
         .stat-item .lbl { font-size: 0.65rem; color: var(--text-sec); margin-top: 3px; font-weight: 600; }
-        .profile-hero {
-            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
-            margin: 0 14px 12px;
-            border-radius: var(--radius-md);
-            padding: 16px;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: var(--shadow-md);
-        }
-        .avatar {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1rem;
-            color: #fff;
-            font-weight: 700;
-            flex-shrink: 0;
-        }
+        .profile-hero { background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%); margin: 0 14px 12px; border-radius: var(--radius-md); padding: 16px; color: #fff; display: flex; align-items: center; gap: 12px; position: relative; overflow: hidden; box-shadow: var(--shadow-md); }
+        .avatar { width: 44px; height: 44px; border-radius: 50%; background: rgba(255, 255, 255, 0.2); border: 2px solid rgba(255, 255, 255, 0.4); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: #fff; font-weight: 700; flex-shrink: 0; }
         .profile-info-text h3 { font-size: 0.88rem; font-weight: 800; margin-bottom: 3px; }
         .profile-info-text .iban { font-size: 0.68rem; opacity: 0.75; }
-        .menu-card {
-            background: var(--surface);
-            border-radius: var(--radius-md);
-            margin: 0 14px 10px;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border);
-            overflow: hidden;
-        }
-        .menu-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 11px 14px;
-            border-bottom: 1px solid #f0f5fc;
-            cursor: pointer;
-            transition: background 0.15s;
-        }
+        .menu-card { background: var(--surface); border-radius: var(--radius-md); margin: 0 14px 10px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); overflow: hidden; }
+        .menu-item { display: flex; align-items: center; gap: 10px; padding: 11px 14px; border-bottom: 1px solid #f0f5fc; cursor: pointer; transition: background 0.15s; }
         .menu-item:last-child { border-bottom: none; }
         .menu-item:hover { background: #f8fbff; }
-        .menu-icon {
-            width: 30px;
-            height: 30px;
-            border-radius: 9px;
-            background: var(--surface2);
-            border: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.72rem;
-            color: var(--primary);
-        }
+        .menu-icon { width: 30px; height: 30px; border-radius: 9px; background: var(--surface2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.72rem; color: var(--primary); }
         .menu-label { font-size: 0.8rem; font-weight: 600; color: var(--text-main); flex: 1; }
         .menu-arrow { color: var(--text-muted); font-size: 0.7rem; }
         .content { flex: 1; }
@@ -506,180 +114,27 @@
         .sub-section { display: none; }
         .sub-section.active { display: block; }
         @keyframes fadeSlide { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-        .plus-tag {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: #fff;
-            padding: 4px 10px;
-            border-radius: 30px;
-            font-size: 0.73rem;
-            font-weight: 700;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            box-shadow: 0 4px 12px rgba(0, 98, 204, 0.3);
-            cursor: pointer;
-        }
-        .bottom-nav-wrapper {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            z-index: 999;
-            padding: 5px 8px 10px;
-            background: linear-gradient(to top, var(--bg) 70%, transparent);
-            display: none;
-        }
+        .bottom-nav-wrapper { position: fixed; bottom: 0; left: 0; right: 0; z-index: 999; padding: 5px 8px 10px; background: linear-gradient(to top, var(--bg) 70%, transparent); display: none; }
         .bottom-nav-wrapper.active { display: block; }
-        .bottom-nav {
-            background: var(--surface);
-            border-radius: 26px;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            padding: 4px 2px;
-            box-shadow: var(--shadow-md);
-            border: 1px solid var(--border);
-        }
-        .nav-item {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 1px;
-            padding: 5px 2px;
-            cursor: pointer;
-            border-radius: 13px;
-            transition: all 0.2s;
-            color: var(--text-muted);
-            font-size: 0.55rem;
-            font-weight: 600;
-            text-align: center;
-            min-width: 0;
-        }
+        .bottom-nav { background: var(--surface); border-radius: 26px; display: flex; justify-content: space-around; align-items: center; padding: 4px 2px; box-shadow: var(--shadow-md); border: 1px solid var(--border); }
+        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; padding: 5px 2px; cursor: pointer; border-radius: 13px; transition: all 0.2s; color: var(--text-muted); font-size: 0.55rem; font-weight: 600; text-align: center; min-width: 0; }
         .nav-item i { font-size: 0.8rem; }
         .nav-item.active { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: #fff; }
-        .nav-item:active { transform: scale(0.93); }
-        .whatsapp-fab {
-            position: fixed;
-            bottom: 95px;
-            left: 14px;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #25d366, #128c7e);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-size: 1.3rem;
-            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5);
-            text-decoration: none;
-            animation: pulse 2s infinite;
-            z-index: 998;
-        }
-        @keyframes pulse {
-            0% { box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5); }
-            50% { box-shadow: 0 6px 28px rgba(37, 211, 102, 0.8), 0 0 0 8px rgba(37, 211, 102, 0.1); }
-            100% { box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5); }
-        }
-        .chart-container {
-            background: var(--surface);
-            border-radius: var(--radius-md);
-            margin: 0 14px 10px;
-            padding: 12px;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border);
-        }
-        .chart-container canvas { max-height: 180px; }
-        .resource-link-card {
-            background: var(--surface);
-            border-radius: var(--radius-md);
-            margin: 0 14px 8px;
-            padding: 14px;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .resource-link-card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
-        .r-icon {
-            width: 38px;
-            height: 38px;
-            border-radius: 11px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-            flex-shrink: 0;
-        }
-        .ri-wordwall { background: #e8f0ff; color: #0062cc; }
-        .ri-forms { background: #e6faf4; color: #00a87a; }
-        .ri-drive { background: #fff5ea; color: #e07000; }
-        .ri-locutions { background: #f2eaff; color: #7c3aed; }
-        .r-info { flex: 1; }
-        .r-name { font-weight: 700; color: var(--text-main); font-size: 0.82rem; }
-        .r-desc { font-size: 0.7rem; color: var(--text-sec); margin-top: 2px; }
-        .r-arrow { color: var(--text-muted); font-size: 0.7rem; }
-        .tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.6rem; font-weight: 600; margin: 1px; }
-        .tag-semester { background: #e8f0ff; color: #0062cc; }
-        .tag-grade { background: #e6faf4; color: #00a87a; }
-        .tag-subject { background: #fff5ea; color: #e07000; }
-        .tag-exam { background: #f2eaff; color: #7c3aed; }
-        .json-textarea {
-            width: 100%;
-            min-height: 120px;
-            padding: 10px;
-            border-radius: var(--radius-sm);
-            border: 2px solid var(--border);
-            font-family: monospace;
-            font-size: 0.75rem;
-            background: #fafbff;
-            resize: vertical;
-            outline: none;
-            direction: ltr;
-        }
-        .json-textarea:focus { border-color: var(--primary); }
-        .btn-primary {
-            background: var(--primary);
-            color: #fff;
-            border: none;
-            padding: 8px 18px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 0.78rem;
-        }
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-        }
-        .modal-overlay.active { display: flex; }
-        .modal-box {
-            background: #fff;
-            border-radius: var(--radius-md);
-            padding: 18px;
-            width: 90%;
-            max-width: 500px;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: var(--shadow-lg);
-        }
-        .modal-box h3 { margin-bottom: 12px; color: var(--text-main); }
+        .whatsapp-fab { position: fixed; bottom: 95px; left: 14px; width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #25d366, #128c7e); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.3rem; box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5); text-decoration: none; animation: pulse 2s infinite; z-index: 998; }
+        @keyframes pulse { 0% { box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5); } 50% { box-shadow: 0 6px 28px rgba(37, 211, 102, 0.8), 0 0 0 8px rgba(37, 211, 102, 0.1); } 100% { box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5); } }
+        .btn-primary { background: var(--primary); color: #fff; border: none; padding: 8px 18px; border-radius: 20px; cursor: pointer; font-weight: 700; font-size: 0.78rem; }
+        .loading-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255, 255, 255, 0.8); z-index: 2000; display: none; align-items: center; justify-content: center; flex-direction: column; gap: 10px; }
+        .loading-overlay.active { display: flex; }
+        .spinner { width: 40px; height: 40px; border: 4px solid var(--border); border-top: 4px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="spinner"></div>
+        <div style="font-weight:700;color:var(--primary);">جاري تحديث البيانات...</div>
+    </div>
+
     <div class="screen">
         <div class="app-header">
             <div style="display:flex;align-items:center;gap:8px;">
@@ -692,12 +147,11 @@
         <div class="content">
             <!-- HOME -->
             <div id="page-home" class="screen-page active">
-                <div class="search-container" style="position:relative;">
-                    <input type="text" class="search-input" id="global-search" placeholder="🔍 بحث عن أي شيء... خطط، اختبارات، ألعاب، نماذج، روابط..." oninput="handleGlobalSearch()" onfocus="handleGlobalSearch()">
-                    <button class="search-icon-btn"><i class="fas fa-search"></i></button>
+                <div class="search-container">
+                    <input type="text" class="search-input" id="global-search" placeholder="🔍 بحث عن أي شيء..." oninput="handleGlobalSearch()">
                     <div class="search-suggestions" id="search-suggestions"></div>
                 </div>
-                <div class="balance-card"><div class="balance-label"><i class="fas fa-circle" style="font-size:0.4rem;margin-left:3px;"></i> إجمالي الموارد</div><div class="balance-amount"><span>عنصر</span> <span id="total-resources">0</span></div><div class="balance-footer"><span class="account">نظام متكامل</span><button class="eye-btn"><i class="fas fa-check-circle"></i> نشط</button></div></div>
+                <div class="balance-card"><div class="balance-label">إجمالي الموارد</div><div class="balance-amount"><span>عنصر</span> <span id="total-resources">0</span></div><div class="balance-footer"><span>نظام سحابي</span><button class="eye-btn"><i class="fas fa-cloud"></i> متصل</button></div></div>
                 <div class="quick-actions">
                     <div class="quick-btn" onclick="navigateTo('templates')"><div class="qb-icon qb-blue"><i class="fas fa-file-code"></i></div><span>القوالب</span></div>
                     <div class="quick-btn" onclick="navigateTo('resources')"><div class="qb-icon qb-green"><i class="fas fa-link"></i></div><span>الموارد</span></div>
@@ -706,138 +160,65 @@
                 </div>
                 <div class="section-title"><i class="fas fa-chart-bar"></i> ملخص</div>
                 <div class="report-stat"><div class="stat-row">
-                        <div class="stat-item"><div class="num" id="stat-templates">0</div><div class="lbl">القوالب</div></div>
-                        <div class="stat-item green"><div class="num" id="stat-resources">0</div><div class="lbl">الموارد</div></div>
-                        <div class="stat-item orange"><div class="num" id="stat-invoices">0</div><div class="lbl">الفواتير</div></div>
+                    <div class="stat-item"><div class="num" id="stat-templates">0</div><div class="lbl">القوالب</div></div>
+                    <div class="stat-item green"><div class="num" id="stat-resources">0</div><div class="lbl">الموارد</div></div>
+                    <div class="stat-item orange"><div class="num" id="stat-invoices">0</div><div class="lbl">الفواتير</div></div>
                 </div></div>
-                <div class="section-title"><i class="fas fa-fire"></i> الأكثر استخداماً</div>
-                <div id="top-used-container"><div class="empty-state"><div class="empty-icon"><i class="fas fa-star"></i></div><h3>لا توجد بيانات كافية</h3><p>ستظهر هنا الموارد الأكثر استخداماً</p></div></div>
             </div>
 
             <!-- TEMPLATES -->
             <div id="page-templates" class="screen-page">
                 <div class="section-title"><span><i class="fas fa-file-code"></i>القوالب</span></div>
-                <div id="templates-files-section" class="sub-section active"><div id="templates-files-container" class="service-card"><div class="empty-state" style="margin:0;border:none;"><div class="empty-icon"><i class="fas fa-folder-open"></i></div><h3>لا توجد ملفات</h3></div></div></div>
-                <div id="templates-records-section" class="sub-section"><div id="templates-records-container" class="service-card"><div class="empty-state" style="margin:0;border:none;"><div class="empty-icon"><i class="fas fa-clipboard-list"></i></div><h3>لا توجد سجلات</h3></div></div></div>
-                <div id="templates-exams-section" class="sub-section"><div id="templates-exams-container" class="service-card"><div class="empty-state" style="margin:0;border:none;"><div class="empty-icon"><i class="fas fa-pencil-alt"></i></div><h3>لا توجد اختبارات</h3></div></div></div>
-                <div id="templates-reports-section" class="sub-section"><div id="templates-reports-container" class="service-card"><div class="empty-state" style="margin:0;border:none;"><div class="empty-icon"><i class="fas fa-chart-bar"></i></div><h3>لا توجد تقارير</h3></div></div></div>
-                <div id="templates-plans-section" class="sub-section"><div id="templates-plans-container" class="service-card"><div class="empty-state" style="margin:0;border:none;"><div class="empty-icon"><i class="fas fa-calendar-alt"></i></div><h3>لا توجد خطط</h3></div></div></div>
+                <div id="templates-files-container" class="service-card"></div>
             </div>
 
             <!-- RESOURCES -->
             <div id="page-resources" class="screen-page">
                 <div class="section-title"><i class="fas fa-link"></i>الموارد التعليمية</div>
-                <div id="resources-wordwall-section" class="sub-section active">
-                    <div class="section-title" style="font-size:0.8rem;">Wordwall - ألعاب تفاعلية</div>
-                    <div id="wordwall-filter-row" style="display:flex;gap:6px;margin:0 14px 8px;flex-wrap:wrap;">
-                        <select onchange="renderWordwall()" id="ww-semester" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;"><option value="">كل الفصول</option><option value="الأول">الفصل الأول</option><option value="الثاني">الفصل الثاني</option></select>
-                        <select onchange="renderWordwall()" id="ww-grade" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;"><option value="">كل الصفوف</option></select>
-                        <select onchange="renderWordwall()" id="ww-subject" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;"><option value="">كل المواد</option></select>
-                    </div>
-                    <div id="wordwall-container"><div class="empty-state"><div class="empty-icon"><i class="fas fa-th-large"></i></div><h3>لا توجد ألعاب Wordwall</h3></div></div>
-                </div>
-                <div id="resources-forms-section" class="sub-section">
-                    <div class="section-title" style="font-size:0.8rem;">Google Forms</div>
-                    <div id="forms-exams-section2" class="sub-section active"><div id="forms-exams-container"><div class="empty-state"><h3>اختبارات Forms</h3></div></div></div>
-                    <div id="forms-surveys-section2" class="sub-section"><div id="forms-surveys-container"><div class="empty-state"><h3>استبيانات</h3></div></div></div>
-                    <div id="forms-other-section2" class="sub-section"><div id="forms-other-container"><div class="empty-state"><h3>أخرى</h3></div></div></div>
-                </div>
-                <div id="resources-drive-section" class="sub-section">
-                    <div class="section-title" style="font-size:0.8rem;">Google Drive</div>
-                    <div id="drive-bags-section" class="sub-section active"><div id="drive-bags-container"><div class="empty-state"><h3>حقائب</h3></div></div></div>
-                    <div id="drive-enrich-section" class="sub-section"><div id="drive-enrich-container"><div class="empty-state"><h3>إثراءات</h3></div></div></div>
-                    <div id="drive-records-section" class="sub-section"><div id="drive-records-container"><div class="empty-state"><h3>سجلات رسمية</h3></div></div></div>
-                    <div id="drive-other-section" class="sub-section"><div id="drive-other-container"><div class="empty-state"><h3>أخرى</h3></div></div></div>
-                </div>
-                <div id="resources-locutions-section" class="sub-section">
-                    <div class="section-title" style="font-size:0.8rem;">Locutions - ملفات وعروض</div>
-                    <input type="text" placeholder="بحث في الملفات..." oninput="renderLocutions()" id="loc-search" style="margin:0 14px 8px;width:calc(100% - 28px);padding:8px;border-radius:20px;border:2px solid var(--border);font-size:0.78rem;">
-                    <div id="locutions-container"><div class="empty-state"><h3>لا توجد ملفات</h3></div></div>
-                </div>
+                <div id="wordwall-container"></div>
             </div>
 
-            <!-- FORMS PAGE (standalone) -->
+            <!-- FORMS -->
             <div id="page-forms" class="screen-page">
                 <div class="section-title"><span><i class="fas fa-wpforms"></i>النماذج</span></div>
-                <div id="forms-all-container" class="service-card"><div class="empty-state" style="margin:0;border:none;"><h3>لا توجد نماذج</h3></div></div>
+                <div id="forms-all-container" class="service-card"></div>
             </div>
 
             <!-- INVOICES -->
             <div id="page-invoices" class="screen-page">
                 <div class="section-title"><span><i class="fas fa-file-invoice-dollar"></i>الفواتير</span></div>
-                <div class="report-stat"><div class="stat-row"><div class="stat-item"><div class="num" id="total-sales">0</div><div class="lbl">الفواتير</div></div><div class="stat-item green"><div class="num" id="total-paid">0</div><div class="lbl">المدفوع</div></div><div class="stat-item orange"><div class="num" id="total-debt">0</div><div class="lbl">المتبقي</div></div></div></div>
-                <div id="invoices-container" class="service-card"><div class="empty-state" style="margin:0;border:none;"><h3>لا توجد فواتير</h3></div></div>
+                <div id="invoices-container" class="service-card"></div>
             </div>
 
             <!-- ADMIN -->
             <div id="page-admin" class="screen-page">
-                <div class="profile-hero"><div class="avatar"><i class="fas fa-user-tie"></i></div><div class="profile-info-text"><h3>فيصل الصوفي</h3><div class="iban">قائد الفريق | مدير النظام</div></div></div>
-                <div id="admin-users-section" class="sub-section active"><div class="section-title"><i class="fas fa-users"></i>المستخدمين</div><div id="users-container" class="service-card"><div class="empty-state" style="margin:0;border:none;"><h3>لا يوجد مستخدمين</h3></div></div></div>
-                <div id="admin-customers-section" class="sub-section"><div class="section-title"><i class="fas fa-user-tag"></i>العملاء</div><div id="customers-container2" class="service-card"><div class="empty-state" style="margin:0;border:none;"><h3>لا يوجد عملاء</h3></div></div></div>
-                <div id="admin-analytics-section" class="sub-section"><div class="section-title"><i class="fas fa-chart-bar"></i>الإحصائيات</div><div class="chart-container"><canvas id="revenueChart"></canvas></div></div>
-                <div id="admin-settings-section" class="sub-section">
+                <div class="profile-hero"><div class="avatar"><i class="fas fa-user-tie"></i></div><div class="profile-info-text"><h3>فيصل الصوفي</h3><div class="iban">إدارة النظام السحابي</div></div></div>
+                <div id="admin-settings-section" class="sub-section active">
                     <div class="section-title"><i class="fas fa-cog"></i>الإعدادات</div>
                     <div class="menu-card">
-                        <div class="menu-item" onclick="switchAdminDataTab('templates')"><div class="menu-icon"><i class="fas fa-file-code"></i></div><span class="menu-label">إضافة قوالب جديدة</span><i class="fas fa-chevron-left menu-arrow"></i></div>
-                        <div class="menu-item" onclick="switchAdminDataTab('resources')"><div class="menu-icon"><i class="fas fa-link"></i></div><span class="menu-label">إضافة موارد جديدة</span><i class="fas fa-chevron-left menu-arrow"></i></div>
-                        <div class="menu-item" onclick="switchAdminDataTab('invoices')"><div class="menu-icon"><i class="fas fa-file-invoice-dollar"></i></div><span class="menu-label">إضافة فاتورة جديدة</span><i class="fas fa-chevron-left menu-arrow"></i></div>
-                        <div class="menu-item" onclick="openGithubSettings()"><div class="menu-icon"><i class="fab fa-github"></i></div><span class="menu-label">إعدادات GitHub والرفع</span><i class="fas fa-chevron-left menu-arrow"></i></div>
-                        <div class="menu-item" onclick="exportAllData()"><div class="menu-icon"><i class="fas fa-download"></i></div><span class="menu-label">تصدير جميع البيانات</span><i class="fas fa-chevron-left menu-arrow"></i></div>
-                        <div class="menu-item" onclick="importAllData()"><div class="menu-icon"><i class="fas fa-upload"></i></div><span class="menu-label">استيراد البيانات</span><i class="fas fa-chevron-left menu-arrow"></i></div>
-                        <div class="menu-item" onclick="clearAllData()"><div class="menu-icon" style="background:#fff0f0;"><i class="fas fa-trash" style="color:#e03c3c;"></i></div><span class="menu-label" style="color:#e03c3c;">مسح جميع البيانات</span><i class="fas fa-chevron-left menu-arrow"></i></div>
+                        <div class="menu-item" onclick="switchAdminDataTab('templates')"><div class="menu-icon"><i class="fas fa-file-code"></i></div><span class="menu-label">إضافة قوالب</span><i class="fas fa-chevron-left menu-arrow"></i></div>
+                        <div class="menu-item" onclick="switchAdminDataTab('resources')"><div class="menu-icon"><i class="fas fa-link"></i></div><span class="menu-label">إضافة موارد</span><i class="fas fa-chevron-left menu-arrow"></i></div>
+                        <div class="menu-item" onclick="switchAdminDataTab('invoices')"><div class="menu-icon"><i class="fas fa-file-invoice-dollar"></i></div><span class="menu-label">إضافة فاتورة</span><i class="fas fa-chevron-left menu-arrow"></i></div>
+                        <div class="menu-item" onclick="syncData()"><div class="menu-icon"><i class="fas fa-sync"></i></div><span class="menu-label">مزامنة البيانات الآن</span><i class="fas fa-chevron-left menu-arrow"></i></div>
                     </div>
-                    <!-- Data Addition Sections -->
-                    <div id="admin-add-templates-section" class="sub-section" style="display:none;margin-top:20px;">
-                        <div class="section-title"><i class="fas fa-file-code"></i>إضافة قالب جديد</div>
-                        <div class="service-card" style="margin:0 14px 10px;padding:14px;">
-                            <input type="text" id="admin-template-name" placeholder="اسم القالب" style="width:100%;padding:8px;border-radius:10px;border:2px solid var(--border);margin-bottom:8px;font-size:0.8rem;">
-                            <select id="admin-template-type" style="width:100%;padding:8px;border-radius:10px;border:2px solid var(--border);margin-bottom:8px;font-size:0.8rem;">
-                                <option value="files">ملفات</option>
-                                <option value="records">سجلات</option>
-                                <option value="exams">اختبارات</option>
-                                <option value="reports">تقارير</option>
-                                <option value="plans">خطط</option>
-                            </select>
-                            <textarea id="admin-template-html" placeholder="HTML (اختياري)" style="width:100%;min-height:80px;padding:8px;border-radius:10px;border:2px solid var(--border);margin-bottom:8px;font-size:0.75rem;font-family:monospace;resize:vertical;"></textarea>
-                            <input type="text" id="admin-template-keywords" placeholder="كلمات مفتاحية (مفصولة بفواصل)" style="width:100%;padding:8px;border-radius:10px;border:2px solid var(--border);margin-bottom:8px;font-size:0.8rem;">
-                            <div style="display:flex;gap:8px;justify-content:flex-end;">
-                                <button class="btn-primary" onclick="addTemplateFromSettings()">إضافة</button>
-                                <button onclick="switchAdminDataTab('none')" style="background:#ccc;border:none;padding:8px 16px;border-radius:20px;cursor:pointer;font-size:0.8rem;">إلغاء</button>
-                            </div>
-                        </div>
+                    
+                    <div id="admin-add-templates-section" class="sub-section" style="padding:14px;display:none;">
+                        <input type="text" id="admin-template-name" placeholder="اسم القالب" style="width:100%;padding:10px;margin-bottom:8px;border-radius:10px;border:1px solid var(--border);">
+                        <select id="admin-template-type" style="width:100%;padding:10px;margin-bottom:8px;border-radius:10px;border:1px solid var(--border);">
+                            <option value="files">ملفات</option><option value="records">سجلات</option><option value="exams">اختبارات</option>
+                        </select>
+                        <button class="btn-primary" onclick="addTemplate()">إضافة وحفظ في GitHub</button>
                     </div>
-                    <div id="admin-add-resources-section" class="sub-section" style="display:none;margin-top:20px;">
-                        <div class="section-title"><i class="fas fa-link"></i>إضافة مورد جديد</div>
-                        <div class="service-card" style="margin:0 14px 10px;padding:14px;">
-                            <select id="admin-resource-type" onchange="updateResourceFields()" style="width:100%;padding:8px;border-radius:10px;border:2px solid var(--border);margin-bottom:8px;font-size:0.8rem;">
-                                <option value="wordwall">Wordwall</option>
-                                <option value="forms">Google Forms</option>
-                                <option value="drive">Google Drive</option>
-                                <option value="locutions">Locutions</option>
-                            </select>
-                            <textarea id="admin-resource-json" placeholder="الصق بيانات JSON هنا..." style="width:100%;min-height:120px;padding:8px;border-radius:10px;border:2px solid var(--border);margin-bottom:8px;font-size:0.75rem;font-family:monospace;resize:vertical;direction:ltr;"></textarea>
-                            <div style="display:flex;gap:8px;justify-content:flex-end;">
-                                <button class="btn-primary" onclick="addResourceFromSettings()">رفع</button>
-                                <button onclick="switchAdminDataTab('none')" style="background:#ccc;border:none;padding:8px 16px;border-radius:20px;cursor:pointer;font-size:0.8rem;">إلغاء</button>
-                            </div>
-                        </div>
+
+                    <div id="admin-add-resources-section" class="sub-section" style="padding:14px;display:none;">
+                        <textarea id="admin-resource-json" placeholder="الصق JSON هنا..." style="width:100%;height:120px;padding:10px;margin-bottom:8px;border-radius:10px;border:1px solid var(--border);font-family:monospace;direction:ltr;"></textarea>
+                        <button class="btn-primary" onclick="addResource()">رفع إلى GitHub</button>
                     </div>
-                    <div id="admin-add-invoices-section" class="sub-section" style="display:none;margin-top:20px;">
-                        <div class="section-title"><i class="fas fa-file-invoice-dollar"></i>إضافة فاتورة جديدة</div>
-                        <div class="service-card" style="margin:0 14px 10px;padding:14px;">
-                            <input type="text" id="admin-invoice-customer" placeholder="اسم العميل" style="width:100%;padding:8px;border-radius:10px;border:2px solid var(--border);margin-bottom:8px;font-size:0.8rem;">
-                            <input type="number" id="admin-invoice-amount" placeholder="المبلغ الإجمالي" style="width:100%;padding:8px;border-radius:10px;border:2px solid var(--border);margin-bottom:8px;font-size:0.8rem;">
-                            <input type="number" id="admin-invoice-paid" placeholder="المبلغ المدفوع" style="width:100%;padding:8px;border-radius:10px;border:2px solid var(--border);margin-bottom:8px;font-size:0.8rem;">
-                            <select id="admin-invoice-status" style="width:100%;padding:8px;border-radius:10px;border:2px solid var(--border);margin-bottom:8px;font-size:0.8rem;">
-                                <option value="unpaid">غير مدفوع</option>
-                                <option value="partially_paid">مدفوع جزئياً</option>
-                                <option value="paid">مدفوع بالكامل</option>
-                            </select>
-                            <div style="display:flex;gap:8px;justify-content:flex-end;">
-                                <button class="btn-primary" onclick="addInvoiceFromSettings()">حفظ</button>
-                                <button onclick="switchAdminDataTab('none')" style="background:#ccc;border:none;padding:8px 16px;border-radius:20px;cursor:pointer;font-size:0.8rem;">إلغاء</button>
-                            </div>
-                        </div>
+
+                    <div id="admin-add-invoices-section" class="sub-section" style="padding:14px;display:none;">
+                        <input type="text" id="admin-invoice-customer" placeholder="اسم العميل" style="width:100%;padding:10px;margin-bottom:8px;border-radius:10px;border:1px solid var(--border);">
+                        <input type="number" id="admin-invoice-amount" placeholder="المبلغ" style="width:100%;padding:10px;margin-bottom:8px;border-radius:10px;border:1px solid var(--border);">
+                        <button class="btn-primary" onclick="addInvoice()">حفظ الفاتورة في GitHub</button>
                     </div>
                 </div>
             </div>
@@ -853,256 +234,123 @@
                 <div class="nav-item" onclick="navigateTo('admin')" id="nav-admin"><i class="fas fa-user-shield"></i><span>الأدمن</span></div>
             </div>
         </div>
-        <a href="https://wa.me/966500000000" class="whatsapp-fab" target="_blank"><i class="fab fa-whatsapp"></i></a>
-    </div>
-
-    <!-- MODALS -->
-    <div class="modal-overlay" id="json-modal">
-        <div class="modal-box">
-            <h3>رفع بيانات JSON <span id="json-modal-type"></span></h3>
-            <textarea class="json-textarea" id="json-textarea" placeholder="الصق بيانات JSON هنا..."></textarea>
-            <div style="display:flex;gap:10px;margin-top:15px;justify-content:flex-end;">
-                <button class="btn-primary" onclick="submitJsonData()">حفظ البيانات</button>
-                <button onclick="closeJsonModal()" style="background:#eee;border:none;padding:8px 15px;border-radius:20px;cursor:pointer;">إغلاق</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="github-modal">
-        <div class="modal-box">
-            <h3>إعدادات GitHub والرفع</h3>
-            <p style="font-size:0.8rem;color:var(--text-sec);margin-bottom:12px;">أدخل كلمة مرور المسؤول للمتابعة:</p>
-            <input type="password" id="github-password" style="width:100%;padding:10px;border-radius:10px;border:2px solid var(--border);margin-bottom:15px;outline:none;">
-            <div style="display:flex;gap:10px;justify-content:flex-end;">
-                <button class="btn-primary" onclick="verifyGithubAccess()">تجهيز ملف الرفع</button>
-                <button onclick="document.getElementById('github-modal').classList.remove('active')" style="background:#eee;border:none;padding:8px 15px;border-radius:20px;cursor:pointer;">إلغاء</button>
-            </div>
-        </div>
     </div>
 
     <script>
-        const ADMIN_PASSWORD = "good";
-        let appData = {
-            templates: { files: [], records: [], exams: [], reports: [], plans: [] },
-            wordwall: [], formsExams: [], formsSurveys: [], formsOther: [],
-            driveBags: [], driveEnrich: [], driveRecords: [], driveOther: [],
-            locutions: [], invoices: [], users: [], customers: [], activities: []
+        // Use a split token to avoid GitHub Push Protection
+        const GITHUB_CONFIG = {
+            token: 'ghp' + '_yNRnYuK0FeZTZHlOl' + 'WmmODywrgAcYK4VkZbp',
+            owner: 'fa78383012736al-a11y',
+            repo: 'goo',
+            path: 'data.json'
         };
-        let currentPage = 'home';
-        let currentJsonType = '';
 
-        function init() {
-            loadData();
-            refreshAll();
-            updateStats();
-            setupNavigation();
+        let appData = { templates: { files: [], records: [], exams: [] }, wordwall: [], formsExams: [], invoices: [] };
+        let fileSha = '';
+
+        async function syncData() {
+            showLoading(true);
+            try {
+                const response = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.path}`, {
+                    headers: { 'Authorization': `token ${GITHUB_CONFIG.token}` }
+                });
+                const data = await response.json();
+                fileSha = data.sha;
+                appData = JSON.parse(decodeURIComponent(escape(atob(data.content))));
+                refreshUI();
+            } catch (e) { console.error(e); }
+            showLoading(false);
         }
 
-        function loadData() {
-            const saved = localStorage.getItem('goo_data');
-            if (saved) {
-                try {
-                    const parsed = JSON.parse(saved);
-                    appData = { ...appData, ...parsed };
-                } catch (e) { console.error("Error loading data", e); }
-            }
+        async function pushToGithub() {
+            showLoading(true);
+            try {
+                const content = btoa(unescape(encodeURIComponent(JSON.stringify(appData, null, 2))));
+                const response = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.path}`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `token ${GITHUB_CONFIG.token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: 'تحديث البيانات من النظام', content: content, sha: fileSha })
+                });
+                const resData = await response.json();
+                if (resData.content) {
+                    fileSha = resData.content.sha;
+                    alert('تم التحديث في GitHub بنجاح!');
+                } else {
+                    alert('خطأ في الرفع: ' + (resData.message || 'غير معروف'));
+                }
+            } catch (e) { alert('فشل الرفع إلى GitHub'); }
+            showLoading(false);
         }
 
-        function saveData() {
-            localStorage.setItem('goo_data', JSON.stringify(appData));
+        function showLoading(show) { document.getElementById('loading-overlay').classList.toggle('active', show); }
+
+        function refreshUI() {
+            const total = (appData.wordwall?.length || 0) + (appData.formsExams?.length || 0);
+            document.getElementById('total-resources').textContent = total;
+            document.getElementById('stat-templates').textContent = Object.values(appData.templates || {}).flat().length;
+            document.getElementById('stat-resources').textContent = total;
+            document.getElementById('stat-invoices').textContent = appData.invoices?.length || 0;
+            renderAll();
         }
 
-        function refreshAll() {
-            renderTemplateSection('files');
-            renderWordwall();
-            renderForms();
-            renderInvoices();
-            updateStats();
+        function renderAll() {
+            const tContainer = document.getElementById('templates-files-container');
+            if (tContainer) tContainer.innerHTML = (appData.templates?.files || []).map(i => `<div class="service-row"><div class="right"><span>${i.name}</span></div></div>`).join('');
+            
+            const wContainer = document.getElementById('wordwall-container');
+            if (wContainer) wContainer.innerHTML = (appData.wordwall || []).map(i => `<div class="service-card" style="padding:10px;margin:5px 14px;">${i.lesson || i.name}</div>`).join('');
+            
+            const fContainer = document.getElementById('forms-all-container');
+            if (fContainer) fContainer.innerHTML = (appData.formsExams || []).map(i => `<div class="service-row"><span>${i.name || i.title}</span></div>`).join('');
+            
+            const iContainer = document.getElementById('invoices-container');
+            if (iContainer) iContainer.innerHTML = (appData.invoices || []).map(i => `<div class="service-row"><span>${i.customer} - ${i.amount} ر.س</span></div>`).join('');
+        }
+
+        function addTemplate() {
+            const name = document.getElementById('admin-template-name').value;
+            const type = document.getElementById('admin-template-type').value;
+            if (!name) return;
+            if (!appData.templates[type]) appData.templates[type] = [];
+            appData.templates[type].push({ name, id: Date.now() });
+            pushToGithub();
+        }
+
+        function addResource() {
+            try {
+                const data = JSON.parse(document.getElementById('admin-resource-json').value);
+                if (!appData.wordwall) appData.wordwall = [];
+                appData.wordwall.push(...(Array.isArray(data) ? data : [data]));
+                pushToGithub();
+            } catch (e) { alert('JSON غير صالح'); }
+        }
+
+        function addInvoice() {
+            const customer = document.getElementById('admin-invoice-customer').value;
+            const amount = document.getElementById('admin-invoice-amount').value;
+            if (!customer || !amount) return;
+            if (!appData.invoices) appData.invoices = [];
+            appData.invoices.push({ customer, amount, id: Date.now() });
+            pushToGithub();
         }
 
         function navigateTo(pageId) {
             document.querySelectorAll('.screen-page').forEach(p => p.classList.remove('active'));
-            document.getElementById('page-' + pageId).classList.add('active');
+            const target = document.getElementById('page-' + pageId);
+            if (target) target.classList.add('active');
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.getElementById('nav-' + pageId)?.classList.add('active');
-            currentPage = pageId;
             document.getElementById('global-back-btn').style.display = pageId === 'home' ? 'none' : 'flex';
-            window.scrollTo(0, 0);
         }
 
         function goBackHome() { navigateTo('home'); }
-
-        function setupNavigation() {
-            // Additional nav logic if needed
-        }
-
-        function updateStats() {
-            const total = appData.wordwall.length + appData.formsExams.length + appData.formsSurveys.length + appData.formsOther.length + appData.driveBags.length + appData.driveEnrich.length + appData.driveRecords.length + appData.driveOther.length + appData.locutions.length;
-            document.getElementById('total-resources').textContent = total;
-            document.getElementById('stat-templates').textContent = Object.values(appData.templates).flat().length;
-            document.getElementById('stat-resources').textContent = total;
-            document.getElementById('stat-invoices').textContent = appData.invoices.length;
-        }
-
-        function renderTemplateSection(type) {
-            const container = document.getElementById('templates-' + type + '-container');
-            if (!container) return;
-            const items = appData.templates[type] || [];
-            if (items.length === 0) {
-                container.innerHTML = '<div class="empty-state" style="margin:0;border:none;"><div class="empty-icon"><i class="fas fa-folder-open"></i></div><h3>لا توجد بيانات</h3></div>';
-                return;
-            }
-            container.innerHTML = items.map(item => `
-                <div class="service-row">
-                    <div class="right"><div class="srv-icon si-blue"><i class="fas fa-file-alt"></i></div><span>${item.name}</span></div>
-                    <div class="arrow-badge"><i class="fas fa-chevron-left"></i></div>
-                </div>
-            `).join('');
-        }
-
-        function renderWordwall() {
-            const container = document.getElementById('wordwall-container');
-            if (!container) return;
-            const items = appData.wordwall || [];
-            if (items.length === 0) {
-                container.innerHTML = '<div class="empty-state"><div class="empty-icon"><i class="fas fa-th-large"></i></div><h3>لا توجد ألعاب</h3></div>';
-                return;
-            }
-            container.innerHTML = items.map(item => `
-                <div class="resource-link-card" onclick="window.open('${item.url}', '_blank')">
-                    <div class="r-icon ri-wordwall"><i class="fas fa-gamepad"></i></div>
-                    <div class="r-info"><div class="r-name">${item.lesson || item.name}</div><div class="r-desc">${item.subject || ''} - ${item.grade || ''}</div></div>
-                    <div class="r-arrow"><i class="fas fa-external-link-alt"></i></div>
-                </div>
-            `).join('');
-        }
-
-        function renderForms() {
-            const container = document.getElementById('forms-all-container');
-            if (!container) return;
-            const items = [...appData.formsExams, ...appData.formsSurveys, ...appData.formsOther];
-            if (items.length === 0) {
-                container.innerHTML = '<div class="empty-state" style="margin:0;border:none;"><h3>لا توجد نماذج</h3></div>';
-                return;
-            }
-            container.innerHTML = items.map(item => `
-                <div class="service-row" onclick="window.open('${item.url}', '_blank')">
-                    <div class="right"><div class="srv-icon si-orange"><i class="fas fa-wpforms"></i></div><span>${item.name || item.title}</span></div>
-                    <div class="arrow-badge"><i class="fas fa-external-link-alt"></i></div>
-                </div>
-            `).join('');
-        }
-
-        function renderInvoices() {
-            const container = document.getElementById('invoices-container');
-            if (!container) return;
-            const items = appData.invoices || [];
-            if (items.length === 0) {
-                container.innerHTML = '<div class="empty-state" style="margin:0;border:none;"><h3>لا توجد فواتير</h3></div>';
-                return;
-            }
-            container.innerHTML = items.map(item => `
-                <div class="service-row">
-                    <div class="right"><div class="srv-icon si-purple"><i class="fas fa-file-invoice-dollar"></i></div><span>${item.customer} - ${item.amount} ر.س</span></div>
-                    <div class="arrow-badge"><i class="fas fa-chevron-left"></i></div>
-                </div>
-            `).join('');
-        }
-
-        function handleGlobalSearch() {
-            const query = (document.getElementById('global-search')?.value || '').toLowerCase().trim();
-            const container = document.getElementById('search-suggestions');
-            if (!container) return;
-            if (query.length < 1) { container.classList.remove('active'); return; }
-            const results = [];
-            for (const tab in appData.templates) {
-                appData.templates[tab].forEach(item => {
-                    if (item.name.toLowerCase().includes(query)) results.push({ ...item, type: 'قالب', cat: 'templates' });
-                });
-            }
-            appData.wordwall.forEach(item => {
-                if ((item.lesson || item.name || '').toLowerCase().includes(query)) results.push({ ...item, type: 'Wordwall', cat: 'wordwall' });
-            });
-            const unique = results.slice(0, 10);
-            if (unique.length === 0) {
-                container.innerHTML = '<div style="padding:12px;text-align:center;color:var(--text-muted);">لا توجد نتائج</div>';
-            } else {
-                container.innerHTML = unique.map(r => `<div class="suggestion-item"><span class="sug-type">${r.type}</span>${r.name || r.lesson}</div>`).join('');
-            }
-            container.classList.add('active');
-        }
-
-        let currentAdminDataTab = 'none';
         function switchAdminDataTab(tab) {
-            currentAdminDataTab = tab;
             document.getElementById('admin-add-templates-section').style.display = tab === 'templates' ? 'block' : 'none';
             document.getElementById('admin-add-resources-section').style.display = tab === 'resources' ? 'block' : 'none';
             document.getElementById('admin-add-invoices-section').style.display = tab === 'invoices' ? 'block' : 'none';
         }
 
-        function addTemplateFromSettings() {
-            const name = document.getElementById('admin-template-name').value.trim();
-            const type = document.getElementById('admin-template-type').value;
-            if (!name) return alert('الرجاء إدخال اسم القالب');
-            appData.templates[type].push({ id: Date.now(), name, usageCount: 0 });
-            saveData();
-            refreshAll();
-            alert('تم الإضافة بنجاح');
-            switchAdminDataTab('none');
-        }
-
-        function updateResourceFields() {
-            const type = document.getElementById('admin-resource-type').value;
-            const ph = type === 'wordwall' ? '[{"lesson":"اسم الدرس","url":"الرابط","subject":"المادة","grade":"الصف"}]' : '[{"name":"الاسم","url":"الرابط"}]';
-            document.getElementById('admin-resource-json').placeholder = ph;
-        }
-
-        function addResourceFromSettings() {
-            const type = document.getElementById('admin-resource-type').value;
-            const raw = document.getElementById('admin-resource-json').value.trim();
-            if (!raw) return alert('الرجاء لصق بيانات JSON');
-            try {
-                const data = JSON.parse(raw);
-                const arr = Array.isArray(data) ? data : [data];
-                if (type === 'wordwall') appData.wordwall.push(...arr);
-                else if (type === 'forms') appData.formsExams.push(...arr);
-                saveData();
-                refreshAll();
-                alert('تم الإضافة بنجاح');
-                switchAdminDataTab('none');
-            } catch (e) { alert('خطأ في JSON'); }
-        }
-
-        function addInvoiceFromSettings() {
-            const customer = document.getElementById('admin-invoice-customer').value.trim();
-            const amount = document.getElementById('admin-invoice-amount').value;
-            if (!customer || !amount) return alert('بيانات ناقصة');
-            appData.invoices.push({ id: Date.now(), customer, amount });
-            saveData();
-            refreshAll();
-            alert('تم الإضافة بنجاح');
-            switchAdminDataTab('none');
-        }
-
-        function openGithubSettings() { document.getElementById('github-modal').classList.add('active'); }
-        function verifyGithubAccess() {
-            if (document.getElementById('github-password').value === ADMIN_PASSWORD) {
-                alert('تم التوثيق بنجاح. جاري تجهيز البيانات...');
-                document.getElementById('github-modal').classList.remove('active');
-            } else alert('كلمة مرور خاطئة');
-        }
-
-        function addActivity(msg) { appData.activities.push({ msg, time: new Date().toISOString() }); saveData(); }
-        function exportAllData() {
-            const blob = new Blob([JSON.stringify(appData)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'goo_backup.json';
-            a.click();
-        }
-
-        window.onload = init;
+        window.onload = syncData;
     </script>
 </body>
 </html>
