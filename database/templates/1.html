@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>نظام GOO - إدارة الأعمال التعليمية</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js">
+    </script>
+    <style>
+        :root {
+            --primary: #0062cc;
+            --primary-light: #1a8cff;
+            --primary-dark: #004a9e;
+            --accent: #00c896;
+            --bg: #dde6f0;
+            --surface: #ffffff;
+            --surface2: #f4f8fd;
+            --border: #e2ecf7;
+            --text-main: #0a2540;
+            --text-sec: #4a6a8a;
+            --text-muted: #8aaac8;
+            --shadow-sm: 0 2px 12px rgba(0, 98, 204, 0.07);
+            --shadow-md: 0 6px 24px rgba(0, 98, 204, 0.12);
+            --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.14);
+            --radius-sm: 14px;
+            --radius-md: 22px;
+            --radius-lg: 32px;
+            --radius-xl: 44px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            background: var(--bg);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .screen {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            scrollbar-width: none;
+            scroll-behavior: smooth;
+            padding-bottom: 90px;
+        }
+        .screen::-webkit-scrollbar {
+            display: none;
+        }
+
+        .app-header {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 60%, var(--primary-light) 100%);
+            padding: 14px 18px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .app-header::before {
+            content: '';
+            position: absolute;
+            top: -40px;
+            left: -40px;
+            width: 180px;
+            height: 180px;
+            background: rgba(255, 255, 255, 0.07);
+            border-radius: 50%;
+        }
+        .app-header::after {
+            content: '';
+            position: absolute;
+            bottom: -60px;
+            right: -20px;
+            width: 140px;
+            height: 140px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+        }
+        .greeting h2 {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.8);
+            letter-spacing: 0.3px;
+        }
+        .greeting h2 .star {
+            color: #ffd04e;
+        }
+        .greeting p {
+            font-size: 1.1rem;
+            color: #ffffff;
+            font-weight: 700;
+            margin-top: 3px;
+        }
+        .header-badge {
+            background: rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            padding: 7px 14px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.85rem;
+            z-index: 1;
+        }
+        .header-badge i {
+            color: #ffd04e;
+        }
+
+        /* زر الرجوع */
+        .back-button {
+            background: rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            padding: 6px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+            z-index: 2;
+            transition: all 0.2s;
+            margin-left: 10px;
+        }
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.28);
+        }
+        .back-button i {
+            font-size: 1.1rem;
+        }
+
+        .balance-card {
+            background: linear-gradient(135deg, #00b37a 0%, #00c896 50%, #00d9a8 100%);
+            margin: 14px 14px 0;
+            border-radius: var(--radius-md);
+            padding: 16px 18px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0, 200, 150, 0.35);
+        }
+        .balance-card::before {
+            content: '';
+            position: absolute;
+            top: -30px;
+            right: -30px;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .balance-card::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 20px;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.07);
+        }
+        .balance-label {
+            font-size: 0.8rem;
+            opacity: 0.85;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        .balance-amount {
+            font-size: 1.7rem;
+            font-weight: 800;
+            direction: ltr;
+            text-align: right;
+        }
+        .balance-amount span {
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-right: 4px;
+            opacity: 0.85;
+        }
+        .balance-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.25);
+            font-size: 0.78rem;
+        }
+        .balance-footer .account {
+            opacity: 0.8;
+        }
+        .eye-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 30px;
+            color: white;
+            padding: 4px 10px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 8px;
+            margin: 12px 14px 0;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .quick-btn {
+            flex: 1 1 22%;
+            min-width: 70px;
+            background: var(--surface);
+            border-radius: var(--radius-sm);
+            padding: 12px 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid var(--border);
+        }
+        .quick-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        .quick-btn .qb-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+        .quick-btn span {
+            font-size: 0.68rem;
+            font-weight: 600;
+            color: var(--text-main);
+            text-align: center;
+            line-height: 1.3;
+        }
+        .qb-blue {
+            background: #e8f0ff;
+            color: var(--primary);
+        }
+        .qb-green {
+            background: #e6faf4;
+            color: #00a87a;
+        }
+        .qb-orange {
+            background: #fff5ea;
+            color: #e07000;
+        }
+        .qb-purple {
+            background: #f2eaff;
+            color: #7c3aed;
+        }
+
+        .section-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin: 16px 14px 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-title i {
+            width: 26px;
+            height: 26px;
+            border-radius: 8px;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+        }
+        .section-title .see-all {
+            margin-right: auto;
+            font-size: 0.75rem;
+            color: var(--primary);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .service-card {
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            margin: 0 14px 12px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+        .card-header {
+            padding: 12px 16px 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+        .card-header-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8rem;
+        }
+        .card-header-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .service-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            border-bottom: 1px solid #f0f5fc;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .service-row:last-child {
+            border-bottom: none;
+        }
+        .service-row:hover {
+            background: #f8fbff;
+        }
+        .service-row:active {
+            background: #eef4ff;
+        }
+        .service-row .right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+            color: var(--text-main);
+            font-size: 0.88rem;
+        }
+        .srv-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+        .si-blue {
+            background: #e8f0ff;
+            color: var(--primary);
+        }
+        .si-green {
+            background: #e6faf4;
+            color: #00a87a;
+        }
+        .si-orange {
+            background: #fff5ea;
+            color: #e07000;
+        }
+        .si-purple {
+            background: #f2eaff;
+            color: #7c3aed;
+        }
+        .si-red {
+            background: #fff0f0;
+            color: #e03c3c;
+        }
+        .si-teal {
+            background: #e6f6fa;
+            color: #0096b4;
+        }
+
+        .service-row .arrow-badge {
+            width: 26px;
+            height: 26px;
+            border-radius: 8px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+        }
+
+        .empty-state {
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            margin: 0 14px 12px;
+            padding: 32px 18px;
+            text-align: center;
+            border: 2px dashed #d0dff0;
+        }
+        .empty-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--surface2);
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            color: var(--text-muted);
+            border: 2px solid var(--border);
+        }
+        .empty-state h3 {
+            font-size: 0.95rem;
+            color: var(--text-main);
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        .empty-state p {
+            font-size: 0.8rem;
+            color: var(--text-sec);
+            line-height: 1.6;
+        }
+
+        .report-stat {
+            margin: 0 14px 12px;
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            padding: 14px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+        .stat-row {
+            display: flex;
+            gap: 8px;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .stat-item {
+            flex: 1 1 28%;
+            min-width: 70px;
+            text-align: center;
+            padding: 10px;
+            background: var(--surface2);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+        }
+        .stat-item.green {
+            background: #e6faf4;
+            border-color: #b3f0d8;
+        }
+        .stat-item.orange {
+            background: #fff5ea;
+            border-color: #ffd9b3;
+        }
+        .stat-item .num {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+        .stat-item.green .num {
+            color: #00a87a;
+        }
+        .stat-item.orange .num {
+            color: #e07000;
+        }
+        .stat-item .lbl {
+            font-size: 0.7rem;
+            color: var(--text-sec);
+            margin-top: 4px;
+            font-weight: 600;
+        }
+
+        .profile-hero {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            margin: 0 14px 14px;
+            border-radius: var(--radius-md);
+            padding: 18px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+        .profile-hero::after {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 50%;
+        }
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: white;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .profile-info-text h3 {
+            font-size: 0.95rem;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+        .profile-info-text .iban {
+            font-size: 0.73rem;
+            opacity: 0.75;
+            letter-spacing: 0.5px;
+        }
+
+        .menu-card {
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            margin: 0 14px 12px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-bottom: 1px solid #f0f5fc;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+        .menu-item:hover {
+            background: #f8fbff;
+        }
+        .menu-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: var(--primary);
+        }
+        .menu-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-main);
+            flex: 1;
+        }
+        .menu-arrow {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+
+        .content {
+            flex: 1;
+        }
+        .screen-page {
+            display: none;
+            animation: fadeSlide 0.28s ease;
+        }
+        .screen-page.active {
+            display: block;
+        }
+        .sub-section {
+            display: none;
+        }
+        .sub-section.active {
+            display: block;
+        }
+
+        @keyframes fadeSlide {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .plus-tag {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 4px 12px rgba(0, 98, 204, 0.3);
+            cursor: pointer;
+        }
+
+        /* BOTTOM NAV */
+        .bottom-nav-wrapper {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 999;
+            padding: 6px 10px 12px;
+            background: linear-gradient(to top, var(--bg) 70%, transparent);
+            display: none;
+        }
+        .bottom-nav-wrapper.active {
+            display: block;
+        }
+        .bottom-nav {
+            background: var(--surface);
+            border-radius: 28px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 5px 3px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+        }
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            padding: 6px 2px;
+            cursor: pointer;
+            border-radius: 14px;
+            transition: all 0.2s ease;
+            color: var(--text-muted);
+            font-size: 0.6rem;
+            font-weight: 600;
+            text-align: center;
+            min-width: 0;
+        }
+        .nav-item i {
+            font-size: 0.95rem;
+        }
+        .nav-item.active {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+        }
+        .nav-item:active {
+            transform: scale(0.94);
+        }
+
+        /* WHATSAPP FAB */
+        .whatsapp-fab {
+            position: fixed;
+            bottom: 95px;
+            left: 16px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #25d366, #128c7e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5);
+            text-decoration: none;
+            animation: pulse 2s infinite;
+            z-index: 998;
+        }
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5);
+            }
+            50% {
+                box-shadow: 0 6px 28px rgba(37, 211, 102, 0.8), 0 0 0 8px rgba(37, 211, 102, 0.1);
+            }
+            100% {
+                box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5);
+            }
+        }
+
+        .chart-container {
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            margin: 0 14px 12px;
+            padding: 14px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+        .chart-container canvas {
+            max-height: 220px;
+        }
+
+        .resource-link-card {
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            margin: 0 14px 10px;
+            padding: 16px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .resource-link-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-1px);
+        }
+        .resource-link-card .r-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+        .resource-link-card .r-info {
+            flex: 1;
+        }
+        .resource-link-card .r-info .r-name {
+            font-weight: 700;
+            color: var(--text-main);
+            font-size: 0.9rem;
+        }
+        .resource-link-card .r-info .r-desc {
+            font-size: 0.75rem;
+            color: var(--text-sec);
+            margin-top: 2px;
+        }
+        .resource-link-card .r-arrow {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+        .ri-wordwall {
+            background: #e8f0ff;
+            color: #0062cc;
+        }
+        .ri-forms {
+            background: #e6faf4;
+            color: #00a87a;
+        }
+        .ri-drive {
+            background: #fff5ea;
+            color: #e07000;
+        }
+        .ri-locutions {
+            background: #f2eaff;
+            color: #7c3aed;
+        }
+
+        .badge-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-left: 4px;
+        }
+        .bd-green {
+            background: #00c896;
+        }
+        .bd-orange {
+            background: #ff9500;
+        }
+        .bd-red {
+            background: #e03c3c;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="screen">
+        <div class="app-header">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <div class="back-button" id="global-back-btn" onclick="goBackHome()" style="display:none;">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+                <div class="greeting">
+                    <h2>أهلاً وسهلاً <span class="star">★</span></h2>
+                    <p id="app-title">نظام GOO التعليمي</p>
+                </div>
+            </div>
+            <div class="header-badge">
+                <i class="fas fa-graduation-cap"></i>
+                <span>تعليمي</span>
+            </div>
+        </div>
+
+        <div class="content">
+
+            <!-- ══════════════ HOME PAGE ══════════════ -->
+            <div id="page-home" class="screen-page active">
+                <div class="balance-card" style="margin:14px 14px 0;">
+                    <div class="balance-label"><i class="fas fa-circle" style="font-size:0.45rem;margin-left:4px;"></i> إجمالي الأرباح</div>
+                    <div class="balance-amount"><span>ر.س</span> <span id="total-revenue">0</span></div>
+                    <div class="balance-footer">
+                        <span class="account" id="user-info">نظام متكامل</span>
+                        <button class="eye-btn"><i class="fas fa-check-circle"></i> نشط</button>
+                    </div>
+                </div>
+
+                <div class="quick-actions">
+                    <div class="quick-btn" onclick="navigateTo('templates')"><div class="qb-icon qb-blue"><i class="fas fa-file-code"></i></div><span>القوالب</span></div>
+                    <div class="quick-btn" onclick="navigateTo('resources')"><div class="qb-icon qb-green"><i class="fas fa-link"></i></div><span>الموارد</span></div>
+                    <div class="quick-btn" onclick="navigateTo('forms')"><div class="qb-icon qb-orange"><i class="fas fa-wpforms"></i></div><span>النماذج</span></div>
+                    <div class="quick-btn" onclick="navigateTo('invoices')"><div class="qb-icon qb-purple"><i class="fas fa-file-invoice-dollar"></i></div><span>الفواتير</span></div>
+                </div>
+
+                <div class="section-title"><i class="fas fa-chart-bar"></i> ملخص الأداء</div>
+                <div class="report-stat">
+                    <div class="stat-row">
+                        <div class="stat-item"><div class="num" id="stat-templates">0</div><div class="lbl">القوالب</div></div>
+                        <div class="stat-item green"><div class="num" id="stat-customers">0</div><div class="lbl">العملاء</div></div>
+                        <div class="stat-item orange"><div class="num" id="stat-invoices">0</div><div class="lbl">الفواتير</div></div>
+                    </div>
+                </div>
+
+                <div class="section-title"><i class="fas fa-hard-hat"></i> الخدمات الرئيسية</div>
+                <div class="service-card">
+                    <div class="service-row" onclick="navigateTo('templates')"><span class="right"><span class="srv-icon si-blue"><i class="fas fa-file-code"></i></span> إدارة القوالب</span><span class="arrow-badge"><i class="fas fa-chevron-left"></i></span></div>
+                    <div class="service-row" onclick="navigateTo('resources')"><span class="right"><span class="srv-icon si-green"><i class="fas fa-link"></i></span> الموارد التعليمية</span><span class="arrow-badge"><i class="fas fa-chevron-left"></i></span></div>
+                    <div class="service-row" onclick="navigateTo('forms')"><span class="right"><span class="srv-icon si-orange"><i class="fas fa-wpforms"></i></span> النماذج</span><span class="arrow-badge"><i class="fas fa-chevron-left"></i></span></div>
+                    <div class="service-row" onclick="navigateTo('invoices')"><span class="right"><span class="srv-icon si-purple"><i class="fas fa-file-invoice"></i></span> نظام الفواتير</span><span class="arrow-badge"><i class="fas fa-chevron-left"></i></span></div>
+                    <div class="service-row" onclick="navigateTo('admin')"><span class="right"><span class="srv-icon si-red"><i class="fas fa-user-shield"></i></span> لوحة الإدارة</span><span class="arrow-badge"><i class="fas fa-chevron-left"></i></span></div>
+                </div>
+
+                <div class="section-title"><i class="fas fa-history"></i> آخر العمليات <span class="see-all" onclick="navigateTo('admin')">عرض الكل</span></div>
+                <div id="recent-activities-container">
+                    <div class="empty-state"><div class="empty-icon"><i class="fas fa-history"></i></div><h3>لا توجد عمليات بعد</h3><p>ستظهر هنا آخر العمليات التي قمت بها في النظام</p></div>
+                </div>
+            </div>
+
+            <!-- ══════════════ TEMPLATES PAGE ══════════════ -->
+            <div id="page-templates" class="screen-page">
+                <div class="section-title" style="justify-content:space-between;">
+                    <span style="display:flex;align-items:center;gap:8px;"><i class="fas fa-file-code" style="background:var(--primary);"></i> القوالب التعليمية</span>
+                    <span class="plus-tag" onclick="addNewTemplate()"><i class="fas fa-plus"></i> جديد</span>
+                </div>
+                <div id="templates-files-section" class="sub-section active">
+                    <div id="templates-container" class="service-card">
+                        <div class="empty-state" style="margin:0;border:none;"><div class="empty-icon"><i class="fas fa-folder-open"></i></div><h3>لا توجد قوالب بعد</h3><p>ابدأ بإضافة قالب HTML جديد</p></div>
+                    </div>
+                </div>
+                <div id="templates-records-section" class="sub-section">
+                    <div class="empty-state"><div class="empty-icon"><i class="fas fa-clipboard-list"></i></div><h3>السجلات</h3><p>سجل الحضور والمتابعة</p></div>
+                </div>
+                <div id="templates-exams-section" class="sub-section">
+                    <div class="empty-state"><div class="empty-icon"><i class="fas fa-pencil-alt"></i></div><h3>الاختبارات</h3><p>بنك الأسئلة والاختبارات</p></div>
+                </div>
+                <div id="templates-reports-section" class="sub-section">
+                    <div class="empty-state"><div class="empty-icon"><i class="fas fa-chart-bar"></i></div><h3>التقارير</h3><p>تقارير الأداء والتحصيل</p></div>
+                </div>
+                <div id="templates-plans-section" class="sub-section">
+                    <div class="empty-state"><div class="empty-icon"><i class="fas fa-calendar-alt"></i></div><h3>الخطط</h3><p>الخطط الدراسية والمناهج</p></div>
+                </div>
+            </div>
+
+            <!-- ══════════════ RESOURCES PAGE ══════════════ -->
+            <div id="page-resources" class="screen-page">
+                <div class="section-title" style="justify-content:space-between;">
+                    <span style="display:flex;align-items:center;gap:8px;"><i class="fas fa-link" style="background:var(--primary);"></i> الموارد التعليمية</span>
+                    <span class="plus-tag" onclick="addNewResource()"><i class="fas fa-plus"></i> جديد</span>
+                </div>
+                <div id="resources-wordwall-section" class="sub-section active">
+                    <div class="resource-link-card" onclick="window.open('https://wordwall.net/','_blank')">
+                        <div class="r-icon ri-wordwall"><i class="fas fa-th-large"></i></div>
+                        <div class="r-info"><div class="r-name">Wordwall</div><div class="r-desc">منصة الأنشطة التفاعلية والألعاب التعليمية</div></div>
+                        <div class="r-arrow"><i class="fas fa-external-link-alt"></i></div>
+                    </div>
+                </div>
+                <div id="resources-forms-section" class="sub-section">
+                    <div class="resource-link-card" onclick="window.open('https://forms.google.com/','_blank')">
+                        <div class="r-icon ri-forms"><i class="fas fa-wpforms"></i></div>
+                        <div class="r-info"><div class="r-name">Google Forms</div><div class="r-desc">نماذج جمع البيانات والاستبيانات</div></div>
+                        <div class="r-arrow"><i class="fas fa-external-link-alt"></i></div>
+                    </div>
+                </div>
+                <div id="resources-drive-section" class="sub-section">
+                    <div class="resource-link-card" onclick="window.open('https://drive.google.com/','_blank')">
+                        <div class="r-icon ri-drive"><i class="fas fa-cloud"></i></div>
+                        <div class="r-info"><div class="r-name">Google Drive</div><div class="r-desc">التخزين السحابي ومشاركة الملفات</div></div>
+                        <div class="r-arrow"><i class="fas fa-external-link-alt"></i></div>
+                    </div>
+                </div>
+                <div id="resources-locutions-section" class="sub-section">
+                    <div class="resource-link-card">
+                        <div class="r-icon ri-locutions"><i class="fas fa-microphone-alt"></i></div>
+                        <div class="r-info"><div class="r-name">Locutions</div><div class="r-desc">منصة المحاضرات والتسجيلات الصوتية</div></div>
+                        <div class="r-arrow"><i class="fas fa-external-link-alt"></i></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══════════════ FORMS PAGE ══════════════ -->
+            <div id="page-forms" class="screen-page">
+                <div class="section-title" style="justify-content:space-between;">
+                    <span style="display:flex;align-items:center;gap:8px;"><i class="fas fa-wpforms" style="background:var(--primary);"></i> النماذج</span>
+                    <span class="plus-tag"><i class="fas fa-plus"></i> جديد</span>
+                </div>
+                <div id="forms-container" class="service-card">
+                    <div class="empty-state" style="margin:0;border:none;"><div class="empty-icon"><i class="fas fa-wpforms"></i></div><h3>لا توجد نماذج بعد</h3><p>أضف نموذج تقييم أو استبيان جديد</p></div>
+                </div>
+            </div>
+
+            <!-- ══════════════ INVOICES PAGE ══════════════ -->
+            <div id="page-invoices" class="screen-page">
+                <div class="section-title" style="justify-content:space-between;">
+                    <span style="display:flex;align-items:center;gap:8px;"><i class="fas fa-file-invoice-dollar" style="background:var(--primary);"></i> نظام الفواتير</span>
+                    <span class="plus-tag" onclick="addNewInvoice()"><i class="fas fa-plus"></i> جديد</span>
+                </div>
+                <div class="report-stat">
+                    <div class="stat-row">
+                        <div class="stat-item"><div class="num" id="total-sales">0</div><div class="lbl">المبيعات</div></div>
+                        <div class="stat-item green"><div class="num" id="total-paid">0</div><div class="lbl">المدفوع</div></div>
+                        <div class="stat-item orange"><div class="num" id="total-debt">0</div><div class="lbl">الديون</div></div>
+                    </div>
+                </div>
+                <div id="invoices-container" class="service-card">
+                    <div class="empty-state" style="margin:0;border:none;"><div class="empty-icon"><i class="fas fa-file-invoice"></i></div><h3>لا توجد فواتير بعد</h3><p>أنشئ فاتورة جديدة</p></div>
+                </div>
+                <div id="invoice-pdf-template" style="display:none;padding:40px;font-family:'Tajawal',sans-serif;direction:rtl;background:white;color:#333;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #0062cc;padding-bottom:20px;margin-bottom:30px;">
+                        <div><h1 style="color:#0062cc;margin:0;font-size:28px;">نظام GOO التعليمي</h1><p style="margin:5px 0 0;color:#666;">فاتورة ضريبية مبسطة</p></div>
+                        <div style="text-align:left;"><div id="pdf-invoice-number" style="font-weight:bold;font-size:18px;">#INV-0000</div><div id="pdf-invoice-date" style="color:#666;">التاريخ: 2024/01/01</div></div>
+                    </div>
+                    <div style="margin-bottom:30px;"><h3 style="border-right:4px solid #0062cc;padding-right:10px;margin-bottom:15px;">معلومات العميل</h3><p style="margin:5px 0;"><strong>الاسم:</strong> <span id="pdf-customer-name">-</span></p></div>
+                    <table style="width:100%;border-collapse:collapse;margin-bottom:30px;"><thead><tr style="background:#f4f8fd;text-align:right;"><th style="padding:12px;border:1px solid #e2ecf7;">الوصف</th><th style="padding:12px;border:1px solid #e2ecf7;width:100px;">المبلغ</th></tr></thead><tbody><tr><td style="padding:12px;border:1px solid #e2ecf7;">خدمات تعليمية / رسوم دراسية</td><td style="padding:12px;border:1px solid #e2ecf7;text-align:left;"><span id="pdf-amount">0</span> ر.س</td></tr></tbody></table>
+                    <div style="display:flex;justify-content:flex-end;"><div style="width:250px;"><div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #eee;"><span>الإجمالي:</span><span id="pdf-total">0 ر.س</span></div><div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #eee;"><span>المدفوع:</span><span id="pdf-paid">0 ر.س</span></div><div style="display:flex;justify-content:space-between;padding:12px 0;font-weight:bold;color:#0062cc;font-size:18px;"><span>المتبقي:</span><span id="pdf-debt">0 ر.س</span></div></div></div>
+                    <div style="margin-top:50px;text-align:center;color:#999;font-size:12px;border-top:1px solid #eee;padding-top:20px;">شكراً لتعاملكم مع نظام GOO التعليمي</div>
+                </div>
+            </div>
+
+            <!-- ══════════════ ADMIN PAGE ══════════════ -->
+            <div id="page-admin" class="screen-page">
+                <div class="profile-hero" style="margin-top:12px;">
+                    <div class="avatar"><i class="fas fa-user-tie" style="font-size:1.2rem;"></i></div>
+                    <div class="profile-info-text"><h3 id="profile-name">مدير النظام</h3><div class="iban" id="profile-role">المدير العام</div></div>
+                </div>
+                <div id="admin-users-section" class="sub-section active">
+                    <div class="section-title" style="justify-content:space-between;"><span style="display:flex;align-items:center;gap:8px;"><i class="fas fa-users" style="background:var(--primary);"></i> المستخدمين</span><span class="plus-tag"><i class="fas fa-plus"></i> جديد</span></div>
+                    <div id="users-container" class="service-card"><div class="empty-state" style="margin:0;border:none;"><div class="empty-icon"><i class="fas fa-users"></i></div><h3>لا توجد مستخدمين</h3><p>أضف مستخدم جديد للنظام</p></div></div>
+                </div>
+                <div id="admin-customers-section" class="sub-section">
+                    <div class="section-title" style="justify-content:space-between;"><span style="display:flex;align-items:center;gap:8px;"><i class="fas fa-user-tag" style="background:var(--primary);"></i> العملاء</span><span class="plus-tag"><i class="fas fa-plus"></i> جديد</span></div>
+                    <div id="customers-container" class="service-card"><div class="empty-state" style="margin:0;border:none;"><div class="empty-icon"><i class="fas fa-user-tag"></i></div><h3>لا توجد عملاء بعد</h3><p>أضف عميل جديد لبدء العمل</p></div></div>
+                </div>
+                <div id="admin-analytics-section" class="sub-section">
+                    <div class="section-title"><i class="fas fa-chart-bar"></i> الإحصائيات</div>
+                    <div class="chart-container"><canvas id="revenueChart"></canvas></div>
+                    <div id="logs-container"><div class="empty-state"><div class="empty-icon"><i class="fas fa-clipboard-list"></i></div><h3>لا توجد عمليات مسجلة</h3><p>ستظهر هنا جميع العمليات</p></div></div>
+                </div>
+                <div id="admin-tools-section" class="sub-section">
+                    <div class="section-title" style="justify-content:space-between;"><span style="display:flex;align-items:center;gap:8px;"><i class="fas fa-tools" style="background:var(--primary);"></i> الأدوات</span><span class="plus-tag"><i class="fas fa-plus"></i> جديد</span></div>
+                    <div id="tools-container" class="service-card"><div class="empty-state" style="margin:0;border:none;"><div class="empty-icon"><i class="fas fa-link"></i></div><h3>لا توجد أدوات</h3><p>أضف رابط أو أداة جديدة</p></div></div>
+                </div>
+                <div id="admin-messages-section" class="sub-section">
+                    <div class="section-title"><i class="fas fa-envelope"></i> رسائل النظام</div>
+                    <div id="messages-container"><div class="empty-state"><div class="empty-icon"><i class="fas fa-bell"></i></div><h3>لا توجد رسائل</h3><p>ستظهر هنا إشعارات ورسائل النظام</p></div></div>
+                </div>
+                <div id="admin-settings-section" class="sub-section">
+                    <div class="section-title"><i class="fas fa-cog"></i> الإعدادات</div>
+                    <div class="menu-card">
+                        <div class="menu-item" onclick="exportData()"><div class="menu-icon"><i class="fas fa-download"></i></div><span class="menu-label">تصدير البيانات</span><i class="fas fa-chevron-left menu-arrow"></i></div>
+                        <div class="menu-item" onclick="importData()"><div class="menu-icon"><i class="fas fa-upload"></i></div><span class="menu-label">استيراد البيانات</span><i class="fas fa-chevron-left menu-arrow"></i></div>
+                        <div class="menu-item" onclick="clearAllData()"><div class="menu-icon" style="background:#fff0f0;border-color:#ffd0d0;"><i class="fas fa-trash" style="color:#e03c3c;"></i></div><span class="menu-label" style="color:#e03c3c;">مسح جميع البيانات</span><i class="fas fa-chevron-left menu-arrow"></i></div>
+                        <div class="menu-item" onclick="logout()"><div class="menu-icon" style="background:#fff0f0;border-color:#ffd0d0;"><i class="fas fa-sign-out-alt" style="color:#e03c3c;"></i></div><span class="menu-label" style="color:#e03c3c;">تسجيل الخروج</span><i class="fas fa-chevron-left menu-arrow"></i></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- WHATSAPP FAB -->
+    <a class="whatsapp-fab" href="https://wa.me/966501234567" target="_blank" title="تواصل عبر واتساب"><i class="fab fa-whatsapp"></i></a>
+
+    <!-- ══════════════ BOTTOM NAVS ══════════════ -->
+    <div class="bottom-nav-wrapper active" id="nav-main">
+        <div class="bottom-nav">
+            <div class="nav-item active" data-page="home" onclick="navigateTo('home')"><i class="fas fa-home"></i><span>الرئيسية</span></div>
+            <div class="nav-item" data-page="templates" onclick="navigateTo('templates')"><i class="fas fa-file-code"></i><span>القوالب</span></div>
+            <div class="nav-item" data-page="resources" onclick="navigateTo('resources')"><i class="fas fa-link"></i><span>الموارد</span></div>
+            <div class="nav-item" data-page="forms" onclick="navigateTo('forms')"><i class="fas fa-wpforms"></i><span>النماذج</span></div>
+            <div class="nav-item" data-page="invoices" onclick="navigateTo('invoices')"><i class="fas fa-file-invoice-dollar"></i><span>الفواتير</span></div>
+            <div class="nav-item" data-page="admin" onclick="navigateTo('admin')"><i class="fas fa-cog"></i><span>الإدارة</span></div>
+        </div>
+    </div>
+
+    <div class="bottom-nav-wrapper" id="nav-templates">
+        <div class="bottom-nav">
+            <div class="nav-item active" data-sub="files" onclick="switchTemplateTab('files')"><i class="fas fa-folder"></i><span>ملفات</span></div>
+            <div class="nav-item" data-sub="records" onclick="switchTemplateTab('records')"><i class="fas fa-clipboard-list"></i><span>سجلات</span></div>
+            <div class="nav-item" data-sub="exams" onclick="switchTemplateTab('exams')"><i class="fas fa-pencil-alt"></i><span>اختبارات</span></div>
+            <div class="nav-item" data-sub="reports" onclick="switchTemplateTab('reports')"><i class="fas fa-chart-bar"></i><span>تقارير</span></div>
+            <div class="nav-item" data-sub="plans" onclick="switchTemplateTab('plans')"><i class="fas fa-calendar-alt"></i><span>خطط</span></div>
+        </div>
+    </div>
+
+    <div class="bottom-nav-wrapper" id="nav-resources">
+        <div class="bottom-nav">
+            <div class="nav-item active" data-sub="wordwall" onclick="switchResourceTab('wordwall')"><i class="fas fa-th-large"></i><span>Wordwall</span></div>
+            <div class="nav-item" data-sub="forms" onclick="switchResourceTab('forms')"><i class="fas fa-wpforms"></i><span>Forms</span></div>
+            <div class="nav-item" data-sub="drive" onclick="switchResourceTab('drive')"><i class="fas fa-cloud"></i><span>Drive</span></div>
+            <div class="nav-item" data-sub="locutions" onclick="switchResourceTab('locutions')"><i class="fas fa-microphone-alt"></i><span>Locutions</span></div>
+        </div>
+    </div>
+
+    <div class="bottom-nav-wrapper" id="nav-admin">
+        <div class="bottom-nav">
+            <div class="nav-item active" data-sub="users" onclick="switchAdminTab('users')"><i class="fas fa-users"></i><span>المستخدمين</span></div>
+            <div class="nav-item" data-sub="customers" onclick="switchAdminTab('customers')"><i class="fas fa-user-tag"></i><span>العملاء</span></div>
+            <div class="nav-item" data-sub="analytics" onclick="switchAdminTab('analytics')"><i class="fas fa-chart-bar"></i><span>إحصائيات</span></div>
+            <div class="nav-item" data-sub="tools" onclick="switchAdminTab('tools')"><i class="fas fa-tools"></i><span>الأدوات</span></div>
+            <div class="nav-item" data-sub="messages" onclick="switchAdminTab('messages')"><i class="fas fa-envelope"></i><span>رسائل</span></div>
+            <div class="nav-item" data-sub="settings" onclick="switchAdminTab('settings')"><i class="fas fa-cog"></i><span>إعدادات</span></div>
+        </div>
+    </div>
+
+    <script>
+        const DB_KEY = 'goo_edu_system';
+        let appData = {
+            templates: [],
+            customers: [],
+            invoices: [],
+            tools: [],
+            users: [],
+            forms: [],
+            activities: [],
+            totalRevenue: 0
+        };
+
+        function loadData() {
+            try { const raw = localStorage.getItem(DB_KEY); if (raw) { const parsed = JSON.parse(raw);
+                    appData = { ...appData, ...parsed }; } } catch (e) { console.warn('Load error:', e); }
+        }
+
+        function saveData() { localStorage.setItem(DB_KEY, JSON.stringify(appData)); }
+        loadData();
+
+        let currentPage = 'home';
+        let currentTemplateTab = 'files';
+        let currentResourceTab = 'wordwall';
+        let currentAdminTab = 'users';
+
+        function hideAllNavs() { document.querySelectorAll('.bottom-nav-wrapper').forEach(n => n.classList.remove(
+                'active')); }
+
+        function showMainNav() { hideAllNavs();
+            document.getElementById('nav-main').classList.add('active');
+            updateMainNavActive(); }
+
+        function showTemplatesNav() { hideAllNavs();
+            document.getElementById('nav-templates').classList.add('active');
+            updateTemplatesNavActive(); }
+
+        function showResourcesNav() { hideAllNavs();
+            document.getElementById('nav-resources').classList.add('active');
+            updateResourcesNavActive(); }
+
+        function showAdminNav() { hideAllNavs();
+            document.getElementById('nav-admin').classList.add('active');
+            updateAdminNavActive(); }
+
+        function updateMainNavActive() {
+            const nav = document.getElementById('nav-main'); if (!nav) return;
+            nav.querySelectorAll('.nav-item').forEach(item => { item.classList.toggle('active', item.getAttribute(
+                    'data-page') === currentPage); });
+        }
+
+        function updateTemplatesNavActive() {
+            const nav = document.getElementById('nav-templates'); if (!nav) return;
+            nav.querySelectorAll('.nav-item').forEach(item => { item.classList.toggle('active', item.getAttribute(
+                    'data-sub') === currentTemplateTab); });
+        }
+
+        function updateResourcesNavActive() {
+            const nav = document.getElementById('nav-resources'); if (!nav) return;
+            nav.querySelectorAll('.nav-item').forEach(item => { item.classList.toggle('active', item.getAttribute(
+                    'data-sub') === currentResourceTab); });
+        }
+
+        function updateAdminNavActive() {
+            const nav = document.getElementById('nav-admin'); if (!nav) return;
+            nav.querySelectorAll('.nav-item').forEach(item => { item.classList.toggle('active', item.getAttribute(
+                    'data-sub') === currentAdminTab); });
+        }
+
+        function toggleBackButton(show) {
+            const btn = document.getElementById('global-back-btn');
+            if (btn) btn.style.display = show ? 'flex' : 'none';
+        }
+
+        function goBackHome() {
+            navigateTo('home');
+        }
+
+        function showPage(pageId) {
+            document.querySelectorAll('.screen-page').forEach(p => p.classList.remove('active'));
+            const target = document.getElementById('page-' + pageId);
+            if (target) target.classList.add('active');
+            currentPage = pageId;
+            document.querySelector('.screen').scrollTop = 0;
+            if (pageId === 'home') {
+                toggleBackButton(false);
+                showMainNav();
+            } else if (pageId === 'templates') {
+                toggleBackButton(true);
+                showTemplatesNav();
+                switchTemplateTab(currentTemplateTab, true);
+            } else if (pageId === 'resources') {
+                toggleBackButton(true);
+                showResourcesNav();
+                switchResourceTab(currentResourceTab, true);
+            } else if (pageId === 'admin') {
+                toggleBackButton(true);
+                showAdminNav();
+                switchAdminTab(currentAdminTab, true);
+            } else {
+                toggleBackButton(true);
+                showMainNav();
+            }
+            refreshDashboardStats();
+        }
+
+        function navigateTo(pageId) { showPage(pageId); }
+
+        function switchTemplateTab(tab, silent = false) {
+            currentTemplateTab = tab;
+            const page = document.getElementById('page-templates'); if (!page) return;
+            page.querySelectorAll('.sub-section').forEach(s => s.classList.remove('active'));
+            const target = document.getElementById('templates-' + tab + '-section'); if (target) target.classList.add(
+                'active');
+            updateTemplatesNavActive(); if (!silent && currentPage !== 'templates') { showPage('templates'); }
+        }
+
+        function switchResourceTab(tab, silent = false) {
+            currentResourceTab = tab;
+            const page = document.getElementById('page-resources'); if (!page) return;
+            page.querySelectorAll('.sub-section').forEach(s => s.classList.remove('active'));
+            const target = document.getElementById('resources-' + tab + '-section'); if (target) target.classList.add(
+                'active');
+            updateResourcesNavActive(); if (!silent && currentPage !== 'resources') { showPage('resources'); }
+        }
+
+        function switchAdminTab(tab, silent = false) {
+            currentAdminTab = tab;
+            const page = document.getElementById('page-admin'); if (!page) return;
+            page.querySelectorAll('.sub-section').forEach(s => s.classList.remove('active'));
+            const target = document.getElementById('admin-' + tab + '-section'); if (target) target.classList.add(
+            'active');
+            updateAdminNavActive(); if (!silent && currentPage !== 'admin') { showPage('admin'); } if (tab ===
+                'analytics') initChart();
+        }
+
+        function refreshDashboardStats() {
+            document.getElementById('stat-templates').textContent = appData.templates.length;
+            document.getElementById('stat-customers').textContent = appData.customers.length;
+            document.getElementById('stat-invoices').textContent = appData.invoices.length;
+            document.getElementById('total-revenue').textContent = appData.totalRevenue.toLocaleString('ar-SA');
+            const totalSalesEl = document.getElementById('total-sales'); if (totalSalesEl) totalSalesEl.textContent =
+                appData.invoices.length;
+            const paid = appData.invoices.filter(i => i.status === 'paid').reduce((s, i) => s + (i.paid || 0), 0);
+            const debt = appData.invoices.filter(i => i.status !== 'paid').reduce((s, i) => s + ((i.amount || 0) - (i
+                .paid || 0)), 0);
+            const totalPaidEl = document.getElementById('total-paid'); if (totalPaidEl) totalPaidEl.textContent = paid
+                .toLocaleString('ar-SA');
+            const totalDebtEl = document.getElementById('total-debt'); if (totalDebtEl) totalDebtEl.textContent = debt
+                .toLocaleString('ar-SA');
+            updateRecentActivities();
+        }
+
+        function addActivity(desc) {
+            appData.activities.unshift({ desc, time: new Date().toLocaleString('ar-SA') }); if (appData.activities
+                .length > 20) appData.activities.pop();
+            saveData();
+            updateRecentActivities();
+        }
+
+        function updateRecentActivities() {
+            const container = document.getElementById('recent-activities-container'); if (!container) return; if (appData
+                .activities.length === 0) { container.innerHTML =
+                '<div class="empty-state"><div class="empty-icon"><i class="fas fa-history"></i></div><h3>لا توجد عمليات بعد</h3><p>ستظهر هنا آخر العمليات</p></div>'; } else { container
+                .innerHTML = appData.activities.slice(0, 6).map(a =>
+                    '<div class="service-row"><span class="right"><span class="srv-icon si-teal"><i class="fas fa-circle"></i></span>' +
+                    a.desc + '</span><span style="font-size:0.7rem;color:var(--text-muted);">' + a.time +
+                    '</span></div>').join(''); }
+            const logsContainer = document.getElementById('logs-container'); if (logsContainer) { if (appData.activities
+                    .length === 0) { logsContainer.innerHTML =
+                    '<div class="empty-state"><div class="empty-icon"><i class="fas fa-clipboard-list"></i></div><h3>لا توجد عمليات مسجلة</h3><p>ستظهر هنا جميع العمليات</p></div>'; } else { logsContainer
+                    .innerHTML = appData.activities.map(a =>
+                        '<div class="service-row"><span class="right"><span class="srv-icon si-teal"><i class="fas fa-circle"></i></span>' +
+                        a.desc + '</span><span style="font-size:0.7rem;color:var(--text-muted);">' + a.time +
+                        '</span></div>').join(''); } }
+        }
+
+        let revenueChartInstance = null;
+
+        function initChart() {
+            setTimeout(() => { const ctx = document.getElementById('revenueChart'); if (!ctx) return; if (
+                    revenueChartInstance) revenueChartInstance.destroy(); const monthly = Array(6).fill(0);
+                appData.invoices.forEach(inv => { if (inv.status === 'paid') { const m = new Date(inv.date || Date
+                            .now()).getMonth(); const idx = m % 6;
+                        monthly[idx] += (inv.paid || inv.amount || 0); } });
+                revenueChartInstance = new Chart(ctx, { type: 'bar', data: { labels: ['الشهر 1', 'الشهر 2',
+                            'الشهر 3', 'الشهر 4', 'الشهر 5', 'الشهر 6'
+                        ], datasets: [{ label: 'الإيرادات (ر.س)', data: monthly, backgroundColor: 'rgba(0,98,204,0.6)',
+                            borderColor: '#0062cc', borderWidth: 2, borderRadius: 8
+                        }] }, options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { display: false } },
+                        scales: { y: { beginAtZero: true, ticks: { callback: v => v + ' ر.س' } } } } }); }, 300);
+        }
+
+        function addNewTemplate() {
+            const name = prompt('اسم القالب الجديد:'); if (!name || !name.trim()) return;
+            const content = prompt('محتوى HTML للقالب (اختياري):') || '<div>قالب جديد</div>';
+            appData.templates.push({ id: Date.now(), name: name.trim(), content, created: new Date().toISOString() });
+            saveData();
+            renderTemplates();
+            addActivity('تم إضافة قالب: ' + name.trim());
+            refreshDashboardStats();
+        }
+
+        function renderTemplates() {
+            const container = document.getElementById('templates-container'); if (!container) return; if (appData
+                .templates.length === 0) { container.innerHTML =
+                '<div class="empty-state" style="margin:0;border:none;"><div class="empty-icon"><i class="fas fa-folder-open"></i></div><h3>لا توجد قوالب بعد</h3><p>ابدأ بإضافة قالب HTML جديد</p></div>'; } else { container
+                .innerHTML = appData.templates.map(t => '<div class="service-row" style="justify-content:space-between;"><span class="right"><span class="srv-icon si-blue"><i class="fas fa-file-code"></i></span>' +
+                    t.name + '</span><span style="display:flex;gap:6px;"><span style="font-size:0.7rem;color:var(--text-muted);">' +
+                    new Date(t.created).toLocaleDateString('ar-SA') +
+                    '</span><i class="fas fa-trash" style="color:#e03c3c;cursor:pointer;font-size:0.8rem;" onclick="event.stopPropagation();deleteTemplate(' +
+                    t.id + ')"></i></span></div>').join(''); }
+        }
+
+        function deleteTemplate(id) {
+            if (!confirm('هل أنت متأكد من حذف هذا القالب؟')) return;
+            const t = appData.templates.find(x => x.id === id);
+            appData.templates = appData.templates.filter(x => x.id !== id);
+            saveData();
+            renderTemplates(); if (t) addActivity('تم حذف القالب: ' + t.name);
+            refreshDashboardStats();
+        }
+
+        function addNewInvoice() {
+            const customer = prompt('اسم العميل:'); if (!customer || !customer.trim()) return;
+            const amount = parseFloat(prompt('المبلغ (ر.س):')); if (isNaN(amount) || amount <= 0) return alert(
+                'المبلغ غير صالح');
+            appData.invoices.push({ id: Date.now(), customer: customer.trim(), amount, paid: 0, status: 'unpaid',
+                date: new Date().toISOString() });
+            saveData();
+            renderInvoices();
+            addActivity('تم إنشاء فاتورة لـ: ' + customer.trim() + ' بقيمة ' + amount + ' ر.س');
+            refreshDashboardStats();
+        }
+
+        function renderInvoices() {
+            const container = document.getElementById('invoices-container'); if (!container) return; if (appData.invoices
+                .length === 0) { container.innerHTML =
+                '<div class="empty-state" style="margin:0;border:none;"><div class="empty-icon"><i class="fas fa-file-invoice"></i></div><h3>لا توجد فواتير بعد</h3><p>أنشئ فاتورة جديدة</p></div>'; } else { container
+                .innerHTML = appData.invoices.map(inv => { const remaining = (inv.amount || 0) - (inv.paid || 0);
+                    const statusBadge = inv.status === 'paid' ?
+                        '<span style="color:#00a87a;font-weight:700;">مدفوعة</span>' :
+                        '<span style="color:#e07000;font-weight:700;">متبقي ' + remaining + ' ر.س</span>'; return '<div class="service-row" style="justify-content:space-between;flex-wrap:wrap;"><span class="right"><span class="srv-icon si-orange"><i class="fas fa-file-invoice"></i></span>' +
+                        inv.customer + ' - ' + (inv.amount || 0) +
+                        ' ر.س</span><span style="display:flex;gap:8px;align-items:center;">' + statusBadge +
+                        '<i class="fas fa-file-pdf" style="color:#e03c3c;cursor:pointer;font-size:0.85rem;" onclick="event.stopPropagation();exportInvoicePDF(' +
+                        inv.id + ')"></i></span></div>'; }).join(''); }
+        }
+
+        function exportInvoicePDF(invId) {
+            const inv = appData.invoices.find(i => i.id === invId); if (!inv) return;
+            document.getElementById('pdf-invoice-number').textContent = '#INV-' + String(inv.id).slice(-4);
+            document.getElementById('pdf-invoice-date').textContent = 'التاريخ: ' + new Date(inv.date)
+                .toLocaleDateString('ar-SA');
+            document.getElementById('pdf-customer-name').textContent = inv.customer;
+            document.getElementById('pdf-amount').textContent = inv.amount || 0;
+            document.getElementById('pdf-total').textContent = (inv.amount || 0) + ' ر.س';
+            document.getElementById('pdf-paid').textContent = (inv.paid || 0) + ' ر.س';
+            document.getElementById('pdf-debt').textContent = ((inv.amount || 0) - (inv.paid || 0)) + ' ر.س';
+            const element = document.getElementById('invoice-pdf-template');
+            element.style.display = 'block';
+            html2pdf().set({ margin: 10, filename: 'inv-' + inv.id + '.pdf', image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } }).from(
+                element).save().then(() => { element.style.display = 'none'; });
+        }
+
+        function addNewResource() {
+            const name = prompt('اسم المورد الجديد:'); if (!name || !name.trim()) return;
+            const url = prompt('الرابط:') || '#';
+            appData.tools.push({ id: Date.now(), name: name.trim(), url, type: 'resource', created: new Date()
+                    .toISOString() });
+            saveData();
+            renderTools();
+            addActivity('تم إضافة مورد: ' + name.trim());
+            refreshDashboardStats();
+        }
+
+        function renderTools() {
+            const container = document.getElementById('tools-container'); if (!container) return;
+            const tools = appData.tools.filter(t => t.type === 'resource'); if (tools.length === 0) { container
+                .innerHTML =
+                '<div class="empty-state" style="margin:0;border:none;"><div class="empty-icon"><i class="fas fa-link"></i></div><h3>لا توجد أدوات</h3><p>أضف رابط أو أداة جديدة</p></div>'; } else { container
+                .innerHTML = tools.map(t => '<div class="service-row" style="justify-content:space-between;"><span class="right"><span class="srv-icon si-purple"><i class="fas fa-link"></i></span>' +
+                    t.name + '</span><a href="' + t.url +
+                    '" target="_blank" style="font-size:0.75rem;color:var(--primary);text-decoration:none;">فتح</a></div>'
+                    ).join(''); }
+        }
+
+        function exportData() {
+            const blob = new Blob([JSON.stringify(appData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'goo-backup-' + new Date().toISOString().slice(0, 10) + '.json';
+            a.click();
+            addActivity('تم تصدير البيانات');
+        }
+
+        function importData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = (e) => { const file = e.target.files[0]; if (!file) return; const reader = new FileReader();
+                reader.onload = (ev) => { try { const data = JSON.parse(ev.target.result); if (confirm(
+                            'سيتم استبدال جميع البيانات الحالية. هل أنت متأكد؟')) { appData = { ...appData,
+                            ...data };
+                        saveData();
+                        refreshAll();
+                        addActivity('تم استيراد البيانات بنجاح');
+                        alert('تم استيراد البيانات بنجاح'); } } catch (err) { alert('ملف غير صالح'); } };
+                reader.readAsText(file); };
+            input.click();
+        }
+
+        function clearAllData() { if (confirm('تحذير: سيتم مسح جميع البيانات نهائياً. هل أنت متأكد؟')) { if (confirm(
+                    'تأكيد نهائي: لا يمكن التراجع عن هذا الإجراء.')) { appData = { templates: [], customers: [],
+                    invoices: [], tools: [], users: [], forms: [], activities: [], totalRevenue: 0 };
+                saveData();
+                refreshAll();
+                addActivity('تم مسح جميع البيانات'); } } }
+
+        function logout() { if (confirm('تسجيل الخروج؟')) { addActivity('تم تسجيل الخروج');
+                saveData();
+                alert('تم تسجيل الخروج بنجاح'); } }
+
+        function refreshAll() { renderTemplates();
+            renderInvoices();
+            renderTools();
+            refreshDashboardStats();
+            updateRecentActivities(); }
+
+        function init() { showMainNav();
+            showPage('home');
+            refreshAll();
+            initChart(); }
+        document.addEventListener('DOMContentLoaded', init);
+        refreshDashboardStats();
+    </script>
+</body>
+</html>
