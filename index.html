@@ -904,7 +904,7 @@
 
             <!-- TEMPLATES -->
             <div id="page-templates" class="screen-page">
-                <div class="section-title" style="justify-content:space-between;"><span><i class="fas fa-file-code"></i>القوالب</span><span class="plus-tag" onclick="addTemplateItem()"><i class="fas fa-plus"></i>جديد</span></div>
+                <div class="section-title" style="justify-content:space-between;"><span><i class="fas fa-file-code"></i>القوالب</span></div>
                 <div id="templates-files-section" class="sub-section active"><div id="templates-files-container" class="service-card"><div class="empty-state" style="margin:0;border:none;"><div class="empty-icon"><i class="fas fa-folder-open"></i></div><h3>لا توجد ملفات</h3></div></div></div>
                 <div id="templates-records-section" class="sub-section"><div id="templates-records-container" class="service-card"><div class="empty-state" style="margin:0;border:none;"><div class="empty-icon"><i class="fas fa-clipboard-list"></i></div><h3>لا توجد سجلات</h3></div></div></div>
                 <div id="templates-exams-section" class="sub-section"><div id="templates-exams-container" class="service-card"><div class="empty-state" style="margin:0;border:none;"><div class="empty-icon"><i class="fas fa-pencil-alt"></i></div><h3>لا توجد اختبارات</h3></div></div></div>
@@ -916,7 +916,7 @@
             <div id="page-resources" class="screen-page">
                 <div class="section-title"><i class="fas fa-link"></i>الموارد التعليمية</div>
                 <div id="resources-wordwall-section" class="sub-section active">
-                    <div class="section-title" style="font-size:0.8rem;">Wordwall - ألعاب تفاعلية <span class="plus-tag" style="margin-right:auto;" onclick="openJsonModal('wordwall')"><i class="fas fa-upload"></i> رفع JSON</span></div>
+                    <div class="section-title" style="font-size:0.8rem;">Wordwall - ألعاب تفاعلية</div>
                     <div id="wordwall-filter-row" style="display:flex;gap:6px;margin:0 14px 8px;flex-wrap:wrap;">
                         <select onchange="renderWordwall()" id="ww-semester" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;"><option value="">كل الفصول</option><option value="الأول">الفصل الأول</option><option value="الثاني">الفصل الثاني</option></select>
                         <select onchange="renderWordwall()" id="ww-grade" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;"><option value="">كل الصفوف</option></select>
@@ -925,20 +925,20 @@
                     <div id="wordwall-container"><div class="empty-state"><div class="empty-icon"><i class="fas fa-th-large"></i></div><h3>لا توجد ألعاب Wordwall</h3><p>ارفع بيانات JSON</p></div></div>
                 </div>
                 <div id="resources-forms-section" class="sub-section">
-                    <div class="section-title" style="font-size:0.8rem;">Google Forms <span class="plus-tag" style="margin-right:auto;" onclick="openJsonModal('forms')"><i class="fas fa-upload"></i> رفع JSON</span></div>
+                    <div class="section-title" style="font-size:0.8rem;">Google Forms</div>
                     <div id="forms-exams-section2" class="sub-section active"><div id="forms-exams-container"><div class="empty-state"><h3>اختبارات Forms</h3></div></div></div>
                     <div id="forms-surveys-section2" class="sub-section"><div id="forms-surveys-container"><div class="empty-state"><h3>استبيانات</h3></div></div></div>
                     <div id="forms-other-section2" class="sub-section"><div id="forms-other-container"><div class="empty-state"><h3>أخرى</h3></div></div></div>
                 </div>
                 <div id="resources-drive-section" class="sub-section">
-                    <div class="section-title" style="font-size:0.8rem;">Google Drive <span class="plus-tag" style="margin-right:auto;" onclick="openJsonModal('drive')"><i class="fas fa-upload"></i> رفع JSON</span></div>
+                    <div class="section-title" style="font-size:0.8rem;">Google Drive</div>
                     <div id="drive-bags-section" class="sub-section active"><div id="drive-bags-container"><div class="empty-state"><h3>حقائب</h3></div></div></div>
                     <div id="drive-enrich-section" class="sub-section"><div id="drive-enrich-container"><div class="empty-state"><h3>إثراءات</h3></div></div></div>
                     <div id="drive-records-section" class="sub-section"><div id="drive-records-container"><div class="empty-state"><h3>سجلات رسمية</h3></div></div></div>
                     <div id="drive-other-section" class="sub-section"><div id="drive-other-container"><div class="empty-state"><h3>أخرى</h3></div></div></div>
                 </div>
                 <div id="resources-locutions-section" class="sub-section">
-                    <div class="section-title" style="font-size:0.8rem;">Locutions - ملفات وعروض <span class="plus-tag" style="margin-right:auto;" onclick="addLocution()"><i class="fas fa-plus"></i> جديد</span></div>
+                    <div class="section-title" style="font-size:0.8rem;">Locutions - ملفات وعروض</div>
                     <input type="text" placeholder="بحث في الملفات..." oninput="renderLocutions()" id="loc-search" style="margin:0 14px 8px;width:calc(100% - 28px);padding:8px;border-radius:20px;border:2px solid var(--border);font-size:0.78rem;">
                     <div id="locutions-container"><div class="empty-state"><h3>لا توجد ملفات</h3></div></div>
                 </div>
@@ -952,7 +952,7 @@
 
             <!-- INVOICES -->
             <div id="page-invoices" class="screen-page">
-                <div class="section-title" style="justify-content:space-between;"><span><i class="fas fa-file-invoice-dollar"></i>الفواتير</span><span class="plus-tag" onclick="addNewInvoice()"><i class="fas fa-plus"></i>جديد</span></div>
+                <div class="section-title" style="justify-content:space-between;"><span><i class="fas fa-file-invoice-dollar"></i>الفواتير</span></div>
                 <div class="report-stat"><div class="stat-row"><div class="stat-item"><div class="num" id="total-sales">0</div><div class="lbl">الفواتير</div></div><div class="stat-item green"><div class="num" id="total-paid">0</div><div class="lbl">المدفوع</div></div><div class="stat-item orange"><div class="num" id="total-debt">0</div><div class="lbl">المتبقي</div></div></div></div>
                 <div id="invoices-container" class="service-card"><div class="empty-state" style="margin:0;border:none;"><h3>لا توجد فواتير</h3></div></div>
                 <div id="invoice-pdf-template" style="display:none;padding:30px;font-family:'Tajawal',sans-serif;direction:rtl;background:#fff;color:#333;"><div style="display:flex;justify-content:space-between;border-bottom:2px solid #0062cc;padding-bottom:15px;margin-bottom:20px;"><div><h1 style="color:#0062cc;margin:0;font-size:22px;">نظام GOO</h1></div><div style="text-align:left;"><div id="pdf-invoice-number" style="font-weight:bold;">#INV-0000</div><div id="pdf-invoice-date" style="color:#666;">-</div></div></div><div style="margin-bottom:20px;"><p><strong>العميل:</strong> <span id="pdf-customer-name">-</span></p></div><table style="width:100%;border-collapse:collapse;margin-bottom:20px;"><thead><tr style="background:#f4f8fd;"><th style="padding:10px;border:1px solid #e2ecf7;">الوصف</th><th style="padding:10px;border:1px solid #e2ecf7;">المبلغ</th></tr></thead><tbody><tr><td style="padding:10px;border:1px solid #e2ecf7;">خدمات</td><td style="padding:10px;border:1px solid #e2ecf7;text-align:left;"><span id="pdf-amount">0</span> ر.س</td></tr></tbody></table><div style="display:flex;justify-content:flex-end;"><div style="width:200px;"><div style="display:flex;justify-content:space-between;padding:6px 0;"><span>الإجمالي:</span><span id="pdf-total">0</span></div><div style="display:flex;justify-content:space-between;padding:6px 0;"><span>المدفوع:</span><span id="pdf-paid">0</span></div><div style="display:flex;justify-content:space-between;padding:6px 0;font-weight:bold;color:#0062cc;"><span>المتبقي:</span><span id="pdf-debt">0</span></div></div></div></div>
@@ -967,10 +967,65 @@
                 <div id="admin-settings-section" class="sub-section">
                     <div class="section-title"><i class="fas fa-cog"></i>الإعدادات</div>
                     <div class="menu-card">
+                        <div class="menu-item" onclick="switchAdminDataTab('templates')"><div class="menu-icon"><i class="fas fa-file-code"></i></div><span class="menu-label">إضافة قوالب جديدة</span><i class="fas fa-chevron-left menu-arrow"></i></div>
+                        <div class="menu-item" onclick="switchAdminDataTab('resources')"><div class="menu-icon"><i class="fas fa-link"></i></div><span class="menu-label">إضافة موارد جديدة</span><i class="fas fa-chevron-left menu-arrow"></i></div>
+                        <div class="menu-item" onclick="switchAdminDataTab('invoices')"><div class="menu-icon"><i class="fas fa-file-invoice-dollar"></i></div><span class="menu-label">إضافة فاتورة جديدة</span><i class="fas fa-chevron-left menu-arrow"></i></div>
                         <div class="menu-item" onclick="openGithubSettings()"><div class="menu-icon"><i class="fab fa-github"></i></div><span class="menu-label">إعدادات GitHub والرفع</span><i class="fas fa-chevron-left menu-arrow"></i></div>
                         <div class="menu-item" onclick="exportAllData()"><div class="menu-icon"><i class="fas fa-download"></i></div><span class="menu-label">تصدير جميع البيانات</span><i class="fas fa-chevron-left menu-arrow"></i></div>
                         <div class="menu-item" onclick="importAllData()"><div class="menu-icon"><i class="fas fa-upload"></i></div><span class="menu-label">استيراد البيانات</span><i class="fas fa-chevron-left menu-arrow"></i></div>
                         <div class="menu-item" onclick="clearAllData()"><div class="menu-icon" style="background:#fff0f0;"><i class="fas fa-trash" style="color:#e03c3c;"></i></div><span class="menu-label" style="color:#e03c3c;">مسح جميع البيانات</span><i class="fas fa-chevron-left menu-arrow"></i></div>
+                    </div>
+                    <!-- Data Addition Sections -->
+                    <div id="admin-add-templates-section" class="sub-section" style="display:none;margin-top:20px;">
+                        <div class="section-title"><i class="fas fa-file-code"></i>إضافة قالب جديد</div>
+                        <div class="service-card" style="margin:0 14px 10px;padding:14px;">
+                            <input type="text" id="admin-template-name" placeholder="اسم القالب" style="width:100%;padding:8px;border-radius:10px;border:2px solid var(--border);margin-bottom:8px;font-size:0.8rem;">
+                            <select id="admin-template-type" style="width:100%;padding:8px;border-radius:10px;border:2px solid var(--border);margin-bottom:8px;font-size:0.8rem;">
+                                <option value="files">ملفات</option>
+                                <option value="records">سجلات</option>
+                                <option value="exams">اختبارات</option>
+                                <option value="reports">تقارير</option>
+                                <option value="plans">خطط</option>
+                            </select>
+                            <textarea id="admin-template-html" placeholder="HTML (اختياري)" style="width:100%;min-height:80px;padding:8px;border-radius:10px;border:2px solid var(--border);margin-bottom:8px;font-size:0.75rem;font-family:monospace;resize:vertical;"></textarea>
+                            <input type="text" id="admin-template-keywords" placeholder="كلمات مفتاحية (مفصولة بفواصل)" style="width:100%;padding:8px;border-radius:10px;border:2px solid var(--border);margin-bottom:8px;font-size:0.8rem;">
+                            <div style="display:flex;gap:8px;justify-content:flex-end;">
+                                <button class="btn-primary" onclick="addTemplateFromSettings()">إضافة</button>
+                                <button onclick="switchAdminDataTab('none')" style="background:#ccc;border:none;padding:8px 16px;border-radius:20px;cursor:pointer;font-size:0.8rem;">إلغاء</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="admin-add-resources-section" class="sub-section" style="display:none;margin-top:20px;">
+                        <div class="section-title"><i class="fas fa-link"></i>إضافة مورد جديد</div>
+                        <div class="service-card" style="margin:0 14px 10px;padding:14px;">
+                            <select id="admin-resource-type" onchange="updateResourceFields()" style="width:100%;padding:8px;border-radius:10px;border:2px solid var(--border);margin-bottom:8px;font-size:0.8rem;">
+                                <option value="wordwall">Wordwall</option>
+                                <option value="forms">Google Forms</option>
+                                <option value="drive">Google Drive</option>
+                                <option value="locutions">Locutions</option>
+                            </select>
+                            <textarea id="admin-resource-json" placeholder="الصق بيانات JSON هنا..." style="width:100%;min-height:120px;padding:8px;border-radius:10px;border:2px solid var(--border);margin-bottom:8px;font-size:0.75rem;font-family:monospace;resize:vertical;direction:ltr;"></textarea>
+                            <div style="display:flex;gap:8px;justify-content:flex-end;">
+                                <button class="btn-primary" onclick="addResourceFromSettings()">رفع</button>
+                                <button onclick="switchAdminDataTab('none')" style="background:#ccc;border:none;padding:8px 16px;border-radius:20px;cursor:pointer;font-size:0.8rem;">إلغاء</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="admin-add-invoices-section" class="sub-section" style="display:none;margin-top:20px;">
+                        <div class="section-title"><i class="fas fa-file-invoice-dollar"></i>إضافة فاتورة جديدة</div>
+                        <div class="service-card" style="margin:0 14px 10px;padding:14px;">
+                            <input type="text" id="admin-invoice-customer" placeholder="اسم العميل" style="width:100%;padding:8px;border-radius:10px;border:2px solid var(--border);margin-bottom:8px;font-size:0.8rem;">
+                            <input type="number" id="admin-invoice-amount" placeholder="المبلغ (ر.س)" style="width:100%;padding:8px;border-radius:10px;border:2px solid var(--border);margin-bottom:8px;font-size:0.8rem;">
+                            <select id="admin-invoice-status" style="width:100%;padding:8px;border-radius:10px;border:2px solid var(--border);margin-bottom:8px;font-size:0.8rem;">
+                                <option value="unpaid">غير مدفوعة</option>
+                                <option value="paid">مدفوعة</option>
+                            </select>
+                            <input type="number" id="admin-invoice-paid" placeholder="المبلغ المدفوع (اختياري)" style="width:100%;padding:8px;border-radius:10px;border:2px solid var(--border);margin-bottom:8px;font-size:0.8rem;">
+                            <div style="display:flex;gap:8px;justify-content:flex-end;">
+                                <button class="btn-primary" onclick="addInvoiceFromSettings()">إضافة</button>
+                                <button onclick="switchAdminDataTab('none')" style="background:#ccc;border:none;padding:8px 16px;border-radius:20px;cursor:pointer;font-size:0.8rem;">إلغاء</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1458,6 +1513,115 @@
                 closeJsonModal();
                 alert('تم بنجاح! أضيف: ' + added + ' | تم تخطي المكرر: ' + skipped);
             } catch (e) { alert('خطأ في صيغة JSON: ' + e.message); }
+        }
+
+        // ============ ADMIN DATA TAB SWITCHING ============
+        let currentAdminDataTab = 'none';
+        function switchAdminDataTab(tab) {
+            currentAdminDataTab = tab;
+            document.getElementById('admin-add-templates-section')?.style.setProperty('display', tab === 'templates' ? 'block' : 'none');
+            document.getElementById('admin-add-resources-section')?.style.setProperty('display', tab === 'resources' ? 'block' : 'none');
+            document.getElementById('admin-add-invoices-section')?.style.setProperty('display', tab === 'invoices' ? 'block' : 'none');
+        }
+
+        function addTemplateFromSettings() {
+            const name = document.getElementById('admin-template-name')?.value?.trim();
+            const type = document.getElementById('admin-template-type')?.value || 'files';
+            const htmlContent = document.getElementById('admin-template-html')?.value?.trim() || '<div></div>';
+            const keywords = document.getElementById('admin-template-keywords')?.value?.trim() || '';
+            if (!name) return alert('الرجاء إدخال اسم القالب');
+            appData.templates[type].push({ id: Date.now(), name, htmlContent, keywords, usageCount: 0, created: new Date().toISOString() });
+            saveData();
+            renderTemplateSection(type);
+            addActivity('تمت إضافة قالب: ' + name);
+            document.getElementById('admin-template-name').value = '';
+            document.getElementById('admin-template-html').value = '';
+            document.getElementById('admin-template-keywords').value = '';
+            alert('تم الإضافة بنجاح');
+            switchAdminDataTab('none');
+        }
+
+        function updateResourceFields() {
+            const type = document.getElementById('admin-resource-type')?.value || 'wordwall';
+            const placeholder = type === 'locutions' ? '{اسم: "الاسم", نوع: "عرض", رابط: "url", وصف: "الوصف"}' : '{اسم: "الاسم", رابط: "url", فصل: "الأول", صف: "1", مادة: "رياضيات"}';
+            document.getElementById('admin-resource-json').placeholder = placeholder;
+        }
+
+        function addResourceFromSettings() {
+            const type = document.getElementById('admin-resource-type')?.value || 'wordwall';
+            const raw = document.getElementById('admin-resource-json')?.value?.trim();
+            if (!raw) return alert('الرجاء لصق بيانات JSON');
+            try {
+                const data = JSON.parse(raw);
+                const arr = Array.isArray(data) ? data : [data];
+                let added = 0, skipped = 0;
+                if (type === 'wordwall') {
+                    arr.forEach(item => {
+                        const exists = appData.wordwall.find(w => w.url === item.url);
+                        if (exists) { skipped++; return; }
+                        item.id = Date.now() + Math.random();
+                        item.usageCount = 0;
+                        appData.wordwall.push(item);
+                        added++;
+                    });
+                } else if (type === 'forms') {
+                    arr.forEach(item => {
+                        const cat = item.category || item.type || 'exams';
+                        const target = cat === 'surveys' ? appData.formsSurveys : cat === 'other' ? appData.formsOther : appData.formsExams;
+                        const exists = target.find(f => f.url === item.url);
+                        if (exists) { skipped++; return; }
+                        item.id = Date.now() + Math.random();
+                        item.usageCount = 0;
+                        target.push(item);
+                        added++;
+                    });
+                } else if (type === 'drive') {
+                    arr.forEach(item => {
+                        const cat = item.category || 'bags';
+                        const target = cat === 'enrich' ? appData.driveEnrich : cat === 'records' ? appData.driveRecords : cat === 'other' ? appData.driveOther : appData.driveBags;
+                        const exists = target.find(f => f.url === item.url);
+                        if (exists) { skipped++; return; }
+                        item.id = Date.now() + Math.random();
+                        item.usageCount = 0;
+                        target.push(item);
+                        added++;
+                    });
+                } else if (type === 'locutions') {
+                    arr.forEach(item => {
+                        const exists = appData.locutions.find(l => l.url === item.url);
+                        if (exists) { skipped++; return; }
+                        item.id = Date.now() + Math.random();
+                        item.usageCount = 0;
+                        appData.locutions.push(item);
+                        added++;
+                    });
+                }
+                saveData();
+                refreshAll();
+                document.getElementById('admin-resource-json').value = '';
+                alert('تم بنجاح! أضيف: ' + added + ' | تم تخطي المكرر: ' + skipped);
+                switchAdminDataTab('none');
+            } catch (e) { alert('خطأ في صيغة JSON: ' + e.message); }
+        }
+
+        function addInvoiceFromSettings() {
+            const customer = document.getElementById('admin-invoice-customer')?.value?.trim();
+            const amount = parseFloat(document.getElementById('admin-invoice-amount')?.value);
+            const status = document.getElementById('admin-invoice-status')?.value || 'unpaid';
+            const paid = parseFloat(document.getElementById('admin-invoice-paid')?.value) || 0;
+            if (!customer) return alert('الرجاء إدخال اسم العميل');
+            if (isNaN(amount) || amount <= 0) return alert('المبلغ غير صالح');
+            appData.invoices.push({ id: Date.now(), customer, amount, paid, status, date: new Date().toISOString() });
+            saveData();
+            renderInvoices();
+            updateStats();
+            addActivity('فاتورة: ' + customer + ' - ' + amount + ' ر.س');
+            document.getElementById('admin-invoice-customer').value = '';
+            document.getElementById('admin-invoice-amount').value = '';
+            document.getElementById('admin-invoice-paid').value = '';
+            document.getElementById('admin-invoice-status').value = 'unpaid';
+            alert('تم الإضافة بنجاح');
+            switchAdminDataTab('none');
         }
 
         // ============ GITHUB ============
