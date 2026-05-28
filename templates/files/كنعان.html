@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تقرير تنفيذ تطبيق البادلت</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=El+Messiri:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --primary-deep: #0B2F4E;
+      --primary-gold: #D4AF37;
+      --accent-teal: #1A7F7A;
+      --light-bg: #F9F7F3;
+      --border-light: #E2D9C5;
+      --text-dark: #1E2A38;
+      --white: #ffffff;
+      --shadow-sm: 0 6px 12px -6px rgba(0,0,0,0.08);
+      --shadow-lux: 0 12px 20px -8px rgba(11, 47, 78, 0.1);
+    }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: #e8e3d9;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: var(--text-dark);
+    }
+
+    .luxury-report {
+      width: 210mm;
+      height: 297mm; /* تثبيت الارتفاع ليكون صفحة واحدة A4 */
+      margin: 0 auto;
+      background: var(--white);
+      box-shadow: var(--shadow-lux), 0 0 0 1px rgba(212, 175, 55, 0.15);
+      position: relative;
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+    }
+
+    .luxury-report::before {
+      content: "";
+      position: absolute;
+      top: 10mm;
+      left: 10mm;
+      right: 10mm;
+      bottom: 10mm;
+      border: 2.5px solid var(--primary-gold);
+      border-radius: 6px;
+      pointer-events: none;
+      z-index: 5;
+      opacity: 0.4;
+    }
+
+    .report-content {
+      position: relative;
+      z-index: 10;
+      padding: 5mm 12mm 5mm 12mm;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 5px; /* إضافة فجوة صغيرة بين العناصر لمنع التداخل */
+    }
+
+    @media print {
+      @page {
+        size: A4;
+        margin: 0;
+      }
+      body {
+        padding: 0;
+        background: white;
+      }
+      .luxury-report {
+        width: 210mm;
+        height: 297mm;
+        border: none;
+        box-shadow: none;
+        margin: 0;
+      }
+      .luxury-report::before {
+        top: 5mm;
+        left: 5mm;
+        right: 5mm;
+        bottom: 5mm;
+      }
+      .control-bar {
+        display: none;
+      }
+      .signatures-lux {
+        page-break-inside: avoid;
+      }
+      .page-footer {
+        position: relative; /* تغيير من مطلق إلى نسبي لمنع التداخل */
+        margin-top: 10px;
+        padding-top: 5px;
+      }
+    }
+
+    .luxury-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      border-bottom: 2px solid var(--primary-gold);
+      padding-bottom: 8px;
+      background: linear-gradient(to bottom, rgba(11,47,78,0.02), transparent);
+    }
+
+    .kingdom-info {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--primary-deep);
+      line-height: 1.6;
+      border-right: 3px solid var(--primary-gold);
+      padding-right: 12px;
+      text-align: right;
+    }
+
+    .kingdom-info i {
+      color: var(--primary-gold);
+      margin-left: 5px;
+    }
+
+    .logo-area {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .luxury-logo {
+      max-height: 50px; /* تقليل حجم الشعار لتوفير مساحة */
+      max-width: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05));
+      border-radius: 10px;
+      padding: 2px;
+    }
+
+    .ministry-text {
+      font-size: 9px;
+      font-weight: 800;
+      color: var(--accent-teal);
+      margin-top: 3px;
+      background: rgba(212,175,55,0.1);
+      padding: 2px 10px;
+      border-radius: 30px;
+    }
+
+    .school-info {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--primary-deep);
+      line-height: 1.6;
+      border-left: 3px solid var(--primary-gold);
+      padding-left: 12px;
+      text-align: left;
+    }
+
+    .school-info i {
+      color: var(--primary-gold);
+      margin-right: 5px;
+    }
+
+    .title-bar-lux {
+      background: linear-gradient(135deg, #0B2F4E 0%, #1A4A6B 100%);
+      margin: 10px 0 18px 0;
+      padding: 12px 20px;
+      border-radius: 30px 6px 30px 6px;
+      box-shadow: 0 8px 12px -4px rgba(11,47,78,0.25);
+      text-align: center;
+      border-bottom: 3px solid var(--primary-gold);
+    }
+
+    .title-bar-lux h1 {
+      color: white;
+      font-size: 24px;
+      font-weight: 900;
+      font-family: 'El Messiri', sans-serif;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 16px; /* تقليل الفجوة */
+      margin-bottom: 10px; /* تقليل الهامش السفلي */
+      background: rgba(249,247,243,0.5);
+      padding: 8px 14px; /* تقليل الحشوة */
+      border-radius: 20px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-light);
+    }
+
+    .info-item {
+      display: flex;
+      align-items: center;
+      border-bottom: 1px dashed rgba(212,175,55,0.3);
+      padding-bottom: 5px;
+    }
+
+    .info-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--primary-deep);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 10px;
+      color: var(--primary-gold);
+      font-size: 14px;
+      border: 1px solid var(--primary-gold);
+    }
+
+    .info-label {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--accent-teal);
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+
+    .info-value {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--primary-deep);
+      background: white;
+      padding: 3px 12px;
+      border-radius: 30px;
+      display: inline-block;
+      border: 1px solid #eee;
+    }
+
+    .two-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px; /* تقليل الفجوة */
+      margin-bottom: 10px; /* تقليل الهامش السفلي */
+    }
+
+    .luxury-card {
+      background: var(--white);
+      border-radius: 24px;
+      padding: 12px 18px; /* تقليل الحشوة الداخلية */
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-light);
+      min-height: 180px; /* تقليل الارتفاع الأدنى للبطاقات */
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 14px;
+      border-bottom: 2px solid var(--primary-gold);
+      padding-bottom: 8px;
+    }
+
+    .card-header i {
+      font-size: 22px;
+      color: var(--primary-gold);
+      margin-left: 10px;
+      background: var(--primary-deep);
+      padding: 6px;
+      border-radius: 12px;
+    }
+
+    .card-header h3 {
+      font-size: 18px;
+      font-weight: 900;
+      color: var(--primary-deep);
+    }
+
+    .topic-badge {
+      background: #f3ede3;
+      padding: 5px 14px;
+      border-radius: 30px;
+      display: inline-block;
+      margin-bottom: 14px;
+      font-weight: 800;
+      color: var(--accent-teal);
+      border-right: 4px solid var(--primary-gold);
+      font-size: 14px;
+    }
+
+    .steps-list, .goals-list {
+      list-style: none;
+    }
+
+    .steps-list li, .goals-list li {
+      margin-bottom: 8px;
+      font-weight: 600;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 13px;
+      line-height: 1.4;
+      color: #1e3a4d;
+    }
+
+    .steps-list li i, .goals-list li i {
+      color: var(--primary-gold);
+      font-size: 13px;
+      background: var(--primary-deep);
+      padding: 4px;
+      border-radius: 50%;
+      min-width: 20px;
+      text-align: center;
+    }
+
+    .evidence-area {
+      background: #faf8f4;
+      border-radius: 20px;
+      padding: 10px 20px; /* تقليل الحشوة */
+      margin-bottom: 10px; /* تقليل الهامش السفلي */
+      border: 2px dashed var(--primary-gold);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .evidence-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .evidence-header i {
+      font-size: 22px;
+      background: var(--primary-gold);
+      color: var(--primary-deep);
+      padding: 8px;
+      border-radius: 16px;
+      margin-left: 10px;
+    }
+
+    .evidence-header h3 {
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .barcode-placeholder {
+      aspect-ratio: 1 / 1;
+      background: white;
+      border: 2px dashed var(--primary-gold);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #ccc;
+      font-size: 12px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .barcode-placeholder:hover {
+      border-color: var(--accent-teal);
+      box-shadow: 0 4px 12px rgba(26, 127, 122, 0.15);
+    }
+
+    .barcode-placeholder i {
+      font-size: 50px;
+      margin-bottom: 10px;
+      color: var(--primary-gold);
+    }
+
+    .barcode-placeholder img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .barcode-label {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(11, 47, 78, 0.05);
+      padding: 5px;
+      text-align: center;
+      font-weight: 700;
+      color: var(--primary-deep);
+      font-size: 10px;
+    }
+
+    .signatures-lux {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 5px;
+    }
+
+    .sig-card {
+      text-align: center;
+      width: 200px;
+      padding: 10px;
+      background: rgba(249,247,243,0.6);
+      border-radius: 30px 6px 30px 6px;
+      border-bottom: 3px solid var(--primary-gold);
+    }
+
+    .sig-role { font-size: 14px; font-weight: 900; }
+    .sig-name { font-size: 16px; font-weight: 800; margin: 5px 0; }
+    .sig-line { font-size: 12px; padding-top: 8px; }
+
+    .page-footer {
+      margin-top: auto;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 700;
+      border-top: 1px solid var(--border-light);
+      padding-top: 8px;
+    }
+
+    .control-bar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 15px;
+    }
+    .btn-lux {
+      background: var(--primary-deep);
+      border: none;
+      padding: 10px 22px;
+      border-radius: 40px;
+      color: white;
+      font-weight: 800;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 6px 10px rgba(0,0,0,0.1);
+      border: 1px solid var(--primary-gold);
+    }
+    .btn-gold { background: var(--primary-gold); color: var(--primary-deep); }
+
+    @media print {
+      body { background: white; padding: 0; }
+      .control-bar, .no-print { display: none !important; }
+      .luxury-report { box-shadow: none; margin: 0; width: 210mm; height: 297mm; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="control-bar no-print">
+  <button class="btn-lux" onclick="window.print()"><i class="fas fa-print"></i> طباعة التقرير</button>
+  <label class="btn-lux btn-gold" id="logoUploadLabel" style="cursor:pointer;">
+    <i class="fas fa-image"></i> تغيير الشعار
+    <input type="file" id="logoUploadLux" accept="image/*" style="display:none;" onchange="updateLuxLogo(this)">
+  </label>
+  <label class="btn-lux btn-gold" id="barcodeUploadLabel" style="cursor:pointer;">
+    <i class="fas fa-image"></i> رفع الباركود
+    <input type="file" id="barcodeUploadBtn" accept="image/*" style="display:none;" onchange="updateBarcodeFromBtn(this)">
+  </label>
+</div>
+
+<div class="luxury-report">
+  <div class="report-content">
+    
+    <div class="luxury-header">
+      <div class="kingdom-info">
+        <i class="fas fa-flag"></i> المملكة العربية السعودية<br>
+        <i class="fas fa-eye"></i> رؤية المملكة 2030<br>
+        <i class="fas fa-building"></i> وزارة التعليم
+      </div>
+      <div class="logo-area">
+        <img class="luxury-logo" id="mainLogo" src="https://upload.wikimedia.org/wikipedia/ar/thumb/1/11/Ministry_of_Education_%28Saudi_Arabia%29_Logo.svg/1200px-Ministry_of_Education_%28Saudi_Arabia%29_Logo.svg.png" alt="شعار وزارة التعليم">
+        <div class="ministry-text">وزارة التعليم · رؤية 2030</div>
+      </div>
+      <div class="school-info">
+        <i class="fas fa-school"></i> الإدارة العامة للتعليم<br>
+        <i class="fas fa-map-marker-alt"></i> مكتب التعليم<br>
+        <i class="fas fa-star"></i> الطفولة المبكرة والابتدائية النموذجية الأولى
+      </div>
+    </div>
+
+    <div class="title-bar-lux">
+      <h1><i class="fas fa-file-signature"></i> تقرير تنفيذ (تطبيق البادلت) <i class="fas fa-star"></i></h1>
+    </div>
+
+    <div class="info-grid">
+      <div class="info-item"><div class="info-icon"><i class="fas fa-user-check"></i></div><div class="info-content"><div class="info-label">المنفذ/ون</div><span class="info-value">معلمة المادة / نجاة السليماني</span></div></div>
+      <div class="info-item"><div class="info-icon"><i class="fas fa-users"></i></div><div class="info-content"><div class="info-label">المستهدفون</div><span class="info-value">طالبات الصف السادس</span></div></div>
+      <div class="info-item"><div class="info-icon"><i class="fas fa-location-dot"></i></div><div class="info-content"><div class="info-label">مكان التنفيذ</div><span class="info-value">الفصل الدراسي / معمل الحاسب</span></div></div>
+      <div class="info-item"><div class="info-icon"><i class="fas fa-calendar"></i></div><div class="info-content"><div class="info-label">تاريخ التنفيذ</div><span class="info-value">.... / .... / 1445 هـ</span></div></div>
+    </div>
+
+    <div class="two-columns">
+      <div class="luxury-card">
+        <div class="card-header"><i class="fas fa-list-check"></i><h3>خطوات التنفيذ</h3></div>
+        <ul class="steps-list">
+          <li><i class="fas fa-chalkboard-user"></i> شرح آلية استخدام تطبيق البادلت للطالبات.</li>
+          <li><i class="fas fa-link"></i> إنشاء حائط إلكتروني خاص بمشاريع الصف السادس.</li>
+          <li><i class="fas fa-share-nodes"></i> مشاركة الرابط أو الباركود مع الطالبات لإرسال أعمالهن.</li>
+          <li><i class="fas fa-upload"></i> قيام الطالبات برفع المشاريع والمهام الأدائية على الحائط.</li>
+          <li><i class="fas fa-check-double"></i> مراجعة وتقييم المشاريع المقدمة من قبل المعلمة.</li>
+        </ul>
+      </div>
+      <div class="luxury-card">
+        <div class="card-header"><i class="fas fa-bullseye"></i><h3>الأهداف</h3></div>
+        <div class="topic-badge"><i class="fas fa-tag"></i> تفعيل التقنية في التعليم</div>
+        <ul class="goals-list">
+          <li><i class="fas fa-laptop-code"></i> تعزيز مهارات التحول الرقمي لدى طالبات الصف السادس.</li>
+          <li><i class="fas fa-folder-open"></i> تنظيم استلام المشاريع الطلابية في مكان واحد.</li>
+          <li><i class="fas fa-users-rectangle"></i> تشجيع التعلم التعاوني وتبادل الخبرات بين الطالبات.</li>
+          <li><i class="fas fa-gauge-high"></i> سرعة الوصول للمشاريع وتقييمها بدقة وفاعلية.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="evidence-area">
+      <div class="evidence-header"><i class="fas fa-qrcode"></i><h3 style="display:inline-block; margin-right:8px;">شواهد التنفيذ (باركود المشاريع)</h3></div>
+      <div style="display: flex; justify-content: center; align-items: center; margin-top: 15px;">
+        <a href="#" id="barcodeLink" style="text-decoration: none;">
+          <div class="barcode-placeholder" id="barcodePlaceholder" style="width: 200px; height: 200px; cursor: pointer;">
+            <i class="fas fa-qrcode"></i>
+            <span id="barcodeText">اضغط لرفع الباركود</span>
+            <div class="barcode-label">باركود المشاريع</div>
+          </div>
+        </a>
+        <input type="file" id="barcodeUpload" accept="image/*" style="display:none;" onchange="updateBarcode(this)">
+      </div>
+    </div>
+
+    <div class="signatures-lux">
+      <div class="sig-card"><div class="sig-role">معلمة المادة</div><div class="sig-name">نجاة السليماني</div><div class="sig-line">التوقيع: .................</div></div>
+      <div class="sig-card"><div class="sig-role">مديرة المدرسة</div><div class="sig-name">ندا وزان</div><div class="sig-line">التوقيع: .................</div></div>
+    </div>
+
+    <div class="page-footer">
+      <i class="fas fa-scroll"></i> تقرير تنفيذ تطبيق البادلت | الطفولة المبكرة والابتدائية النموذجية الأولى
+    </div>
+  </div>
+</div>
+
+<script>
+  // دالة تحديث الشعار
+  function updateLuxLogo(input) {
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+      reader.onload = e => document.getElementById('mainLogo').src = e.target.result;
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+
+  // دالة تحديث الباركود
+  function updateBarcode(input) {
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        const placeholder = document.getElementById('barcodePlaceholder');
+        const barcodeLink = document.getElementById('barcodeLink');
+        
+        // إزالة المحتوى القديم
+        placeholder.innerHTML = '';
+        
+        // إنشاء صورة الباركود
+        const img = document.createElement('img');
+        img.src = e.target.result;
+        img.style.maxWidth = '100%';
+        img.style.maxHeight = '100%';
+        img.style.objectFit = 'contain';
+        
+        placeholder.appendChild(img);
+        
+        // إضافة تسمية في الأسفل
+        const label = document.createElement('div');
+        label.className = 'barcode-label';
+        label.textContent = 'باركود المشاريع';
+        placeholder.appendChild(label);
+        
+        // جعل الباركود قابلاً للضغط
+        barcodeLink.href = e.target.result;
+        barcodeLink.target = '_blank';
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+
+  // دالة تحديث الباركود من الزر
+  function updateBarcodeFromBtn(input) {
+    if (input.files && input.files[0]) {
+      updateBarcode(input);
+    }
+  }
+
+  // جعل الباركود قابلاً للنقر لرفع صورة جديدة
+  document.addEventListener('DOMContentLoaded', function() {
+    const barcodePlaceholder = document.getElementById('barcodePlaceholder');
+    if (barcodePlaceholder) {
+      barcodePlaceholder.addEventListener('click', function(e) {
+        if (!this.querySelector('img')) {
+          document.getElementById('barcodeUpload').click();
+        }
+      });
+    }
+  });
+</script>
+</body>
+</html>
