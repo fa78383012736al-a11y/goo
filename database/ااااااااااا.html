@@ -1,0 +1,2360 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>نظام GOO • إدارة المحتوى التعليمي</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <style>
+        :root {
+            --primary: #0062cc;
+            --primary-light: #1a8cff;
+            --primary-dark: #004a9e;
+            --accent: #00c896;
+            --bg: #dde6f0;
+            --surface: #ffffff;
+            --surface2: #f4f8fd;
+            --border: #e2ecf7;
+            --text-main: #0a2540;
+            --text-sec: #4a6a8a;
+            --text-muted: #8aaac8;
+            --shadow-sm: 0 2px 12px rgba(0, 98, 204, 0.07);
+            --shadow-md: 0 6px 24px rgba(0, 98, 204, 0.12);
+            --radius-sm: 14px;
+            --radius-md: 22px;
+            --radius-lg: 32px;
+            --danger: #e03c3c;
+            --success: #00a87a;
+            --warning: #e07000;
+            --nav-height: 70px;
+            --safe-bottom: env(safe-area-inset-bottom, 10px);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            background: var(--bg);
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .screen {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            scroll-behavior: smooth;
+            padding-bottom: calc(var(--nav-height) + var(--safe-bottom) + 20px);
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .screen::-webkit-scrollbar {
+            display: none;
+        }
+
+        .app-header {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 60%, var(--primary-light) 100%);
+            padding: 12px 16px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            overflow: hidden;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .app-header::before {
+            content: '';
+            position: absolute;
+            top: -40px;
+            left: -40px;
+            width: 180px;
+            height: 180px;
+            background: rgba(255, 255, 255, 0.07);
+            border-radius: 50%;
+        }
+
+        .greeting h2 {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .greeting h2 .star {
+            color: #ffd04e;
+        }
+
+        .greeting p {
+            font-size: 1rem;
+            color: #fff;
+            font-weight: 700;
+            margin-top: 2px;
+        }
+
+        .header-badge {
+            background: rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            padding: 6px 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.8rem;
+            z-index: 1;
+        }
+
+        .header-badge i {
+            color: #ffd04e;
+        }
+
+        .back-button {
+            background: rgba(255, 255, 255, 0.18);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            padding: 5px 10px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 0.95rem;
+            cursor: pointer;
+            z-index: 2;
+            transition: all 0.2s;
+            width: 34px;
+            height: 34px;
+            flex-shrink: 0;
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.28);
+        }
+        .back-button:active {
+            transform: scale(0.9);
+        }
+
+        .search-container {
+            margin: 10px 14px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 50px 12px 16px;
+            border-radius: 28px;
+            border: 2px solid var(--border);
+            background: var(--surface);
+            font-size: 0.9rem;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(0, 98, 204, 0.1);
+        }
+
+        .search-icon-btn {
+            position: absolute;
+            left: 6px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-suggestions {
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            margin: 4px 0;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+            display: none;
+            position: absolute;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            max-height: 220px;
+            overflow-y: auto;
+        }
+
+        .search-suggestions.active {
+            display: block;
+        }
+
+        .suggestion-item {
+            padding: 10px 16px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f5fc;
+            font-size: 0.82rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.15s;
+        }
+
+        .suggestion-item:hover {
+            background: #f4f8fd;
+        }
+
+        .suggestion-item .sug-type {
+            font-size: 0.65rem;
+            background: #e8f0ff;
+            color: var(--primary);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .balance-card {
+            background: linear-gradient(135deg, #00b37a 0%, #00c896 50%, #00d9a8 100%);
+            margin: 10px 14px 0;
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0, 200, 150, 0.35);
+        }
+
+        .balance-card::before {
+            content: '';
+            position: absolute;
+            top: -30px;
+            right: -30px;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .balance-label {
+            font-size: 0.75rem;
+            opacity: 0.85;
+        }
+
+        .balance-amount {
+            font-size: 1.5rem;
+            font-weight: 800;
+            direction: ltr;
+            text-align: right;
+        }
+
+        .balance-amount span {
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-right: 4px;
+            opacity: 0.85;
+        }
+
+        .balance-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(255, 255, 255, 0.25);
+            font-size: 0.73rem;
+        }
+
+        .eye-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 30px;
+            color: #fff;
+            padding: 4px 10px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 7px;
+            margin: 10px 14px 0;
+            flex-wrap: wrap;
+        }
+
+        .quick-btn {
+            flex: 1 1 22%;
+            min-width: 65px;
+            background: var(--surface);
+            border-radius: var(--radius-sm);
+            padding: 10px 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid var(--border);
+        }
+
+        .quick-btn:active {
+            transform: scale(0.95);
+            box-shadow: var(--shadow-md);
+        }
+
+        .quick-btn .qb-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+
+        .quick-btn span {
+            font-size: 0.62rem;
+            font-weight: 600;
+            color: var(--text-main);
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        .qb-blue {
+            background: #e8f0ff;
+            color: var(--primary);
+        }
+        .qb-green {
+            background: #e6faf4;
+            color: #00a87a;
+        }
+        .qb-orange {
+            background: #fff5ea;
+            color: #e07000;
+        }
+        .qb-purple {
+            background: #f2eaff;
+            color: #7c3aed;
+        }
+
+        .section-title {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin: 14px 14px 6px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .section-title i {
+            width: 24px;
+            height: 24px;
+            border-radius: 7px;
+            background: var(--primary);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.68rem;
+        }
+
+        .section-title .see-all {
+            margin-right: auto;
+            font-size: 0.7rem;
+            color: var(--primary);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .service-card {
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            margin: 0 14px 10px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .service-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 11px 14px;
+            border-bottom: 1px solid #f0f5fc;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .service-row:last-child {
+            border-bottom: none;
+        }
+        .service-row:active {
+            background: #f0f5fc;
+        }
+
+        .service-row .right {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-weight: 500;
+            color: var(--text-main);
+            font-size: 0.82rem;
+        }
+
+        .srv-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.72rem;
+        }
+        .si-blue {
+            background: #e8f0ff;
+            color: var(--primary);
+        }
+        .si-green {
+            background: #e6faf4;
+            color: #00a87a;
+        }
+        .si-orange {
+            background: #fff5ea;
+            color: #e07000;
+        }
+        .si-purple {
+            background: #f2eaff;
+            color: #7c3aed;
+        }
+        .si-red {
+            background: #fff0f0;
+            color: #e03c3c;
+        }
+        .si-teal {
+            background: #e6f6fa;
+            color: #0096b4;
+        }
+
+        .arrow-badge {
+            width: 24px;
+            height: 24px;
+            border-radius: 7px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 0.65rem;
+        }
+
+        .empty-state {
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            margin: 0 14px 10px;
+            padding: 28px 16px;
+            text-align: center;
+            border: 2px dashed #d0dff0;
+        }
+
+        .empty-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--surface2);
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            border: 2px solid var(--border);
+        }
+
+        .empty-state h3 {
+            font-size: 0.88rem;
+            color: var(--text-main);
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .empty-state p {
+            font-size: 0.73rem;
+            color: var(--text-sec);
+        }
+
+        .report-stat {
+            margin: 0 14px 10px;
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            padding: 12px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+        .stat-row {
+            display: flex;
+            gap: 7px;
+            flex-wrap: wrap;
+        }
+        .stat-item {
+            flex: 1 1 28%;
+            min-width: 60px;
+            text-align: center;
+            padding: 8px;
+            background: var(--surface2);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+        }
+        .stat-item.green {
+            background: #e6faf4;
+            border-color: #b3f0d8;
+        }
+        .stat-item.orange {
+            background: #fff5ea;
+            border-color: #ffd9b3;
+        }
+        .stat-item .num {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+        .stat-item.green .num {
+            color: #00a87a;
+        }
+        .stat-item.orange .num {
+            color: #e07000;
+        }
+        .stat-item .lbl {
+            font-size: 0.65rem;
+            color: var(--text-sec);
+            margin-top: 3px;
+            font-weight: 600;
+        }
+
+        .profile-hero {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            margin: 0 14px 12px;
+            border-radius: var(--radius-md);
+            padding: 16px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+        .avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            color: #fff;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .profile-info-text h3 {
+            font-size: 0.88rem;
+            font-weight: 800;
+            margin-bottom: 3px;
+        }
+        .profile-info-text .iban {
+            font-size: 0.68rem;
+            opacity: 0.75;
+        }
+
+        .menu-card {
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            margin: 0 14px 10px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 14px;
+            border-bottom: 1px solid #f0f5fc;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+        .menu-item:active {
+            background: #f0f5fc;
+        }
+        .menu-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 9px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.72rem;
+            color: var(--primary);
+        }
+        .menu-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-main);
+            flex: 1;
+        }
+        .menu-arrow {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+        }
+
+        .content {
+            flex: 1;
+        }
+
+        .screen-page {
+            display: none;
+            animation: fadeSlide 0.2s ease;
+        }
+        .screen-page.active {
+            display: block;
+        }
+        .sub-section {
+            display: none;
+        }
+        .sub-section.active {
+            display: block;
+        }
+
+        @keyframes fadeSlide {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .plus-tag {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 30px;
+            font-size: 0.73rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 4px 12px rgba(0, 98, 204, 0.3);
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .plus-tag:active {
+            transform: scale(0.95);
+        }
+
+        .bottom-nav-wrapper {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 999;
+            padding: 6px 10px calc(6px + var(--safe-bottom));
+            background: linear-gradient(to top, rgba(221, 230, 240, 0.98) 70%, transparent);
+            display: none;
+            pointer-events: none;
+        }
+        .bottom-nav-wrapper.active {
+            display: block;
+            pointer-events: auto;
+        }
+        .bottom-nav {
+            background: var(--surface);
+            border-radius: 26px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 5px 4px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            padding: 6px 4px;
+            cursor: pointer;
+            border-radius: 16px;
+            transition: all 0.2s ease;
+            color: var(--text-muted);
+            font-size: 0.6rem;
+            font-weight: 600;
+            text-align: center;
+            min-width: 0;
+            position: relative;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .nav-item i {
+            font-size: 0.9rem;
+            transition: transform 0.2s;
+        }
+        .nav-item.active {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(0, 98, 204, 0.35);
+        }
+        .nav-item.active i {
+            transform: scale(1.1);
+        }
+        .nav-item:active {
+            transform: scale(0.9);
+        }
+
+        .whatsapp-fab {
+            position: fixed;
+            bottom: calc(var(--nav-height) + var(--safe-bottom) + 20px);
+            left: 16px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #25d366, #128c7e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.3rem;
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5);
+            text-decoration: none;
+            animation: pulse 2s infinite;
+            z-index: 998;
+            transition: bottom 0.3s;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5);
+            }
+            50% {
+                box-shadow: 0 6px 28px rgba(37, 211, 102, 0.8), 0 0 0 8px rgba(37, 211, 102, 0.1);
+            }
+            100% {
+                box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5);
+            }
+        }
+
+        .chart-container {
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            margin: 0 14px 10px;
+            padding: 12px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+        .chart-container canvas {
+            max-height: 180px;
+        }
+
+        .resource-link-card {
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            margin: 0 14px 8px;
+            padding: 14px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .resource-link-card:active {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-1px);
+        }
+        .r-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        .ri-wordwall {
+            background: #e8f0ff;
+            color: #0062cc;
+        }
+        .ri-forms {
+            background: #e6faf4;
+            color: #00a87a;
+        }
+        .ri-drive {
+            background: #fff5ea;
+            color: #e07000;
+        }
+        .ri-locutions {
+            background: #f2eaff;
+            color: #7c3aed;
+        }
+        .r-info {
+            flex: 1;
+        }
+        .r-name {
+            font-weight: 700;
+            color: var(--text-main);
+            font-size: 0.82rem;
+        }
+        .r-desc {
+            font-size: 0.7rem;
+            color: var(--text-sec);
+            margin-top: 2px;
+        }
+        .r-arrow {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.6rem;
+            font-weight: 600;
+            margin: 1px;
+        }
+        .tag-semester {
+            background: #e8f0ff;
+            color: #0062cc;
+        }
+        .tag-grade {
+            background: #e6faf4;
+            color: #00a87a;
+        }
+        .tag-subject {
+            background: #fff5ea;
+            color: #e07000;
+        }
+        .tag-exam {
+            background: #f2eaff;
+            color: #7c3aed;
+        }
+
+        .json-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 10px;
+            border-radius: var(--radius-sm);
+            border: 2px solid var(--border);
+            font-family: monospace;
+            font-size: 0.75rem;
+            background: #fafbff;
+            resize: vertical;
+            outline: none;
+            direction: ltr;
+        }
+        .json-textarea:focus {
+            border-color: var(--primary);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.78rem;
+            transition: background 0.2s;
+        }
+        .btn-primary:active {
+            background: var(--primary-dark);
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal-box {
+            background: #fff;
+            border-radius: var(--radius-md);
+            padding: 18px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+        .modal-box h3 {
+            margin-bottom: 12px;
+            color: var(--text-main);
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #e2ecf7;
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            margin-left: 8px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .sync-badge {
+            font-size: 0.6rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            background: #e6faf4;
+            color: #00a87a;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        select {
+            background: var(--surface);
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        /* أنماط إضافية لواجهة رفع GitHub داخل القوالب */
+        .github-upload-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 4px;
+        }
+        .btn-github-upload {
+            background: #24292e;
+            color: #fff;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.65rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: opacity 0.2s;
+        }
+        .btn-github-upload:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .github-status-inline {
+            font-size: 0.6rem;
+            color: var(--text-muted);
+        }
+        .github-settings-bar {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            margin: 0 14px 8px;
+            flex-wrap: wrap;
+        }
+        .github-settings-bar input {
+            padding: 6px;
+            border-radius: 12px;
+            border: 2px solid var(--border);
+            font-size: 0.7rem;
+            width: 120px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="screen" id="main-screen">
+        <div class="app-header">
+            <div style="display:flex;align-items:center;gap:8px;">
+                <div class="back-button" id="global-back-btn" onclick="goBack()" title="الرجوع خطوة">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+                <div class="greeting"><h2>أهلاً وسهلاً <span class="star">★</span></h2><p id="app-title">نظام GOO</p></div>
+            </div>
+            <div class="header-badge"><i class="fas fa-graduation-cap"></i><span>تعليمي</span> <span class="sync-badge" id="sync-status"><i class="fas fa-cloud"></i> متصل</span></div>
+        </div>
+
+        <div class="content">
+            <div id="page-home" class="screen-page active">
+                <div class="search-container" style="position:relative;">
+                    <input type="text" class="search-input" id="global-search" placeholder="🔍 بحث عن أي شيء... طلبات، خطط، اختبارات، ألعاب..." oninput="handleGlobalSearch()" onfocus="handleGlobalSearch()">
+                    <button class="search-icon-btn"><i class="fas fa-search"></i></button>
+                    <div class="search-suggestions" id="search-suggestions"></div>
+                </div>
+                <div class="balance-card"><div class="balance-label"><i class="fas fa-circle" style="font-size:0.4rem;margin-left:3px;"></i> إجمالي الموارد</div><div class="balance-amount"><span>عنصر</span> <span id="total-resources">0</span></div><div class="balance-footer"><span class="account">سحابي - Firestore</span><button class="eye-btn"><i class="fas fa-check-circle"></i> نشط</button></div></div>
+                <div class="quick-actions">
+                    <div class="quick-btn" onclick="navigateTo('orders')"><div class="qb-icon qb-orange"><i class="fas fa-shopping-cart"></i></div><span>الطلبات</span></div>
+                    <div class="quick-btn" onclick="navigateTo('templates')"><div class="qb-icon qb-blue"><i class="fas fa-file-code"></i></div><span>القوالب</span></div>
+                    <div class="quick-btn" onclick="navigateTo('resources')"><div class="qb-icon qb-green"><i class="fas fa-link"></i></div><span>الموارد</span></div>
+                    <div class="quick-btn" onclick="navigateTo('invoices')"><div class="qb-icon qb-purple"><i class="fas fa-file-invoice-dollar"></i></div><span>الفواتير</span></div>
+                </div>
+                <div class="section-title"><i class="fas fa-chart-bar"></i> ملخص</div>
+                <div class="report-stat"><div class="stat-row">
+                        <div class="stat-item"><div class="num" id="stat-orders">0</div><div class="lbl">الطلبات</div></div>
+                        <div class="stat-item green"><div class="num" id="stat-templates">0</div><div class="lbl">القوالب</div></div>
+                        <div class="stat-item orange"><div class="num" id="stat-invoices">0</div><div class="lbl">الفواتير</div></div>
+                </div></div>
+                <div class="section-title"><i class="fas fa-fire"></i> الأكثر استخداماً</div>
+                <div id="top-used-container"><div class="empty-state"><div class="empty-icon"><i class="fas fa-star"></i></div><h3>جاري التحميل...</h3><p>يتم تحميل البيانات من السحابة</p></div></div>
+            </div>
+
+            <div id="page-orders" class="screen-page">
+                <div class="section-title" style="justify-content:space-between;"><span><i class="fas fa-shopping-cart"></i>الطلبات</span><span class="plus-tag" onclick="addNewOrder()"><i class="fas fa-plus"></i>طلب جديد</span></div>
+                <div id="orders-filter-row" style="display:flex;gap:6px;margin:0 14px 8px;flex-wrap:wrap;">
+                    <select onchange="renderOrders()" id="order-status-filter" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;"><option value="">كل الحالات</option><option value="جديد">جديد</option><option value="قيد التصميم">قيد التصميم</option><option value="مكتمل">مكتمل</option><option value="تم التسليم">تم التسليم</option></select>
+                    <select onchange="renderOrders()" id="order-designer-filter" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;"><option value="">كل المصممين</option></select>
+                </div>
+                <div id="orders-container"><div class="empty-state"><h3>جاري التحميل...</h3></div></div>
+            </div>
+
+            <div id="page-templates" class="screen-page">
+                <div class="section-title" style="justify-content:space-between;"><span><i class="fas fa-file-code"></i>القوالب</span><span class="plus-tag" onclick="addTemplateItem()"><i class="fas fa-plus"></i>جديد</span></div>
+                <!-- شريط إعدادات GitHub مدمج في صفحة القوالب -->
+                <div class="github-settings-bar" id="github-settings-bar">
+                    <input type="text" id="gh-token-inline" placeholder="Token" style="width:100px;">
+                    <input type="text" id="gh-repo-inline" placeholder="repo" value="goo" style="width:80px;">
+                    <input type="text" id="gh-folder-inline" placeholder="folder" value="database" style="width:80px;">
+                    <button class="btn-primary" onclick="saveGithubInlineSettings()" style="font-size:0.65rem; padding:4px 10px;">💾 حفظ</button>
+                    <span class="github-status-inline" id="github-inline-status"></span>
+                </div>
+                <div id="templates-files-section" class="sub-section active"><div id="templates-files-container" class="service-card"><div class="empty-state" style="margin:0;border:none;"><div class="empty-icon"><i class="fas fa-folder-open"></i></div><h3>جاري التحميل...</h3></div></div></div>
+                <div id="templates-records-section" class="sub-section"><div id="templates-records-container" class="service-card"><div class="empty-state" style="margin:0;border:none;"><div class="empty-icon"><i class="fas fa-clipboard-list"></i></div><h3>جاري التحميل...</h3></div></div></div>
+                <div id="templates-exams-section" class="sub-section"><div id="templates-exams-container" class="service-card"><div class="empty-state" style="margin:0;border:none;"><div class="empty-icon"><i class="fas fa-pencil-alt"></i></div><h3>جاري التحميل...</h3></div></div></div>
+                <div id="templates-reports-section" class="sub-section"><div id="templates-reports-container" class="service-card"><div class="empty-state" style="margin:0;border:none;"><div class="empty-icon"><i class="fas fa-chart-bar"></i></div><h3>جاري التحميل...</h3></div></div></div>
+                <div id="templates-plans-section" class="sub-section"><div id="templates-plans-container" class="service-card"><div class="empty-state" style="margin:0;border:none;"><div class="empty-icon"><i class="fas fa-calendar-alt"></i></div><h3>جاري التحميل...</h3></div></div></div>
+            </div>
+
+            <div id="page-resources" class="screen-page">
+                <div class="section-title"><i class="fas fa-link"></i>الموارد التعليمية</div>
+                <div id="resources-wordwall-section" class="sub-section active">
+                    <div class="section-title" style="font-size:0.8rem;">Wordwall - ألعاب تفاعلية <span class="plus-tag" style="margin-right:auto;" onclick="openJsonModal('wordwall')"><i class="fas fa-upload"></i> رفع JSON</span></div>
+                    <div id="wordwall-filter-row" style="display:flex;gap:6px;margin:0 14px 8px;flex-wrap:wrap;">
+                        <select onchange="renderWordwall()" id="ww-semester" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;"><option value="">كل الفصول</option><option value="الأول">الفصل الأول</option><option value="الثاني">الفصل الثاني</option></select>
+                        <select onchange="renderWordwall()" id="ww-grade" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;"><option value="">كل الصفوف</option></select>
+                        <select onchange="renderWordwall()" id="ww-subject" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;"><option value="">كل المواد</option></select>
+                    </div>
+                    <div id="wordwall-container"><div class="empty-state"><div class="empty-icon"><i class="fas fa-th-large"></i></div><h3>جاري التحميل...</h3></div></div>
+                </div>
+                <div id="resources-forms-section" class="sub-section">
+                    <div class="section-title" style="font-size:0.8rem;">Google Forms <span class="plus-tag" style="margin-right:auto;" onclick="openJsonModal('forms')"><i class="fas fa-upload"></i> رفع JSON</span></div>
+                    <div id="forms-exams-section2" class="sub-section active"><div id="forms-exams-container"><div class="empty-state"><h3>جاري التحميل...</h3></div></div></div>
+                    <div id="forms-surveys-section2" class="sub-section"><div id="forms-surveys-container"><div class="empty-state"><h3>جاري التحميل...</h3></div></div></div>
+                    <div id="forms-other-section2" class="sub-section"><div id="forms-other-container"><div class="empty-state"><h3>جاري التحميل...</h3></div></div></div>
+                </div>
+                <div id="resources-drive-section" class="sub-section">
+                    <div class="section-title" style="font-size:0.8rem;">Google Drive <span class="plus-tag" style="margin-right:auto;" onclick="openJsonModal('drive')"><i class="fas fa-upload"></i> رفع JSON</span></div>
+                    <div id="drive-bags-section" class="sub-section active"><div id="drive-bags-container"><div class="empty-state"><h3>جاري التحميل...</h3></div></div></div>
+                    <div id="drive-enrich-section" class="sub-section"><div id="drive-enrich-container"><div class="empty-state"><h3>جاري التحميل...</h3></div></div></div>
+                    <div id="drive-records-section" class="sub-section"><div id="drive-records-container"><div class="empty-state"><h3>جاري التحميل...</h3></div></div></div>
+                    <div id="drive-other-section" class="sub-section"><div id="drive-other-container"><div class="empty-state"><h3>جاري التحميل...</h3></div></div></div>
+                </div>
+                <div id="resources-locutions-section" class="sub-section">
+                    <div class="section-title" style="font-size:0.8rem;">Locutions - ملفات وعروض <span class="plus-tag" style="margin-right:auto;" onclick="addLocution()"><i class="fas fa-plus"></i> جديد</span></div>
+                    <input type="text" placeholder="بحث في الملفات..." oninput="renderLocutions()" id="loc-search" style="margin:0 14px 8px;width:calc(100% - 28px);padding:8px;border-radius:20px;border:2px solid var(--border);font-size:0.78rem;">
+                    <div id="locutions-container"><div class="empty-state"><h3>جاري التحميل...</h3></div></div>
+                </div>
+            </div>
+
+            <div id="page-invoices" class="screen-page">
+                <div class="section-title" style="justify-content:space-between;"><span><i class="fas fa-file-invoice-dollar"></i>الفواتير</span><span class="plus-tag" onclick="addNewInvoice()"><i class="fas fa-plus"></i>جديد</span></div>
+                <div class="report-stat"><div class="stat-row"><div class="stat-item"><div class="num" id="total-sales">0</div><div class="lbl">الفواتير</div></div><div class="stat-item green"><div class="num" id="total-paid">0</div><div class="lbl">المدفوع</div></div><div class="stat-item orange"><div class="num" id="total-debt">0</div><div class="lbl">المتبقي</div></div></div></div>
+                <div id="invoices-container" class="service-card"><div class="empty-state" style="margin:0;border:none;"><h3>جاري التحميل...</h3></div></div>
+                <div id="invoice-pdf-template" style="display:none;padding:30px;font-family:'Tajawal',sans-serif;direction:rtl;background:#fff;color:#333;"><div style="display:flex;justify-content:space-between;border-bottom:2px solid #0062cc;padding-bottom:15px;margin-bottom:20px;"><div><h1 style="color:#0062cc;margin:0;font-size:22px;">نظام GOO</h1></div><div style="text-align:left;"><div id="pdf-invoice-number" style="font-weight:bold;">#INV-0000</div><div id="pdf-invoice-date" style="color:#666;">-</div></div></div><div style="margin-bottom:20px;"><p><strong>العميل:</strong> <span id="pdf-customer-name">-</span></p></div><table style="width:100%;border-collapse:collapse;margin-bottom:20px;"><thead><tr style="background:#f4f8fd;"><th style="padding:10px;border:1px solid #e2ecf7;">الوصف</th><th style="padding:10px;border:1px solid #e2ecf7;">المبلغ</th></tr></thead><tbody><tr><td style="padding:10px;border:1px solid #e2ecf7;">خدمات تصميم</td><td style="padding:10px;border:1px solid #e2ecf7;text-align:left;"><span id="pdf-amount">0</span> ر.س</td></tr></tbody></table><div style="display:flex;justify-content:flex-end;"><div style="width:200px;"><div style="display:flex;justify-content:space-between;padding:6px 0;"><span>الإجمالي:</span><span id="pdf-total">0</span></div><div style="display:flex;justify-content:space-between;padding:6px 0;"><span>المدفوع:</span><span id="pdf-paid">0</span></div><div style="display:flex;justify-content:space-between;padding:6px 0;font-weight:bold;color:#0062cc;"><span>المتبقي:</span><span id="pdf-debt">0</span></div></div></div></div>
+            </div>
+
+            <div id="page-admin" class="screen-page">
+                <div class="profile-hero"><div class="avatar"><i class="fas fa-user-tie"></i></div><div class="profile-info-text"><h3>فيصل الصوفي</h3><div class="iban">قائد الفريق | مدير النظام</div></div></div>
+                <div id="admin-users-section" class="sub-section active"><div class="section-title"><i class="fas fa-users"></i>المستخدمين</div><div id="users-container" class="service-card"><div class="empty-state" style="margin:0;border:none;"><h3>لا يوجد مستخدمين</h3></div></div></div>
+                <div id="admin-customers-section" class="sub-section"><div class="section-title"><i class="fas fa-user-tag"></i>العملاء والوسطاء</div><div id="customers-container2" class="service-card"><div class="empty-state" style="margin:0;border:none;"><h3>لا يوجد عملاء</h3></div></div></div>
+                <div id="admin-analytics-section" class="sub-section"><div class="section-title"><i class="fas fa-chart-bar"></i>الإحصائيات</div><div class="chart-container"><canvas id="revenueChart"></canvas></div></div>
+                <div id="admin-settings-section" class="sub-section">
+                    <div class="section-title"><i class="fas fa-cog"></i>الإعدادات</div>
+                    <div class="menu-card">
+                        <div class="menu-item" onclick="openGithubSettings()"><div class="menu-icon"><i class="fab fa-github"></i></div><span class="menu-label">إعدادات GitHub والرفع</span><i class="fas fa-chevron-left menu-arrow"></i></div>
+                        <div class="menu-item" onclick="exportAllData()"><div class="menu-icon"><i class="fas fa-download"></i></div><span class="menu-label">تصدير جميع البيانات (JSON)</span><i class="fas fa-chevron-left menu-arrow"></i></div>
+                        <div class="menu-item" onclick="importAllData()"><div class="menu-icon"><i class="fas fa-upload"></i></div><span class="menu-label">استيراد البيانات</span><i class="fas fa-chevron-left menu-arrow"></i></div>
+                        <div class="menu-item" onclick="syncNow()"><div class="menu-icon"><i class="fas fa-sync-alt"></i></div><span class="menu-label">مزامنة الآن</span><i class="fas fa-chevron-left menu-arrow"></i></div>
+                        <div class="menu-item" onclick="clearAllData()"><div class="menu-icon" style="background:#fff0f0;"><i class="fas fa-trash" style="color:#e03c3c;"></i></div><span class="menu-label" style="color:#e03c3c;">مسح جميع البيانات</span><i class="fas fa-chevron-left menu-arrow"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a class="whatsapp-fab" href="https://wa.me/966562184385" target="_blank" id="whatsapp-fab"><i class="fab fa-whatsapp"></i></a>
+
+    <div class="modal-overlay" id="json-modal">
+        <div class="modal-box">
+            <h3>رفع بيانات JSON <span id="json-modal-type"></span></h3>
+            <textarea class="json-textarea" id="json-textarea" placeholder="الصق بيانات JSON هنا..."></textarea>
+            <div id="upload-progress" style="display:none; margin:10px 0; padding:8px; background:#f4f8fd; border-radius:10px; font-weight:bold; color:var(--primary); text-align:center;"></div>
+            <div style="margin-top:10px;display:flex;gap:8px;justify-content:flex-end;">
+                <button class="btn-primary" onclick="submitJsonData()">رفع إلى السحابة</button>
+                <button onclick="closeJsonModal()" style="background:#ccc;border:none;padding:8px 16px;border-radius:20px;cursor:pointer;">إلغاء</button>
+            </div>
+        </div>
+    </div>
+    <div class="modal-overlay" id="github-modal">
+        <div class="modal-box">
+            <h3>إعدادات GitHub</h3>
+            <p style="font-size:0.75rem;color:var(--text-sec);margin-bottom:8px;">خاص بمدير النظام فقط</p>
+            <input type="password" id="github-password" placeholder="كلمة مرور المدير" style="width:100%;padding:8px;border-radius:10px;border:2px solid var(--border);margin-bottom:8px;font-size:0.8rem;">
+            <button class="btn-primary" onclick="verifyGithubAccess()">تحقق ورفع إلى GitHub</button>
+            <p style="font-size:0.7rem;color:var(--text-muted);margin-top:8px;">كلمة المرور الافتراضية: admin123</p>
+        </div>
+    </div>
+
+    <!-- Navigation Bars Container -->
+    <div id="navigation-container">
+        <div class="bottom-nav-wrapper active" id="nav-main">
+            <div class="bottom-nav">
+                <div class="nav-item active" data-page="home" onclick="navigateTo('home')"><i class="fas fa-home"></i><span>الرئيسية</span></div>
+                <div class="nav-item" data-page="orders" onclick="navigateTo('orders')"><i class="fas fa-shopping-cart"></i><span>الطلبات</span></div>
+                <div class="nav-item" data-page="templates" onclick="navigateTo('templates')"><i class="fas fa-file-code"></i><span>القوالب</span></div>
+                <div class="nav-item" data-page="resources" onclick="navigateTo('resources')"><i class="fas fa-link"></i><span>الموارد</span></div>
+                <div class="nav-item" data-page="invoices" onclick="navigateTo('invoices')"><i class="fas fa-file-invoice-dollar"></i><span>الفواتير</span></div>
+                <div class="nav-item" data-page="admin" onclick="navigateTo('admin')"><i class="fas fa-cog"></i><span>الإدارة</span></div>
+            </div>
+        </div>
+        <div class="bottom-nav-wrapper" id="nav-templates">
+            <div class="bottom-nav">
+                <div class="nav-item active" data-sub="files" onclick="switchTemplateTab('files')"><i class="fas fa-folder"></i><span>ملفات</span></div>
+                <div class="nav-item" data-sub="records" onclick="switchTemplateTab('records')"><i class="fas fa-clipboard-list"></i><span>سجلات</span></div>
+                <div class="nav-item" data-sub="exams" onclick="switchTemplateTab('exams')"><i class="fas fa-pencil-alt"></i><span>اختبارات</span></div>
+                <div class="nav-item" data-sub="reports" onclick="switchTemplateTab('reports')"><i class="fas fa-chart-bar"></i><span>تقارير</span></div>
+                <div class="nav-item" data-sub="plans" onclick="switchTemplateTab('plans')"><i class="fas fa-calendar-alt"></i><span>خطط</span></div>
+            </div>
+        </div>
+        <div class="bottom-nav-wrapper" id="nav-resources">
+            <div class="bottom-nav">
+                <div class="nav-item active" data-sub="wordwall" onclick="switchResourceTab('wordwall')"><i class="fas fa-th-large"></i><span>Wordwall</span></div>
+                <div class="nav-item" data-sub="forms" onclick="switchResourceTab('forms')"><i class="fas fa-wpforms"></i><span>Forms</span></div>
+                <div class="nav-item" data-sub="drive" onclick="switchResourceTab('drive')"><i class="fas fa-cloud"></i><span>Drive</span></div>
+                <div class="nav-item" data-sub="locutions" onclick="switchResourceTab('locutions')"><i class="fas fa-microphone-alt"></i><span>Locutions</span></div>
+            </div>
+        </div>
+        <div class="bottom-nav-wrapper" id="nav-forms-sub">
+            <div class="bottom-nav">
+                <div class="nav-item active" data-sub="exams" onclick="switchFormsSubTab('exams')"><i class="fas fa-pencil-alt"></i><span>اختبارات</span></div>
+                <div class="nav-item" data-sub="surveys" onclick="switchFormsSubTab('surveys')"><i class="fas fa-poll"></i><span>استبيانات</span></div>
+                <div class="nav-item" data-sub="other" onclick="switchFormsSubTab('other')"><i class="fas fa-ellipsis-h"></i><span>أخرى</span></div>
+            </div>
+        </div>
+        <div class="bottom-nav-wrapper" id="nav-drive-sub">
+            <div class="bottom-nav">
+                <div class="nav-item active" data-sub="bags" onclick="switchDriveSubTab('bags')"><i class="fas fa-briefcase"></i><span>حقائب</span></div>
+                <div class="nav-item" data-sub="enrich" onclick="switchDriveSubTab('enrich')"><i class="fas fa-star"></i><span>إثراءات</span></div>
+                <div class="nav-item" data-sub="records" onclick="switchDriveSubTab('records')"><i class="fas fa-file-alt"></i><span>سجلات</span></div>
+                <div class="nav-item" data-sub="other" onclick="switchDriveSubTab('other')"><i class="fas fa-ellipsis-h"></i><span>أخرى</span></div>
+            </div>
+        </div>
+        <div class="bottom-nav-wrapper" id="nav-admin">
+            <div class="bottom-nav">
+                <div class="nav-item active" data-sub="users" onclick="switchAdminTab('users')"><i class="fas fa-users"></i><span>المستخدمين</span></div>
+                <div class="nav-item" data-sub="customers" onclick="switchAdminTab('customers')"><i class="fas fa-user-tag"></i><span>العملاء</span></div>
+                <div class="nav-item" data-sub="analytics" onclick="switchAdminTab('analytics')"><i class="fas fa-chart-bar"></i><span>إحصائيات</span></div>
+                <div class="nav-item" data-sub="settings" onclick="switchAdminTab('settings')"><i class="fas fa-cog"></i><span>إعدادات</span></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== Firebase Configuration ====================
+        const firebaseConfig = {
+            apiKey: "AIzaSyC1TN2FUblcP_P1JNaRqAYhaVyLgn6f40Y",
+            authDomain: "my-wo-3140f.firebaseapp.com",
+            projectId: "my-wo-3140f",
+            storageBucket: "my-wo-3140f.firebasestorage.app",
+            messagingSenderId: "520809412261",
+            appId: "1:520809412261:web:0140457983a2496c26ff4c",
+            measurementId: "G-Z6XMDK23EN"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        db.enablePersistence({ synchronizeTabs: true }).then(() => {
+            console.log('✅ Offline persistence enabled');
+            updateSyncStatus(true);
+        }).catch((err) => {
+            console.warn('Persistence error:', err);
+            updateSyncStatus(false);
+        });
+
+        function updateSyncStatus(online) {
+            const badge = document.getElementById('sync-status');
+            if (badge) {
+                badge.innerHTML = online ? '<i class="fas fa-cloud"></i> متصل' : '<i class="fas fa-wifi"></i> محلي';
+                badge.style.background = online ? '#e6faf4' : '#fff5ea';
+                badge.style.color = online ? '#00a87a' : '#e07000';
+            }
+        }
+
+        // ==================== Collection Names ====================
+        const COL = {
+            T_FILES: 't_files',
+            T_RECORDS: 't_records',
+            T_EXAMS: 't_exams',
+            T_REPORTS: 't_reports',
+            T_PLANS: 't_plans',
+            WORDWALL: 'wordwall',
+            FORMS_EXAMS: 'forms_exams',
+            FORMS_SURVEYS: 'forms_surveys',
+            FORMS_OTHER: 'forms_other',
+            DRIVE_BAGS: 'drive_bags',
+            DRIVE_ENRICH: 'drive_enrich',
+            DRIVE_RECORDS: 'drive_records',
+            DRIVE_OTHER: 'drive_other',
+            LOCUTIONS: 'locutions',
+            CUSTOMERS: 'customers',
+            INVOICES: 'invoices',
+            ORDERS: 'orders',
+            ACTIVITIES: 'activities'
+        };
+
+        // ==================== Firestore Helpers ====================
+        async function getCollectionSorted(collectionName, field = 'usageCount', limitCount = 1000) {
+            try {
+                const snapshot = await db.collection(collectionName).orderBy(field, 'desc').limit(limitCount).get();
+                const data = [];
+                snapshot.forEach(doc => data.push({ id: doc.id, ...doc.data() }));
+                return data;
+            } catch (e) { console.error('getCollectionSorted error:', e); return []; }
+        }
+
+        async function addDocument(collectionName, data) {
+            try {
+                data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                data.usageCount = data.usageCount || 0;
+                const docRef = await db.collection(collectionName).add(data);
+                return { id: docRef.id, ...data };
+            } catch (e) { console.error('addDocument error:', e); return null; }
+        }
+
+        async function updateDocument(collectionName, docId, updates) {
+            try { await db.collection(collectionName).doc(docId).update(updates); return true; } catch (e) { console.error('updateDocument error:', e); return false; }
+        }
+
+        async function deleteDocument(collectionName, docId) {
+            try { await db.collection(collectionName).doc(docId).delete(); return true; } catch (e) { console.error('deleteDocument error:', e); return false; }
+        }
+
+        async function incrementUsage(collectionName, docId) {
+            try {
+                const docRef = db.collection(collectionName).doc(docId);
+                await db.runTransaction(async (transaction) => {
+                    const doc = await transaction.get(docRef);
+                    if (!doc.exists) return;
+                    const current = doc.data().usageCount || 0;
+                    transaction.update(docRef, { usageCount: current + 1 });
+                });
+            } catch (e) { console.error('incrementUsage error:', e); }
+        }
+
+        // ==================== Application Data ====================
+        const appData = {
+            templates: { files: [], records: [], exams: [], reports: [], plans: [] },
+            wordwall: [],
+            formsExams: [],
+            formsSurveys: [],
+            formsOther: [],
+            driveBags: [],
+            driveEnrich: [],
+            driveRecords: [],
+            driveOther: [],
+            locutions: [],
+            customers: [],
+            invoices: [],
+            orders: [],
+            activities: []
+        };
+
+        async function loadAllData() {
+            try {
+                const [files, records, exams, reports, plans, wordwall, formsExams, formsSurveys, formsOther,
+                    driveBags, driveEnrich, driveRecords, driveOther, locutions, customers, invoices, orders, activities
+                ] = await Promise.all([
+                    getCollectionSorted(COL.T_FILES), getCollectionSorted(COL.T_RECORDS),
+                    getCollectionSorted(COL.T_EXAMS), getCollectionSorted(COL.T_REPORTS),
+                    getCollectionSorted(COL.T_PLANS), getCollectionSorted(COL.WORDWALL),
+                    getCollectionSorted(COL.FORMS_EXAMS), getCollectionSorted(COL.FORMS_SURVEYS),
+                    getCollectionSorted(COL.FORMS_OTHER), getCollectionSorted(COL.DRIVE_BAGS),
+                    getCollectionSorted(COL.DRIVE_ENRICH), getCollectionSorted(COL.DRIVE_RECORDS),
+                    getCollectionSorted(COL.DRIVE_OTHER), getCollectionSorted(COL.LOCUTIONS),
+                    getCollectionSorted(COL.CUSTOMERS, 'createdAt'), getCollectionSorted(COL.INVOICES, 'createdAt'),
+                    getCollectionSorted(COL.ORDERS, 'createdAt'), getCollectionSorted(COL.ACTIVITIES, 'createdAt')
+                ]);
+                appData.templates = { files, records, exams, reports, plans };
+                appData.wordwall = wordwall;
+                appData.formsExams = formsExams;
+                appData.formsSurveys = formsSurveys;
+                appData.formsOther = formsOther;
+                appData.driveBags = driveBags;
+                appData.driveEnrich = driveEnrich;
+                appData.driveRecords = driveRecords;
+                appData.driveOther = driveOther;
+                appData.locutions = locutions;
+                appData.customers = customers;
+                appData.invoices = invoices;
+                appData.orders = orders;
+                appData.activities = activities;
+                console.log('✅ All data loaded');
+                updateSyncStatus(true);
+            } catch (e) { console.error('❌ Load error:', e); updateSyncStatus(false); }
+        }
+
+        async function addActivityCloud(desc) {
+            await addDocument(COL.ACTIVITIES, { desc, time: new Date().toLocaleString('ar-SA') });
+        }
+
+        // ==================== Navigation History System ====================
+        const navHistory = [];
+        let isRestoring = false;
+
+        let currentPage = 'home';
+        let currentTemplateTab = 'files';
+        let currentResourceTab = 'wordwall';
+        let currentFormsSubTab = 'exams';
+        let currentDriveSubTab = 'bags';
+        let currentAdminTab = 'users';
+        let currentJsonType = '';
+
+        function pushNavState() {
+            if (isRestoring) return;
+            navHistory.push({
+                page: currentPage,
+                templateTab: currentTemplateTab,
+                resourceTab: currentResourceTab,
+                formsSubTab: currentFormsSubTab,
+                driveSubTab: currentDriveSubTab,
+                adminTab: currentAdminTab
+            });
+            if (navHistory.length > 50) navHistory.shift();
+            updateBackButtonVisibility();
+        }
+
+        function goBack() {
+            if (navHistory.length === 0) {
+                if (currentPage !== 'home') {
+                    isRestoring = true;
+                    currentPage = 'home';
+                    currentTemplateTab = 'files';
+                    currentResourceTab = 'wordwall';
+                    currentFormsSubTab = 'exams';
+                    currentDriveSubTab = 'bags';
+                    currentAdminTab = 'users';
+                    navigateTo('home');
+                    isRestoring = false;
+                }
+                updateBackButtonVisibility();
+                return;
+            }
+            isRestoring = true;
+            const prevState = navHistory.pop();
+            currentPage = prevState.page;
+            currentTemplateTab = prevState.templateTab;
+            currentResourceTab = prevState.resourceTab;
+            currentFormsSubTab = prevState.formsSubTab;
+            currentDriveSubTab = prevState.driveSubTab;
+            currentAdminTab = prevState.adminTab;
+            navigateTo(prevState.page);
+            isRestoring = false;
+            updateBackButtonVisibility();
+        }
+
+        function updateBackButtonVisibility() {
+            const btn = document.getElementById('global-back-btn');
+            if (btn) {
+                btn.style.display = (navHistory.length > 0 || currentPage !== 'home') ? 'flex' : 'none';
+            }
+        }
+
+        // ==================== Navigation Functions ====================
+        function hideAllNavs() {
+            document.querySelectorAll('.bottom-nav-wrapper').forEach(n => n.classList.remove('active'));
+        }
+
+        function showMainNav() { hideAllNavs(); document.getElementById('nav-main').classList.add('active'); }
+        function showTemplatesNav() { hideAllNavs(); document.getElementById('nav-templates').classList.add('active'); }
+        function showResourcesNav() { hideAllNavs(); document.getElementById('nav-resources').classList.add('active'); }
+        function showFormsSubNav() { hideAllNavs(); document.getElementById('nav-forms-sub').classList.add('active'); }
+        function showDriveSubNav() { hideAllNavs(); document.getElementById('nav-drive-sub').classList.add('active'); }
+        function showAdminNav() { hideAllNavs(); document.getElementById('nav-admin').classList.add('active'); }
+
+        function updateActiveNavItems() {
+            document.querySelectorAll('.bottom-nav-wrapper.active .nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            const activeWrapper = document.querySelector('.bottom-nav-wrapper.active');
+            if (!activeWrapper) return;
+            const navItems = activeWrapper.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                const pageAttr = item.getAttribute('data-page');
+                const subAttr = item.getAttribute('data-sub');
+                if (pageAttr && pageAttr === currentPage) item.classList.add('active');
+                if (subAttr) {
+                    if (activeWrapper.id === 'nav-templates' && subAttr === currentTemplateTab) item.classList.add('active');
+                    else if (activeWrapper.id === 'nav-resources' && subAttr === currentResourceTab) item.classList.add('active');
+                    else if (activeWrapper.id === 'nav-forms-sub' && subAttr === currentFormsSubTab) item.classList.add('active');
+                    else if (activeWrapper.id === 'nav-drive-sub' && subAttr === currentDriveSubTab) item.classList.add('active');
+                    else if (activeWrapper.id === 'nav-admin' && subAttr === currentAdminTab) item.classList.add('active');
+                }
+            });
+        }
+
+        function navigateTo(pageId) {
+            if (!pageId) return;
+            if (!isRestoring && pageId === currentPage) {
+                const screen = document.querySelector('.screen');
+                if (screen) screen.scrollTop = 0;
+                return;
+            }
+            if (!isRestoring) {
+                pushNavState();
+            }
+            currentPage = pageId;
+            document.querySelectorAll('.screen-page').forEach(p => p.classList.remove('active'));
+            const targetPage = document.getElementById('page-' + pageId);
+            if (targetPage) targetPage.classList.add('active');
+            const screen = document.querySelector('.screen');
+            if (screen) screen.scrollTop = 0;
+            updateBackButtonVisibility();
+
+            if (pageId === 'home') {
+                showMainNav();
+            } else if (pageId === 'orders' || pageId === 'invoices') {
+                showMainNav();
+                if (pageId === 'orders') renderOrders();
+                if (pageId === 'invoices') renderInvoices();
+            } else if (pageId === 'templates') {
+                showTemplatesNav();
+                switchTemplateTab(currentTemplateTab, true);
+            } else if (pageId === 'resources') {
+                showResourcesNav();
+                switchResourceTab(currentResourceTab, true);
+            } else if (pageId === 'admin') {
+                showAdminNav();
+                switchAdminTab(currentAdminTab, true);
+            } else {
+                showMainNav();
+            }
+            updateActiveNavItems();
+            refreshAll();
+        }
+
+        function switchTemplateTab(tab, silent = false) {
+            if (!silent && !isRestoring) pushNavState();
+            currentTemplateTab = tab;
+            const page = document.getElementById('page-templates');
+            if (!page) return;
+            page.querySelectorAll('.sub-section').forEach(s => s.classList.remove('active'));
+            const target = document.getElementById('templates-' + tab + '-section');
+            if (target) target.classList.add('active');
+            updateActiveNavItems();
+            if (!silent && currentPage !== 'templates') {
+                navigateTo('templates');
+            } else {
+                renderTemplateSection(tab);
+            }
+        }
+
+        function switchResourceTab(tab, silent = false) {
+            if (!silent && !isRestoring) pushNavState();
+            currentResourceTab = tab;
+            const page = document.getElementById('page-resources');
+            if (!page) return;
+            page.querySelectorAll('.sub-section').forEach(s => s.classList.remove('active'));
+            const target = document.getElementById('resources-' + tab + '-section');
+            if (target) target.classList.add('active');
+            if (tab === 'forms') {
+                showFormsSubNav();
+                switchFormsSubTab(currentFormsSubTab, true);
+            } else if (tab === 'drive') {
+                showDriveSubNav();
+                switchDriveSubTab(currentDriveSubTab, true);
+            } else {
+                showResourcesNav();
+            }
+            updateActiveNavItems();
+            if (!silent && currentPage !== 'resources') {
+                navigateTo('resources');
+            } else {
+                if (tab === 'wordwall') renderWordwall();
+                if (tab === 'forms') renderFormsSubData();
+                if (tab === 'drive') renderDriveSubData();
+                if (tab === 'locutions') renderLocutions();
+            }
+        }
+
+        function switchFormsSubTab(tab, silent = false) {
+            if (!silent && !isRestoring) pushNavState();
+            currentFormsSubTab = tab;
+            const section = document.getElementById('resources-forms-section');
+            if (!section) return;
+            section.querySelectorAll('.sub-section').forEach(s => s.classList.remove('active'));
+            const target = document.getElementById('forms-' + tab + '-section2');
+            if (target) target.classList.add('active');
+            updateActiveNavItems();
+            if (!silent) {
+                showFormsSubNav();
+                renderFormsSubData();
+            }
+        }
+
+        function switchDriveSubTab(tab, silent = false) {
+            if (!silent && !isRestoring) pushNavState();
+            currentDriveSubTab = tab;
+            const section = document.getElementById('resources-drive-section');
+            if (!section) return;
+            section.querySelectorAll('.sub-section').forEach(s => s.classList.remove('active'));
+            const target = document.getElementById('drive-' + tab + '-section');
+            if (target) target.classList.add('active');
+            updateActiveNavItems();
+            if (!silent) {
+                showDriveSubNav();
+                renderDriveSubData();
+            }
+        }
+
+        function switchAdminTab(tab, silent = false) {
+            if (!silent && !isRestoring) pushNavState();
+            currentAdminTab = tab;
+            const page = document.getElementById('page-admin');
+            if (!page) return;
+            page.querySelectorAll('.sub-section').forEach(s => s.classList.remove('active'));
+            const target = document.getElementById('admin-' + tab + '-section');
+            if (target) target.classList.add('active');
+            updateActiveNavItems();
+            if (!silent && currentPage !== 'admin') {
+                navigateTo('admin');
+            } else {
+                if (tab === 'customers') renderCustomers();
+                if (tab === 'analytics') initChart();
+            }
+        }
+
+        // ==================== Rendering Functions ====================
+        function getTabLabel(t) {
+            const m = { files: 'ملفات', records: 'سجلات', exams: 'اختبارات', reports: 'تقارير', plans: 'خطط' };
+            return m[t] || t;
+        }
+
+        // دالة مساعدة للحصول على اسم المجلد في GitHub حسب التبويب
+        function getGithubFolderForTab(tab) {
+            const map = { files: 'templates/files', records: 'templates/records', exams: 'templates/exams', reports: 'templates/reports', plans: 'templates/plans' };
+            return map[tab] || 'templates';
+        }
+
+        // دالة رفع عنصر قالب إلى GitHub
+        async function uploadTemplateToGithub(tab, itemId) {
+            const item = appData.templates[tab].find(d => d.id === itemId);
+            if (!item) return alert('القالب غير موجود');
+            const token = localStorage.getItem('gh_token') || '';
+            const repo = localStorage.getItem('gh_repo') || 'goo';
+            const user = localStorage.getItem('gh_user') || 'fa78383012736al-a11y';
+            const folder = getGithubFolderForTab(tab);
+            if (!token) return alert('يرجى إعداد Token GitHub من الإعدادات أولاً');
+            const name = item.name || item.id;
+            const slug = name.replace(/\s+/g, '-').toLowerCase();
+            const btn = document.querySelector(`[data-upload-id="${itemId}"]`);
+            if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; }
+
+            try {
+                const upload = async (path, content) => {
+                    const url = `https://api.github.com/repos/${user}/${repo}/contents/${path}`;
+                    const getRes = await fetch(url, { headers: { 'Authorization': `token ${token}` } });
+                    const existing = getRes.status === 200 ? await getRes.json() : null;
+                    const body = {
+                        message: `Update ${path}`,
+                        content: btoa(unescape(encodeURIComponent(content))),
+                        branch: 'main'
+                    };
+                    if (existing && existing.sha) body.sha = existing.sha;
+                    const res = await fetch(url, {
+                        method: 'PUT',
+                        headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+                        body: JSON.stringify(body)
+                    });
+                    if (!res.ok) throw new Error('فشل الرفع');
+                };
+                await upload(`${folder}/${slug}.html`, item.htmlContent || '<div></div>');
+                if (item.jsonContent) {
+                    await upload(`${folder}/${slug}.json`, item.jsonContent);
+                }
+                alert('✅ تم رفع القالب إلى GitHub بنجاح');
+                await addActivityCloud('رفع قالب إلى GitHub: ' + name);
+            } catch (e) {
+                alert('❌ فشل الرفع: ' + e.message);
+            } finally {
+                if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fab fa-github"></i> رفع'; }
+            }
+        }
+
+        function renderTemplateSection(tab) {
+            const data = appData.templates[tab] || [];
+            const container = document.getElementById('templates-' + tab + '-container');
+            if (!container) return;
+            if (data.length === 0) {
+                container.innerHTML = '<div class="empty-state" style="margin:0;border:none;"><div class="empty-icon"><i class="fas fa-folder-open"></i></div><h3>لا توجد ' + getTabLabel(tab) + '</h3><p>أضف عنصراً جديداً</p></div>';
+                return;
+            }
+            const top10 = data.slice(0, 10);
+            container.innerHTML = top10.map(item => {
+                return `
+                <div class="service-row">
+                    <span class="right" onclick="viewTemplateItem('${tab}','${item.id}')">
+                        <span class="srv-icon si-blue"><i class="fas fa-file"></i></span>${item.name || ''}
+                    </span>
+                    <span style="display:flex; align-items:center; gap:8px;">
+                        <span style="font-size:0.6rem;color:var(--text-muted);">${item.keywords || ''} | 👁 ${item.usageCount || 0}</span>
+                        <button class="btn-github-upload" data-upload-id="${item.id}" onclick="event.stopPropagation(); uploadTemplateToGithub('${tab}','${item.id}')" title="رفع إلى GitHub">
+                            <i class="fab fa-github"></i> رفع
+                        </button>
+                    </span>
+                </div>`;
+            }).join('');
+        }
+
+        function renderWordwall() {
+            const semester = document.getElementById('ww-semester')?.value || '';
+            const grade = document.getElementById('ww-grade')?.value || '';
+            const subject = document.getElementById('ww-subject')?.value || '';
+            let data = appData.wordwall || [];
+            if (semester) data = data.filter(d => d.semester === semester);
+            if (grade) data = data.filter(d => d.grade === grade);
+            if (subject) data = data.filter(d => d.subject === subject);
+            data = data.slice(0, 10);
+            const container = document.getElementById('wordwall-container');
+            if (!container) return;
+            if (data.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-icon"><i class="fas fa-th-large"></i></div><h3>لا توجد ألعاب Wordwall</h3><p>ارفع بيانات JSON</p></div>';
+                return;
+            }
+            container.innerHTML = data.map(d =>
+                '<div class="resource-link-card" onclick="handleWordwallClick(\'' + d.id + '\',\'' + (d.url || '') + '\')"><div class="r-icon ri-wordwall"><i class="fas fa-gamepad"></i></div><div class="r-info"><div class="r-name">' + (d.lesson || '') + '</div><div class="r-desc"><span class="tag tag-semester">' + (d.semester || '') + '</span> <span class="tag tag-grade">' + (d.grade || '') + '</span> <span class="tag tag-subject">' + (d.subject || '') + '</span></div></div><div class="r-arrow"><span style="font-size:0.6rem;color:var(--text-muted);">👁' + (d.usageCount || 0) + '</span> <i class="fas fa-external-link-alt"></i></div></div>'
+            ).join('');
+            const grades = [...new Set(appData.wordwall.map(d => d.grade).filter(Boolean))].sort();
+            const subjects = [...new Set(appData.wordwall.map(d => d.subject).filter(Boolean))].sort();
+            const wg = document.getElementById('ww-grade');
+            if (wg) wg.innerHTML = '<option value="">كل الصفوف</option>' + grades.map(g => '<option value="' + g + '">' + g + '</option>').join('');
+            const ws = document.getElementById('ww-subject');
+            if (ws) ws.innerHTML = '<option value="">كل المواد</option>' + subjects.map(s => '<option value="' + s + '">' + s + '</option>').join('');
+        }
+
+        async function handleWordwallClick(id, url) {
+            await incrementUsage(COL.WORDWALL, id);
+            const item = appData.wordwall.find(d => d.id === id);
+            if (item) item.usageCount = (item.usageCount || 0) + 1;
+            if (url && url !== '#') window.open(url, '_blank');
+            renderWordwall();
+        }
+
+        function renderFormsSubData() {
+            const map = { exams: appData.formsExams, surveys: appData.formsSurveys, other: appData.formsOther };
+            const data = (map[currentFormsSubTab] || []).slice(0, 10);
+            const container = document.getElementById('forms-' + currentFormsSubTab + '-container');
+            if (!container) return;
+            if (data.length === 0) {
+                container.innerHTML = '<div class="empty-state"><h3>لا توجد نماذج</h3><p>ارفع بيانات JSON</p></div>';
+                return;
+            }
+            container.innerHTML = data.map(d => {
+                let tags = '';
+                if (currentFormsSubTab === 'exams') {
+                    tags = '<span class="tag tag-semester">' + (d.semester || '') + '</span> <span class="tag tag-grade">' + (d.grade || '') + '</span> <span class="tag tag-subject">' + (d.subject || '') + '</span> <span class="tag tag-exam">' + (d.examType || '') + '</span>';
+                } else {
+                    tags = '<span style="font-size:0.65rem;">' + (d.title || d.name || '') + '</span>';
+                }
+                return '<div class="resource-link-card" onclick="handleFormsClick(\'' + currentFormsSubTab + '\',\'' + d.id + '\',\'' + (d.url || '') + '\')"><div class="r-icon ri-forms"><i class="fas fa-wpforms"></i></div><div class="r-info"><div class="r-name">' + (d.name || d.title || 'نموذج') + '</div><div class="r-desc">' + tags + '</div></div><div class="r-arrow"><i class="fas fa-external-link-alt"></i></div></div>';
+            }).join('');
+        }
+
+        async function handleFormsClick(subTab, id, url) {
+            const map = { exams: COL.FORMS_EXAMS, surveys: COL.FORMS_SURVEYS, other: COL.FORMS_OTHER };
+            await incrementUsage(map[subTab], id);
+            if (url && url !== '#') window.open(url, '_blank');
+            renderFormsSubData();
+        }
+
+        function renderDriveSubData() {
+            const map = { bags: appData.driveBags, enrich: appData.driveEnrich, records: appData.driveRecords, other: appData.driveOther };
+            const data = (map[currentDriveSubTab] || []).slice(0, 10);
+            const container = document.getElementById('drive-' + currentDriveSubTab + '-container');
+            if (!container) return;
+            if (data.length === 0) {
+                container.innerHTML = '<div class="empty-state"><h3>لا توجد ملفات</h3><p>ارفع بيانات JSON</p></div>';
+                return;
+            }
+            container.innerHTML = data.map(d =>
+                '<div class="resource-link-card" onclick="handleDriveClick(\'' + currentDriveSubTab + '\',\'' + d.id + '\',\'' + (d.url || '') + '\')"><div class="r-icon ri-drive"><i class="fas fa-cloud"></i></div><div class="r-info"><div class="r-name">' + (d.name || d.title || 'ملف') + '</div></div><div class="r-arrow"><i class="fas fa-external-link-alt"></i></div></div>'
+            ).join('');
+        }
+
+        async function handleDriveClick(subTab, id, url) {
+            const map = { bags: COL.DRIVE_BAGS, enrich: COL.DRIVE_ENRICH, records: COL.DRIVE_RECORDS, other: COL.DRIVE_OTHER };
+            await incrementUsage(map[subTab], id);
+            if (url && url !== '#') window.open(url, '_blank');
+            renderDriveSubData();
+        }
+
+        function renderLocutions() {
+            const query = (document.getElementById('loc-search')?.value || '').toLowerCase();
+            let data = appData.locutions || [];
+            if (query) {
+                data = data.filter(d =>
+                    (d.name || '').toLowerCase().includes(query) || (d.type || '').toLowerCase().includes(query) || (d.description || '').toLowerCase().includes(query)
+                );
+            }
+            data = data.slice(0, 10);
+            const container = document.getElementById('locutions-container');
+            if (!container) return;
+            if (data.length === 0) {
+                container.innerHTML = '<div class="empty-state"><h3>لا توجد ملفات</h3><p>أضف ملفاً جديداً</p></div>';
+                return;
+            }
+            container.innerHTML = data.map(d =>
+                '<div class="resource-link-card" onclick="handleLocutionClick(\'' + d.id + '\',\'' + (d.url || '') + '\')"><div class="r-icon ri-locutions"><i class="fas fa-microphone-alt"></i></div><div class="r-info"><div class="r-name">' + (d.name || '') + '</div><div class="r-desc">' + (d.type || '') + ' - ' + (d.description || '') + '</div></div><div class="r-arrow"><i class="fas fa-external-link-alt"></i></div></div>'
+            ).join('');
+        }
+
+        async function handleLocutionClick(id, url) {
+            await incrementUsage(COL.LOCUTIONS, id);
+            if (url && url !== '#') window.open(url, '_blank');
+            renderLocutions();
+        }
+
+        function renderOrders() {
+            const statusFilter = document.getElementById('order-status-filter')?.value || '';
+            const designerFilter = document.getElementById('order-designer-filter')?.value || '';
+            let data = appData.orders || [];
+            if (statusFilter) data = data.filter(o => o.status === statusFilter);
+            if (designerFilter) data = data.filter(o => o.designer === designerFilter);
+            data = data.slice(0, 20);
+            const container = document.getElementById('orders-container');
+            if (!container) return;
+            if (data.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-icon"><i class="fas fa-shopping-cart"></i></div><h3>لا توجد طلبات</h3><p>أضف طلباً جديداً</p></div>';
+                return;
+            }
+            container.innerHTML = data.map(o => {
+                const statusBadge = o.status === 'تم التسليم' ? '<span style="color:#00a87a;font-weight:700;">✅ تم التسليم</span>' : o.status === 'مكتمل' ? '<span style="color:#0062cc;font-weight:700;">✔️ مكتمل</span>' : o.status === 'قيد التصميم' ? '<span style="color:#e07000;font-weight:700;">🔄 قيد التصميم</span>' : '<span style="color:#8aaac8;font-weight:700;">🆕 جديد</span>';
+                return '<div class="service-row" onclick="editOrder(\'' + o.id + '\')"><span class="right"><span class="srv-icon si-orange"><i class="fas fa-tasks"></i></span>' + (o.description || 'طلب') + '</span><span style="display:flex;gap:10px;align-items:center;">' + statusBadge + '<span style="font-size:0.6rem;">' + (o.broker || '') + ' | ' + (o.customer || '') + '</span></span></div>';
+            }).join('');
+            const designers = [...new Set(appData.orders.map(o => o.designer).filter(Boolean))].sort();
+            const df = document.getElementById('order-designer-filter');
+            if (df) df.innerHTML = '<option value="">كل المصممين</option>' + designers.map(d => '<option value="' + d + '">' + d + '</option>').join('');
+        }
+
+        async function addNewOrder() {
+            const broker = prompt('اسم الوسيط:'); if (!broker) return;
+            const customer = prompt('الزبون (المعلم/المدير...):'); if (!customer) return;
+            const description = prompt('وصف الملف المطلوب:'); if (!description) return;
+            const amount = parseFloat(prompt('المبلغ المتفق عليه (ر.س):')); if (isNaN(amount) || amount <= 0) return alert('المبلغ غير صالح');
+            const designer = prompt('المصمم المسؤول:'); if (!designer) return;
+            const dueDate = prompt('تاريخ التسليم (اختياري):') || '';
+            const newOrder = await addDocument(COL.ORDERS, {
+                broker: broker.trim(),
+                customer: customer.trim(),
+                description: description.trim(),
+                amount,
+                designerShare: amount / 2,
+                brokerShare: amount / 2,
+                designer: designer.trim(),
+                status: 'جديد',
+                dueDate: dueDate,
+                notes: ''
+            });
+            if (newOrder) {
+                appData.orders.unshift(newOrder);
+                renderOrders();
+                await addActivityCloud('طلب جديد: ' + description.trim() + ' - ' + amount + ' ر.س');
+                updateStats();
+            }
+        }
+
+        async function editOrder(orderId) {
+            const order = appData.orders.find(o => o.id === orderId); if (!order) return;
+            const newStatus = prompt('الحالة الحالية: ' + order.status + '\nاختر: جديد، قيد التصميم، مكتمل، تم التسليم', order.status);
+            if (!newStatus) return;
+            await updateDocument(COL.ORDERS, orderId, { status: newStatus });
+            order.status = newStatus;
+            if (newStatus === 'تم التسليم') {
+                await addDocument(COL.INVOICES, {
+                    customer: order.customer,
+                    amount: order.amount,
+                    paid: 0,
+                    status: 'unpaid',
+                    broker: order.broker,
+                    designer: order.designer,
+                    orderId: orderId
+                });
+                await addActivityCloud('تم تسليم الطلب وتحويله لفاتورة: ' + order.description);
+            }
+            renderOrders();
+            updateStats();
+        }
+
+        function renderCustomers() {
+            const container = document.getElementById('customers-container2');
+            if (!container) return;
+            if (appData.customers.length === 0) {
+                container.innerHTML = '<div class="empty-state" style="margin:0;border:none;"><h3>لا يوجد عملاء</h3></div>';
+                return;
+            }
+            container.innerHTML = appData.customers.map(c =>
+                '<div class="service-row"><span class="right"><span class="srv-icon si-teal"><i class="fas fa-user"></i></span>' + (c.name || '') + '</span><span style="font-size:0.6rem;">' + (c.type || 'زبون') + '</span></div>'
+            ).join('');
+        }
+
+        function renderInvoices() {
+            const container = document.getElementById('invoices-container');
+            if (!container) return;
+            if (appData.invoices.length === 0) {
+                container.innerHTML = '<div class="empty-state" style="margin:0;border:none;"><h3>لا توجد فواتير</h3><p>أنشئ فاتورة جديدة</p></div>';
+                return;
+            }
+            container.innerHTML = appData.invoices.map(inv => {
+                const rem = (inv.amount || 0) - (inv.paid || 0);
+                const badge = inv.status === 'paid' ? '<span style="color:#00a87a;font-weight:700;">مدفوعة</span>' : '<span style="color:#e07000;font-weight:700;">متبقي ' + rem + ' ر.س</span>';
+                return '<div class="service-row"><span class="right"><span class="srv-icon si-orange"><i class="fas fa-file-invoice"></i></span>' + (inv.customer || '') + ' - ' + (inv.amount || 0) + ' ر.س</span><span style="display:flex;gap:6px;align-items:center;">' + badge + '<i class="fas fa-file-pdf" style="color:#e03c3c;cursor:pointer;" onclick="event.stopPropagation();exportPDF(\'' + inv.id + '\')"></i></span></div>';
+            }).join('');
+            updateInvoiceStats();
+        }
+
+        function updateInvoiceStats() {
+            const totalSales = appData.invoices.length;
+            const paid = appData.invoices.filter(i => i.status === 'paid').reduce((s, i) => s + (i.paid || i.amount || 0), 0);
+            const debt = appData.invoices.filter(i => i.status !== 'paid').reduce((s, i) => s + ((i.amount || 0) - (i.paid || 0)), 0);
+            const totalSalesEl = document.getElementById('total-sales');
+            const totalPaidEl = document.getElementById('total-paid');
+            const totalDebtEl = document.getElementById('total-debt');
+            if (totalSalesEl) totalSalesEl.textContent = totalSales;
+            if (totalPaidEl) totalPaidEl.textContent = paid.toLocaleString('ar-SA');
+            if (totalDebtEl) totalDebtEl.textContent = debt.toLocaleString('ar-SA');
+        }
+
+        function exportPDF(invId) {
+            const inv = appData.invoices.find(i => i.id === invId); if (!inv) return;
+            document.getElementById('pdf-invoice-number').textContent = '#INV-' + String(inv.id).slice(-4);
+            document.getElementById('pdf-invoice-date').textContent = new Date(inv.createdAt?.toDate?.() || Date.now()).toLocaleDateString('ar-SA');
+            document.getElementById('pdf-customer-name').textContent = inv.customer || '';
+            document.getElementById('pdf-amount').textContent = inv.amount || 0;
+            document.getElementById('pdf-total').textContent = (inv.amount || 0) + ' ر.س';
+            document.getElementById('pdf-paid').textContent = (inv.paid || 0) + ' ر.س';
+            document.getElementById('pdf-debt').textContent = ((inv.amount || 0) - (inv.paid || 0)) + ' ر.س';
+            const el = document.getElementById('invoice-pdf-template');
+            el.style.display = 'block';
+            html2pdf().set({ margin: 10, filename: 'inv-' + inv.id + '.pdf' }).from(el).save().then(() => {
+                el.style.display = 'none';
+            });
+        }
+
+        function updateStats() {
+            const totalTemplates = appData.templates.files.length + appData.templates.records.length + appData.templates.exams.length + appData.templates.reports.length + appData.templates.plans.length;
+            const totalResources = appData.wordwall.length + appData.formsExams.length + appData.formsSurveys.length + appData.formsOther.length + appData.driveBags.length + appData.driveEnrich.length + appData.driveRecords.length + appData.driveOther.length + appData.locutions.length;
+            const statOrders = document.getElementById('stat-orders');
+            const statTemplates = document.getElementById('stat-templates');
+            const statInvoices = document.getElementById('stat-invoices');
+            const totalResourcesEl = document.getElementById('total-resources');
+            if (statOrders) statOrders.textContent = appData.orders.length;
+            if (statTemplates) statTemplates.textContent = totalTemplates;
+            if (statInvoices) statInvoices.textContent = appData.invoices.length;
+            if (totalResourcesEl) totalResourcesEl.textContent = (totalTemplates + totalResources).toLocaleString('ar-SA');
+            updateTopUsed();
+        }
+
+        function updateTopUsed() {
+            const allItems = [];
+            for (const tab of ['files', 'records', 'exams', 'reports', 'plans']) {
+                appData.templates[tab].forEach(item => allItems.push({ ...item, cat: 'قالب', typeLabel: getTabLabel(tab) }));
+            }
+            appData.wordwall.forEach(d => allItems.push({ ...d, cat: 'Wordwall', typeLabel: 'لعبة' }));
+            appData.formsExams.forEach(d => allItems.push({ ...d, cat: 'Forms', typeLabel: 'اختبار' }));
+            appData.formsSurveys.forEach(d => allItems.push({ ...d, cat: 'Forms', typeLabel: 'استبيان' }));
+            appData.formsOther.forEach(d => allItems.push({ ...d, cat: 'Forms', typeLabel: 'نموذج' }));
+            appData.driveBags.forEach(d => allItems.push({ ...d, cat: 'Drive', typeLabel: 'حقيبة' }));
+            appData.driveEnrich.forEach(d => allItems.push({ ...d, cat: 'Drive', typeLabel: 'إثراء' }));
+            appData.driveRecords.forEach(d => allItems.push({ ...d, cat: 'Drive', typeLabel: 'سجل' }));
+            appData.driveOther.forEach(d => allItems.push({ ...d, cat: 'Drive', typeLabel: 'ملف' }));
+            appData.locutions.forEach(d => allItems.push({ ...d, cat: 'Locutions', typeLabel: 'ملف' }));
+            const top10 = [...allItems].sort((a, b) => (b.usageCount || 0) - (a.usageCount || 0)).slice(0, 10);
+            const container = document.getElementById('top-used-container');
+            if (!container) return;
+            if (top10.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-icon"><i class="fas fa-star"></i></div><h3>لا توجد بيانات كافية</h3><p>ستظهر هنا الموارد الأكثر استخداماً</p></div>';
+                return;
+            }
+            container.innerHTML = top10.map(item =>
+                '<div class="service-row"><span class="right"><span class="srv-icon si-teal"><i class="fas fa-star"></i></span>' + (item.name || item.lesson || item.title || 'عنصر') + '</span><span style="font-size:0.6rem;color:var(--text-muted);">' + item.typeLabel + ' | استخدام: ' + (item.usageCount || 0) + '</span></div>'
+            ).join('');
+        }
+
+        function refreshAll() {
+            renderTemplateSection(currentTemplateTab);
+            if (currentResourceTab === 'wordwall') renderWordwall();
+            if (currentResourceTab === 'forms') renderFormsSubData();
+            if (currentResourceTab === 'drive') renderDriveSubData();
+            if (currentResourceTab === 'locutions') renderLocutions();
+            renderOrders();
+            renderInvoices();
+            updateStats();
+        }
+
+        // ==================== Search ====================
+        function handleGlobalSearch() {
+            const query = (document.getElementById('global-search')?.value || '').toLowerCase().trim();
+            const container = document.getElementById('search-suggestions');
+            if (!container) return;
+            if (query.length < 1) { container.classList.remove('active'); return; }
+            const results = [];
+            for (const tab of ['files', 'records', 'exams', 'reports', 'plans']) {
+                appData.templates[tab].forEach(item => {
+                    if ((item.name || '').toLowerCase().includes(query) || (item.keywords || '').toLowerCase().includes(query))
+                        results.push({ ...item, type: 'قالب-' + getTabLabel(tab), cat: 'templates', tab: tab });
+                });
+            }
+            appData.orders.forEach(o => {
+                if ((o.description || '').toLowerCase().includes(query) || (o.broker || '').toLowerCase().includes(query) || (o.customer || '').toLowerCase().includes(query))
+                    results.push({ ...o, type: 'طلب', cat: 'orders' });
+            });
+            appData.wordwall.forEach(d => {
+                if ((d.lesson || '').toLowerCase().includes(query) || (d.subject || '').toLowerCase().includes(query) || (d.grade || '').toLowerCase().includes(query))
+                    results.push({ ...d, type: 'Wordwall', cat: 'wordwall' });
+            });
+            [...appData.formsExams, ...appData.formsSurveys, ...appData.formsOther].forEach(d => {
+                if ((d.name || d.title || '').toLowerCase().includes(query))
+                    results.push({ ...d, type: 'Forms', cat: 'forms' });
+            });
+            [...appData.driveBags, ...appData.driveEnrich, ...appData.driveRecords, ...appData.driveOther].forEach(d => {
+                if ((d.name || d.title || '').toLowerCase().includes(query))
+                    results.push({ ...d, type: 'Drive', cat: 'drive' });
+            });
+            appData.locutions.forEach(d => {
+                if ((d.name || '').toLowerCase().includes(query) || (d.type || '').toLowerCase().includes(query))
+                    results.push({ ...d, type: 'Locutions', cat: 'locutions' });
+            });
+            const unique = results.filter((r, i, arr) => arr.findIndex(x => x.id === r.id && x.cat === r.cat) === i).slice(0, 10);
+            container.innerHTML = unique.length === 0 ? '<div style="padding:12px;text-align:center;color:var(--text-muted);">لا توجد نتائج</div>' : unique.map(r => '<div class="suggestion-item" onclick="navigateToSearchResult(\'' + r.cat + '\',\'' + r.id + '\',\'' + (r.tab || '') + '\')"><span class="sug-type">' + r.type + '</span>' + (r.name || r.lesson || r.title || r.description || 'عنصر') + '</div>').join('');
+            container.classList.add('active');
+        }
+
+        async function navigateToSearchResult(cat, id, tab) {
+            document.getElementById('search-suggestions').classList.remove('active');
+            const searchInput = document.getElementById('global-search');
+            if (searchInput) searchInput.value = '';
+            if (cat === 'orders') {
+                navigateTo('orders');
+            } else if (cat === 'templates') {
+                currentTemplateTab = tab || 'files';
+                navigateTo('templates');
+            } else if (cat === 'wordwall') {
+                currentResourceTab = 'wordwall';
+                navigateTo('resources');
+                await incrementUsage(COL.WORDWALL, id);
+            } else if (cat === 'forms') {
+                currentResourceTab = 'forms';
+                navigateTo('resources');
+            } else if (cat === 'drive') {
+                currentResourceTab = 'drive';
+                navigateTo('resources');
+            } else if (cat === 'locutions') {
+                currentResourceTab = 'locutions';
+                navigateTo('resources');
+                await incrementUsage(COL.LOCUTIONS, id);
+            }
+        }
+
+        // ==================== CRUD Operations ====================
+        async function addTemplateItem() {
+            const tab = currentTemplateTab;
+            const name = prompt('اسم ' + getTabLabel(tab) + ':');
+            if (!name || !name.trim()) return;
+            const htmlContent = prompt('كود HTML (اختياري):') || '<div></div>';
+            const keywords = prompt('كلمات مفتاحية للبحث (مفصولة بفواصل):') || '';
+            const colMap = { files: COL.T_FILES, records: COL.T_RECORDS, exams: COL.T_EXAMS, reports: COL.T_REPORTS, plans: COL.T_PLANS };
+            const newItem = await addDocument(colMap[tab], { name: name.trim(), htmlContent, keywords: keywords.trim(), usageCount: 0 });
+            if (newItem) {
+                appData.templates[tab].unshift(newItem);
+                renderTemplateSection(tab);
+                await addActivityCloud('تمت إضافة ' + getTabLabel(tab) + ': ' + name.trim());
+                updateStats();
+            }
+        }
+
+        async function viewTemplateItem(tab, id) {
+            const item = appData.templates[tab].find(d => d.id === id);
+            if (!item) return;
+            const colMap = { files: COL.T_FILES, records: COL.T_RECORDS, exams: COL.T_EXAMS, reports: COL.T_REPORTS, plans: COL.T_PLANS };
+            await incrementUsage(colMap[tab], id);
+            item.usageCount = (item.usageCount || 0) + 1;
+            const win = window.open('', '_blank');
+            if (win) {
+                win.document.write(item.htmlContent || '<div></div>');
+                win.document.close();
+            } else {
+                alert('المحتوى:\n' + (item.htmlContent || ''));
+            }
+            renderTemplateSection(tab);
+        }
+
+        async function addLocution() {
+            const name = prompt('اسم الملف/العرض:'); if (!name || !name.trim()) return;
+            const type = prompt('النوع (فيديو، عرض، إذاعة، تحضير...):') || 'ملف';
+            const url = prompt('الرابط:') || '#';
+            const desc = prompt('وصف مختصر:') || '';
+            const newItem = await addDocument(COL.LOCUTIONS, { name: name.trim(), type: type.trim(), url, description: desc, usageCount: 0 });
+            if (newItem) {
+                appData.locutions.unshift(newItem);
+                renderLocutions();
+                await addActivityCloud('تمت إضافة ملف: ' + name.trim());
+                updateStats();
+            }
+        }
+
+        async function addNewInvoice() {
+            const customer = prompt('اسم العميل:'); if (!customer || !customer.trim()) return;
+            const amount = parseFloat(prompt('المبلغ (ر.س):')); if (isNaN(amount) || amount <= 0) return alert('المبلغ غير صالح');
+            const newItem = await addDocument(COL.INVOICES, { customer: customer.trim(), amount, paid: 0, status: 'unpaid' });
+            if (newItem) {
+                appData.invoices.unshift(newItem);
+                renderInvoices();
+                await addActivityCloud('فاتورة جديدة: ' + customer.trim() + ' - ' + amount + ' ر.س');
+                updateStats();
+            }
+        }
+
+        // ==================== JSON Upload Modal ====================
+        function openJsonModal(type) {
+            currentJsonType = type;
+            document.getElementById('json-modal-type').textContent = '(' + type + ')';
+            document.getElementById('json-textarea').value = '';
+            const progress = document.getElementById('upload-progress');
+            if (progress) { progress.style.display = 'none'; progress.textContent = ''; }
+            document.getElementById('json-modal').classList.add('active');
+        }
+
+        function closeJsonModal() {
+            document.getElementById('json-modal').classList.remove('active');
+        }
+
+        async function submitJsonData() {
+            const raw = document.getElementById('json-textarea').value.trim();
+            if (!raw) return alert('الرجاء لصق بيانات JSON');
+            try {
+                const data = JSON.parse(raw);
+                const arr = Array.isArray(data) ? data : [data];
+                if (arr.length === 0) return alert('لا توجد بيانات للرفع');
+                const progressDiv = document.getElementById('upload-progress');
+                if (progressDiv) { progressDiv.style.display = 'block'; progressDiv.textContent = 'جارٍ التحضير...'; }
+                let added = 0, skipped = 0;
+                const BATCH_SIZE = 400;
+                let collectionName, localArray;
+                if (currentJsonType === 'wordwall') { collectionName = COL.WORDWALL; localArray = appData.wordwall; } else if (currentJsonType === 'forms') { collectionName = COL.FORMS_EXAMS; localArray = appData.formsExams; } else if (currentJsonType === 'drive') { collectionName = COL.DRIVE_BAGS; localArray = appData.driveBags; } else return alert('نوع JSON غير معروف');
+                const newItems = arr.filter(item => !localArray.some(existing => existing.url === item.url));
+                skipped = arr.length - newItems.length;
+                for (let i = 0; i < newItems.length; i += BATCH_SIZE) {
+                    const chunk = newItems.slice(i, i + BATCH_SIZE);
+                    const batch = db.batch();
+                    chunk.forEach(item => {
+                        const docRef = db.collection(collectionName).doc();
+                        batch.set(docRef, { ...item, usageCount: 0, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                        localArray.unshift({ id: docRef.id, ...item, usageCount: 0 });
+                        added++;
+                    });
+                    await batch.commit();
+                    if (progressDiv) progressDiv.textContent = 'تم رفع ' + Math.min(i + BATCH_SIZE, newItems.length) + ' من ' + newItems.length;
+                    await new Promise(resolve => setTimeout(resolve, 30));
+                }
+                if (progressDiv) {
+                    progressDiv.innerHTML = '✅ تم بنجاح! أضيف: ' + added + ' | تخطي: ' + skipped;
+                    setTimeout(() => { progressDiv.style.display = 'none'; progressDiv.textContent = ''; }, 2500);
+                }
+                await addActivityCloud('رفع JSON: أضيف ' + added + ' | تخطي المكرر: ' + skipped);
+                if (currentJsonType === 'wordwall') renderWordwall();
+                else if (currentJsonType === 'forms') renderFormsSubData();
+                else if (currentJsonType === 'drive') renderDriveSubData();
+            } catch (e) { alert('❌ خطأ في صيغة JSON: ' + e.message); }
+        }
+
+        // ==================== GitHub Integration ====================
+        function loadGithubSettings() {
+            const token = localStorage.getItem('gh_token') || '';
+            const repo = localStorage.getItem('gh_repo') || 'goo';
+            const user = localStorage.getItem('gh_user') || 'fa78383012736al-a11y';
+            const folder = localStorage.getItem('gh_folder') || 'database';
+            document.getElementById('gh-token-inline').value = token;
+            document.getElementById('gh-repo-inline').value = repo;
+            document.getElementById('gh-folder-inline').value = folder;
+        }
+
+        function saveGithubInlineSettings() {
+            const token = document.getElementById('gh-token-inline').value.trim();
+            const repo = document.getElementById('gh-repo-inline').value.trim() || 'goo';
+            const folder = document.getElementById('gh-folder-inline').value.trim() || 'database';
+            if (!token) {
+                document.getElementById('github-inline-status').textContent = 'يجب إدخال Token';
+                return;
+            }
+            localStorage.setItem('gh_token', token);
+            localStorage.setItem('gh_repo', repo);
+            localStorage.setItem('gh_user', 'fa78383012736al-a11y'); // يمكن تغييره
+            localStorage.setItem('gh_folder', folder);
+            document.getElementById('github-inline-status').textContent = '✅ تم الحفظ';
+            setTimeout(() => { document.getElementById('github-inline-status').textContent = ''; }, 2000);
+        }
+
+        function openGithubSettings() {
+            document.getElementById('github-password').value = '';
+            document.getElementById('github-modal').classList.add('active');
+        }
+
+        function verifyGithubAccess() {
+            const pw = document.getElementById('github-password').value;
+            if (pw !== 'admin123') return alert('❌ كلمة مرور غير صحيحة!');
+            document.getElementById('github-modal').classList.remove('active');
+            // فتح إعدادات GitHub المضمنة في صفحة القوالب
+            navigateTo('templates');
+            setTimeout(() => {
+                document.getElementById('github-settings-bar').scrollIntoView({ behavior: 'smooth' });
+            }, 300);
+        }
+
+        // تحميل الإعدادات عند بدء التشغيل
+        window.addEventListener('load', () => {
+            loadGithubSettings();
+        });
+
+        // ==================== Admin: Export/Import/Clear ====================
+        async function exportAllData() {
+            const data = {
+                templates: appData.templates,
+                wordwall: appData.wordwall,
+                forms: { exams: appData.formsExams, surveys: appData.formsSurveys, other: appData.formsOther },
+                drive: { bags: appData.driveBags, enrich: appData.driveEnrich, records: appData.driveRecords, other: appData.driveOther },
+                locutions: appData.locutions,
+                invoices: appData.invoices,
+                orders: appData.orders,
+                customers: appData.customers,
+                exportedAt: new Date().toISOString()
+            };
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'goo-full-backup-' + new Date().toISOString().slice(0, 10) + '.json';
+            a.click();
+            await addActivityCloud('تم تصدير جميع البيانات');
+        }
+
+        function importAllData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = async (e) => {
+                const f = e.target.files[0]; if (!f) return;
+                const r = new FileReader();
+                r.onload = async (ev) => {
+                    try {
+                        const d = JSON.parse(ev.target.result);
+                        if (!confirm('سيتم دمج البيانات المستوردة مع السحابة. هل أنت متأكد؟')) return;
+                        let count = 0;
+                        if (d.templates) {
+                            for (const tab of ['files', 'records', 'exams', 'reports', 'plans']) {
+                                if (d.templates[tab]) {
+                                    const colMap = { files: COL.T_FILES, records: COL.T_RECORDS, exams: COL.T_EXAMS, reports: COL.T_REPORTS, plans: COL.T_PLANS };
+                                    for (const item of d.templates[tab]) {
+                                        if (appData.templates[tab].find(x => x.name === item.name)) continue;
+                                        const newItem = await addDocument(colMap[tab], { ...item, usageCount: item.usageCount || 0 });
+                                        if (newItem) { appData.templates[tab].unshift(newItem); count++; }
+                                    }
+                                }
+                            }
+                        }
+                        if (d.wordwall) for (const item of d.wordwall) {
+                            if (appData.wordwall.find(w => w.url === item.url)) continue;
+                            const newItem = await addDocument(COL.WORDWALL, { ...item, usageCount: item.usageCount || 0 });
+                            if (newItem) { appData.wordwall.unshift(newItem); count++; }
+                        }
+                        if (d.orders) for (const item of d.orders) {
+                            const newItem = await addDocument(COL.ORDERS, item);
+                            if (newItem) { appData.orders.unshift(newItem); count++; }
+                        }
+                        refreshAll();
+                        await addActivityCloud('تم استيراد ' + count + ' عنصر');
+                        alert('✅ تم استيراد ' + count + ' عنصر بنجاح!');
+                    } catch (err) { alert('❌ ملف غير صالح: ' + err.message); }
+                };
+                r.readAsText(f);
+            };
+            input.click();
+        }
+
+        async function clearAllData() {
+            if (!confirm('⚠️ تحذير: سيتم مسح جميع البيانات من السحابة نهائياً. هل أنت متأكد؟')) return;
+            if (!confirm('تأكيد نهائي: لا يمكن التراجع عن هذا الإجراء.')) return;
+            const allCollections = Object.values(COL);
+            for (const col of allCollections) {
+                const snapshot = await db.collection(col).get();
+                const batch = db.batch();
+                snapshot.forEach(doc => batch.delete(doc.ref));
+                await batch.commit();
+            }
+            appData.templates = { files: [], records: [], exams: [], reports: [], plans: [] };
+            appData.wordwall = [];
+            appData.formsExams = [];
+            appData.formsSurveys = [];
+            appData.formsOther = [];
+            appData.driveBags = [];
+            appData.driveEnrich = [];
+            appData.driveRecords = [];
+            appData.driveOther = [];
+            appData.locutions = [];
+            appData.customers = [];
+            appData.invoices = [];
+            appData.orders = [];
+            appData.activities = [];
+            refreshAll();
+            await addActivityCloud('تم مسح جميع البيانات');
+            alert('✅ تم مسح جميع البيانات من السحابة.');
+        }
+
+        async function syncNow() {
+            document.getElementById('sync-status').innerHTML = '<span class="loading-spinner"></span> جاري المزامنة...';
+            await loadAllData();
+            refreshAll();
+            updateSyncStatus(true);
+            await addActivityCloud('تمت المزامنة مع السحابة');
+        }
+
+        // ==================== Chart ====================
+        let chartInst = null;
+
+        function initChart() {
+            setTimeout(() => {
+                const ctx = document.getElementById('revenueChart');
+                if (!ctx) return;
+                if (chartInst) chartInst.destroy();
+                const monthly = Array(6).fill(0);
+                appData.invoices.forEach(inv => {
+                    if (inv.status === 'paid') {
+                        const date = inv.createdAt?.toDate?.() || new Date();
+                        monthly[date.getMonth() % 6] += (inv.paid || inv.amount || 0);
+                    }
+                });
+                chartInst = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['1', '2', '3', '4', '5', '6'],
+                        datasets: [{
+                            label: 'الإيرادات (ر.س)',
+                            data: monthly,
+                            backgroundColor: 'rgba(0,98,204,0.5)',
+                            borderColor: '#0062cc',
+                            borderWidth: 2,
+                            borderRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { display: false } },
+                        scales: { y: { beginAtZero: true } }
+                    }
+                });
+            }, 500);
+        }
+
+        // ==================== Initialization ====================
+        async function init() {
+            showMainNav();
+            await loadAllData();
+            navigateTo('home');
+            initChart();
+            updateSyncStatus(true);
+            updateBackButtonVisibility();
+            loadGithubSettings();
+            console.log('🚀 نظام GOO سحابي - مع رفع GitHub للقوالب');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => init().catch(console.error));
+
+        // Close search suggestions on outside click
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.search-container')) {
+                document.getElementById('search-suggestions')?.classList.remove('active');
+            }
+        });
+
+        // Close modals on overlay click
+        document.getElementById('json-modal')?.addEventListener('click', function(e) {
+            if (e.target === this) closeJsonModal();
+        });
+        document.getElementById('github-modal')?.addEventListener('click', function(e) {
+            if (e.target === this) this.classList.remove('active');
+        });
+    </script>
+</body>
+</html>
