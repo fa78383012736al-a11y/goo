@@ -15,13 +15,7 @@
   "driveRecords": [],
   "driveOther": [],
   "locutions": [],
-  "invoices": [
-    {
-      "customer": "gbv",
-      "amount": "99",
-      "id": 1779931400186
-    }
-  ],
+  "invoices": [],
   "users": [],
   "customers": [],
   "activities": []
