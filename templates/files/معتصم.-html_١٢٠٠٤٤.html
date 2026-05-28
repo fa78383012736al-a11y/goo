@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📋 الاختبار النهائي – لغتي – الصف الثاني الابتدائي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --deep-navy: #0a2a44;
+            --border: #000;
+            --shadow-3d: 4px 4px 0px #000, 6px 6px 10px rgba(0,0,0,0.3);
+            --shadow-3d-sm: 2px 2px 0px #000, 3px 3px 6px rgba(0,0,0,0.2);
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+        body {
+            background: #e8e3d9;
+            font-family: 'Cairo', sans-serif;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--deep-navy);
+            font-weight: 500;
+        }
+        .json-panel {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto 20px;
+            background: white;
+            border-radius: 20px;
+            padding: 18px 24px;
+            box-shadow: var(--shadow-3d);
+            border: 2px solid #000;
+        }
+        .panel-title {
+            font-weight: 800;
+            font-size: 18px;
+            color: var(--deep-navy);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .json-area {
+            width: 100%;
+            min-height: 140px;
+            padding: 14px;
+            font-family: 'Cairo', monospace;
+            font-size: 13px;
+            background: #fbfdff;
+            border: 2px solid #000;
+            border-radius: 14px;
+            resize: vertical;
+            direction: ltr;
+            text-align: left;
+            color: #0b2a44;
+            font-weight: 500;
+            margin-bottom: 12px;
+            white-space: pre;
+            box-shadow: var(--shadow-3d-sm);
+        }
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+        .btn {
+            background: var(--deep-navy);
+            color: white;
+            border: 1.5px solid #000;
+            padding: 8px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 13px;
+            font-family: 'Cairo';
+            box-shadow: var(--shadow-3d-sm);
+            transition: 0.15s;
+        }
+        .btn:hover {
+            background: #1a405e;
+            transform: translateY(-2px);
+            box-shadow: 3px 3px 0px #000, 5px 5px 10px rgba(0,0,0,0.3);
+        }
+        .btn-outline {
+            background: #f0f7fc;
+            color: var(--deep-navy);
+        }
+        .action-bar {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            width: 100%;
+            max-width: 1000px;
+            margin: 8px auto 0;
+            flex-wrap: wrap;
+        }
+        .exam-container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        /* مقاسات الصفحة القياسية */
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 12mm 10mm;
+            margin: 10mm auto;
+            background: #ffffff;
+            box-shadow: var(--shadow-3d);
+            border-radius: 4px;
+            direction: rtl;
+            font-family: 'Cairo';
+            font-size: 12pt;
+            border: 2px solid #000;
+            font-weight: 500;
+            page-break-after: always;
+            page-break-inside: avoid;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-sizing: border-box;
+        }
+        .page:last-child {
+            page-break-after: auto;
+        }
+        @media print {
+            .json-panel,.action-bar {
+                display: none !important;
+            }
+            body {
+                background: white;
+                padding: 0;
+            }
+            .page {
+                margin: 0 auto;
+                box-shadow: none;
+                border-radius: 0;
+                padding: 12mm 10mm;
+                border: 1px solid #000;
+                page-break-after: always;
+            }
+            .page:last-child {
+                page-break-after: auto;
+            }
+        }
+        .header-table {
+            width: 100%;
+            border: 2px solid #000;
+            margin-bottom: 10px;
+            text-align: center;
+            border-collapse: collapse;
+            box-shadow: var(--shadow-3d-sm);
+            font-size: 1em;
+        }
+        .header-table td {
+            padding: 5px 8px;
+            border: 1.5px solid #000;
+            vertical-align: middle;
+            font-weight: 700;
+        }
+        .exam-section {
+            border: 2px solid #000;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            position: relative;
+            box-shadow: var(--shadow-3d-sm);
+            background: #fff;
+            flex: 0 0 auto;
+        }
+        .section-title {
+            background: #f0f0f0;
+            padding: 3px 12px;
+            border: 1.5px solid #000;
+            font-weight: 800;
+            display: inline-block;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+            box-shadow: 1px 1px 0px #000;
+        }
+        .mark-box {
+            position: absolute;
+            left: 8px;
+            top: 8px;
+            border: 2px solid #000;
+            padding: 3px 8px;
+            font-weight: 800;
+            background: #fff;
+            font-size: 1em;
+            box-shadow: 2px 2px 0px #000;
+        }
+        .passage {
+            background: #fafafa;
+            border: 1px dashed #000;
+            padding: 8px 12px;
+            margin: 6px 0;
+            font-size: 1.05em;
+            line-height: 1.9;
+            font-weight: 700;
+            box-shadow: inset 2px 2px 4px rgba(0,0,0,0.05);
+        }
+        .question-text {
+            font-weight: 800;
+            margin-top: 8px;
+            font-size: 1.05em;
+        }
+        .dotted-line {
+            border-bottom: 2px dotted #000;
+            display: inline-block;
+            min-width: 200px;
+            margin: 0 5px;
+            height: 22px;
+        }
+        .dotted-line.full {
+            width: 100%;
+            min-width: 90%;
+            margin: 6px 0;
+        }
+        table.skills {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 6px;
+            border: 1.5px solid #000;
+            font-weight: 700;
+            box-shadow: var(--shadow-3d-sm);
+            font-size: 0.95em;
+        }
+        table.skills td,
+        table.skills th {
+            border: 1.5px solid #000;
+            padding: 5px 8px;
+            text-align: center;
+            vertical-align: middle;
+            font-weight: 700;
+        }
+        table.skills th {
+            background: #eef3f8;
+            font-weight: 800;
+        }
+        .calligraphy-box {
+            border: 1.5px solid #000;
+            height: 100px;
+            width: 100%;
+            background: repeating-linear-gradient(transparent, transparent 26px, #ddd 27px);
+            margin-top: 10px;
+            box-shadow: inset 1px 1px 3px rgba(0,0,0,0.1);
+        }
+        .footer-note {
+            text-align: center;
+            margin-top: auto;
+            font-weight: 800;
+            font-size: 1.1em;
+            color: var(--deep-navy);
+            padding: 8px 0;
+        }
+        .page-arrow {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            margin-top: auto;
+            font-size: 1.3em;
+            color: var(--deep-navy);
+            padding-bottom: 5px;
+            font-weight: 700;
+        }
+        .no-break {
+            page-break-inside: avoid;
+        }
+        .classify-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            justify-content: center;
+            align-items: center;
+        }
+        .classify-option {
+            border: 1px dashed #000;
+            padding: 2px 8px;
+            background: #fefefe;
+            font-size: 0.9em;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+
+<div class="json-panel">
+    <div class="panel-title">
+        🧩 بيانات الاختبار (JSON)
+        <span style="font-size:12px;background:var(--deep-navy);color:white;padding:2px 12px;border-radius:40px;">لغتي – الصف الثاني</span>
+    </div>
+    <textarea id="jsonInput" class="json-area" placeholder="الصق JSON هنا ..."></textarea>
+    <div class="btn-group">
+        <button class="btn" id="applyBtn">✨ تطبيق</button>
+        <button class="btn btn-outline" id="loadDefaultBtn">📚 الافتراضي</button>
+        <button class="btn btn-outline" id="copyJsonBtn">📋 نسخ JSON</button>
+    </div>
+</div>
+
+<div class="action-bar">
+    <button class="btn" onclick="window.print()">🖨️ طباعة</button>
+    <button class="btn" id="downloadWordBtn" style="background:#2d6a4f;">📥 تنزيل Word</button>
+</div>
+
+<div id="examContainer" class="exam-container"></div>
+
+<script>
+(function() {
+    function toArabicNumbers(text) {
+        if (typeof text !== 'string') return text;
+        const en = ['0','1','2','3','4','5','6','7','8','9'];
+        const ar = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
+        let r = text;
+        en.forEach((n, i) => { r = r.replace(new RegExp(n, 'g'), ar[i]); });
+        return r;
+    }
+
+    function shuffleArray(arr) {
+        const a = [...arr];
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
+    const DEFAULT_JSON = {
+        ministry: "المملكة العربية السعودية",
+        dept: "وزارة التعليم",
+        office: "مكتب تعليم: ...................",
+        title: "اختبار مادة لغتي (الدور الأول)",
+        grade: "الصف الثاني الابتدائي",
+        semester: "الفصل الدراسي الثاني",
+        studentLabel: "اسم الطالبة: .................................",
+        regLabel: "الرقم السجل: .........................",
+        totalMark: "٤٠",
+        sections: [
+            {
+                type: "comprehension",
+                title: "السؤال الأول: الفهم والاستيعاب",
+                mark: "١٣",
+                passage: "نُورَةُ تُحِبُّ مَادَّةَ الْعُلُومِ، وَتَجِدُ مُتْعَةً وَفَائِدَةً فِي دِرَاسَتِهَا، وَتَرْغَبُ أَنْ تُصْبِحَ طَبِيبَةً فِي الْمُسْتَقْبَلِ. تَقْضِي نُورَةُ وَقْتَ فَرَاغِهَا فِي قِرَاءَةِ الْكُتُبِ، وَالْمَجَلَّاتِ الطِّبِّيَّةِ، وَهِيَ مَسْؤُولَةٌ عَنْ صَيْدَلِيَّةِ الْإِسْعَافَاتِ الْأَوَّلِيَّةِ فِي الْفَصْلِ",
+                questions: [
+                    { type: "open", q: "مَاذَا تَرْغَبُ نُورَةُ أَنْ تَكُونَ فِي الْمُسْتَقْبَلِ؟", mark: "درجتان" },
+                    { type: "extract_table", q: "اِستَخرِج مِنَ النَّصِّ مَا يَلِي:", mark: "٤ درجات", columns: ["تَاءٌ مَرْبُوطَةٌ", "الْـ قَمَرِيَّةٌ", "مَدٌّ بِالْأَلِفِ", "تَنْوِينٌ"] },
+                    { type: "matching", q: "صِلِ الْكَلِمَةَ بِمَعْنَاهَا أو ضِدِّهَا:", mark: "٤ درجات", pairs: [["لِنَجْدَتِهِ","لِمُسَاعَدَتِهِ"],["أَثْنَى","مَدَحَ"],["مُتْعَةٌ","تَسْلِيَةٌ"],["نَائِيَةٌ (ضِدُّها)","قَرِيبَةٌ"]] },
+                    { type: "analysis", q: "أُحَلِّلُ الْكَلِمَةَ التَّالِيَةَ إِلَى مَقَاطِعَ وَحُرُوفٍ:", mark: "٣ درجات", word: "نَوْرَةُ", slots: 3 }
+                ]
+            },
+            {
+                type: "grammar",
+                title: "السؤال الثاني: التراكيب والأساليب اللغوية",
+                mark: "١٥",
+                items: [
+                    { type: "fill", q: "أُؤَكِّدُ الْجُمْلَةَ بِاسْتِخْدَامِ (إِنَّ):", mark: "درجتان", prompt: "الْفِكْرَةُ جَمِيلَةٌ. ←" },
+                    { type: "fill", q: "أَكْتُبُ (إِلَّا) فِي الْمَكَانِ الْمُنَاسِبِ:", mark: "درجتان", prompt: "قَرَأَتْ نُورَةُ الْكُتُبَ ................. كِتَاباً." },
+                    { type: "fill", q: "أُرَتِّبُ الْكَلِمَاتِ الآتِيَةَ مُبْتَدِئاً بِـ (لَعَلَّ):", mark: "درجتان", prompt: "(حَاسُوباً - مُتَطَوِّراً - لَعَلِّي - أَمْلِكُ)" },
+                    { type: "matching2", q: "أَصِلُ اسْمَ الْإِشَارَةِ بِالْكَلِمَةِ الْمُنَاسِبَةِ لَهُ:", mark: "٣ درجات", pairs: [["هَذَانِ","الْمُهَنْدِسَانِ"],["هَؤُلَاءِ","الطَّيَّارُونَ"],["هَذِهِ","الطَّبِيبَةُ"]] },
+                    { type: "fill", q: "أَبْدَأُ الْجُمْلَةَ بِالْكَلِمَةِ الَّتِي بَيْنَ الْقَوْسَيْنِ:", mark: "درجتان", prompt: "الْأَبُ يَمْتَلِكُ سَيَّارَةً. (أَبُوكَ) ←" },
+                    { type: "classify", q: "أَصَنِّفُ الْكَلِمَاتِ الآتِيَةَ حَسَبَ الْمَطْلُوبِ فِي الْجَدْوَلِ:", mark: "٥ درجات", words: ["صِحَّةٌ","وَصَلَتْ","أَحْمَدُ","سَأَلَ"], categories: ["هَمْزةُ قَطْعٍ","هَمْزةٌ مُتَوَسِّطَةٌ","تَاءٌ مَفْتُوحَةٌ","تَاءٌ مَرْبُوطَةٌ"] }
+                ]
+            },
+            {
+                type: "writing",
+                title: "السؤال الثالث: المهارات الكتابية",
+                mark: "١٢",
+                parts: [
+                    { type: "dictation", q: "الإِمْلَاءُ:", mark: "٥ درجات", lines: 3 },
+                    { type: "handwriting", q: "الْخَطُّ:", mark: "٣ درجات", sentence: "بِالْعِلْمِ وَالْعَمَلِ يُصْبِحُ كُلُّ صَعْبٍ سَهْلًا." },
+                    { type: "expression", q: "التَّعْبِيرُ: أُكْمِلُ تَرْقِيمَ الْجُمَلِ الآتِيَةِ لِتَكْوِينِ نَصٍّ مُتَرَابِطٍ:", mark: "٤ درجات", sentences: ["ثُمَّ يَسِيرُ إِلَى الْمَسْجِدِ بِهُدُوءٍ.","حَازِمٌ يُحَافِظُ عَلَى الصَّلَاةِ.","ثُمَّ يُصَلِّي خَلْفَ الْإِمَامِ.","يَتَوَضَّأُ فِي الْمَنْزِلِ."] }
+                ]
+            }
+        ]
+    };
+
+    const container = document.getElementById('examContainer');
+    const jsonArea = document.getElementById('jsonInput');
+
+    function createHeader(data) {
+        const headerTable = document.createElement('table');
+        headerTable.className = 'header-table';
+        headerTable.innerHTML = `
+            <tr>
+                <td width="30%">${toArabicNumbers(data.ministry)}<br>${toArabicNumbers(data.dept)}<br>${toArabicNumbers(data.office)}</td>
+                <td width="40%"><h3 style="font-weight:800;">${toArabicNumbers(data.title)}</h3>${toArabicNumbers(data.grade)}<br>${toArabicNumbers(data.semester)}</td>
+                <td width="30%">${toArabicNumbers(data.studentLabel)}<br>${toArabicNumbers(data.regLabel)}<br>الدرجة النهائية: ( ${toArabicNumbers(data.totalMark)} )</td>
+            </tr>`;
+        return headerTable;
+    }
+
+    function buildExam(data) {
+        container.innerHTML = '';
+
+        // الصفحة الأولى
+        let page1 = document.createElement('div');
+        page1.className = 'page';
+        page1.appendChild(createHeader(data));
+
+        const comprehensionSec = data.sections[0];
+        const compDiv = createComprehensionSection(comprehensionSec);
+        page1.appendChild(compDiv);
+
+        const grammarSec = data.sections[1];
+        const grammarDiv = createGrammarSection(grammarSec);
+        page1.appendChild(grammarDiv);
+
+        const arrow1 = document.createElement('div');
+        arrow1.className = 'page-arrow';
+        arrow1.innerHTML = '⬇️ الصفحة التالية ⬇️';
+        page1.appendChild(arrow1);
+
+        container.appendChild(page1);
+
+        // الصفحة الثانية
+        let page2 = document.createElement('div');
+        page2.className = 'page';
+
+        const writingSec = data.sections[2];
+        const writingDiv = createWritingSection(writingSec);
+        page2.appendChild(writingDiv);
+
+        const footer = document.createElement('div');
+        footer.className = 'footer-note';
+        footer.innerHTML = '❤️ انتهت الأسئلة .. مع تمنياتي لكم بالتوفيق والنجاح';
+        page2.appendChild(footer);
+
+        container.appendChild(page2);
+    }
+
+    function createComprehensionSection(sec) {
+        const secDiv = document.createElement('div');
+        secDiv.className = 'exam-section';
+        secDiv.innerHTML = `<div class="mark-box">${toArabicNumbers(sec.mark)}</div><div class="section-title">${toArabicNumbers(sec.title)}</div>`;
+
+        if (sec.passage) {
+            const passageDiv = document.createElement('div');
+            passageDiv.className = 'passage';
+            passageDiv.innerText = toArabicNumbers(sec.passage);
+            secDiv.appendChild(passageDiv);
+        }
+        (sec.questions || []).forEach((q, qIdx) => {
+            const qDiv = document.createElement('div');
+            qDiv.className = 'question-text';
+            qDiv.innerHTML = `${toArabicNumbers((qIdx+1).toString())}/ ${toArabicNumbers(q.q)} <span style="font-weight:700;font-size:0.9em;">(${toArabicNumbers(q.mark)})</span>`;
+            secDiv.appendChild(qDiv);
+
+            if (q.type === 'open') {
+                const answerDiv = document.createElement('div');
+                answerDiv.style.cssText = 'margin:6px 0;font-weight:700;';
+                answerDiv.innerHTML = 'الإجابة: <span class="dotted-line" style="width:75%;"></span>';
+                secDiv.appendChild(answerDiv);
+            } else if (q.type === 'extract_table') {
+                const table = document.createElement('table');
+                table.className = 'skills';
+                table.innerHTML = `<tr>${(q.columns||[]).map(c => `<th>${toArabicNumbers(c)}</th>`).join('')}</tr><tr>${(q.columns||[]).map(() => '<td>..........</td>').join('')}</tr>`;
+                secDiv.appendChild(table);
+            } else if (q.type === 'matching') {
+                const pairs = q.pairs || [];
+                const leftCol = pairs.map(p => p[0]);
+                const rightColShuffled = shuffleArray(pairs.map(p => p[1]));
+                const table = document.createElement('table');
+                table.className = 'skills';
+                table.style.cssText = 'width:100%;';
+                leftCol.forEach((left, i) => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `<td>${toArabicNumbers(left)}</td><td>( &nbsp;&nbsp; )</td><td>${toArabicNumbers(rightColShuffled[i])}</td>`;
+                    table.appendChild(tr);
+                });
+                secDiv.appendChild(table);
+            } else if (q.type === 'analysis') {
+                const table = document.createElement('table');
+                table.className = 'skills';
+                table.innerHTML = `<tr><td>${toArabicNumbers(q.word)}</td>${Array(q.slots).fill('<td>....</td>').join('')}</tr>`;
+                secDiv.appendChild(table);
+            }
+        });
+        return secDiv;
+    }
+
+    function createGrammarSection(sec) {
+        const secDiv = document.createElement('div');
+        secDiv.className = 'exam-section';
+        secDiv.innerHTML = `<div class="mark-box">${toArabicNumbers(sec.mark)}</div><div class="section-title">${toArabicNumbers(sec.title)}</div>`;
+
+        (sec.items || []).forEach((item, idx) => {
+            const qDiv = document.createElement('div');
+            qDiv.className = 'question-text';
+            qDiv.innerHTML = `${toArabicNumbers((idx+1).toString())}/ ${toArabicNumbers(item.q)} <span style="font-weight:700;font-size:0.9em;">(${toArabicNumbers(item.mark)})</span>`;
+            secDiv.appendChild(qDiv);
+
+            if (item.type === 'fill') {
+                const fillDiv = document.createElement('div');
+                fillDiv.style.cssText = 'margin:6px 0;font-weight:700;';
+                fillDiv.innerHTML = `${toArabicNumbers(item.prompt)} <span class="dotted-line" style="width:300px;"></span>`;
+                secDiv.appendChild(fillDiv);
+            } else if (item.type === 'matching2') {
+                const pairs = item.pairs || [];
+                const table = document.createElement('table');
+                table.className = 'skills';
+                table.style.cssText = 'width:80%;margin:4px auto;';
+                pairs.forEach(p => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `<td style="width:40%;">${toArabicNumbers(p[0])}</td><td style="width:20%;text-align:center;">⬜</td><td style="width:40%;">${toArabicNumbers(p[1])}</td>`;
+                    table.appendChild(tr);
+                });
+                secDiv.appendChild(table);
+            } else if (item.type === 'classify') {
+                const words = item.words || [];
+                const categories = item.categories || [];
+                const table = document.createElement('table');
+                table.className = 'skills';
+                const headerRow = document.createElement('tr');
+                categories.forEach(cat => {
+                    const th = document.createElement('th');
+                    th.innerText = toArabicNumbers(cat);
+                    headerRow.appendChild(th);
+                });
+                table.appendChild(headerRow);
+                const bodyRow = document.createElement('tr');
+                categories.forEach(() => {
+                    const td = document.createElement('td');
+                    td.innerHTML = '.................';
+                    bodyRow.appendChild(td);
+                });
+                table.appendChild(bodyRow);
+                secDiv.appendChild(table);
+
+                const optionsDiv = document.createElement('div');
+                optionsDiv.style.cssText = 'display:flex;flex-wrap:wrap;gap:10px;margin-top:6px;font-weight:700;justify-content:space-around;';
+                categories.forEach((cat, catIdx) => {
+                    const correctWord = words[catIdx] || '';
+                    const otherWords = words.filter(w => w !== correctWord);
+                    const wrongWord = otherWords.length ? otherWords[0] : '';
+                    const catOpt = document.createElement('div');
+                    catOpt.style.cssText = 'text-align:center;';
+                    catOpt.innerHTML = `<span style="margin-left:4px;">${toArabicNumbers(cat)}:</span> <span class="classify-option">${toArabicNumbers(correctWord)}</span> / <span class="classify-option">${toArabicNumbers(wrongWord)}</span>`;
+                    optionsDiv.appendChild(catOpt);
+                });
+                secDiv.appendChild(optionsDiv);
+            }
+        });
+        return secDiv;
+    }
+
+    function createWritingSection(sec) {
+        const secDiv = document.createElement('div');
+        secDiv.className = 'exam-section';
+        secDiv.innerHTML = `<div class="mark-box">${toArabicNumbers(sec.mark)}</div><div class="section-title">${toArabicNumbers(sec.title)}</div>`;
+
+        (sec.parts || []).forEach(part => {
+            const qDiv = document.createElement('div');
+            qDiv.className = 'question-text';
+            qDiv.innerHTML = `${toArabicNumbers(part.q)} <span style="font-weight:700;font-size:0.9em;">(${toArabicNumbers(part.mark)})</span>`;
+            secDiv.appendChild(qDiv);
+
+            if (part.type === 'dictation') {
+                for (let i=0; i<(part.lines||3); i++) {
+                    const line = document.createElement('div');
+                    line.className = 'dotted-line full';
+                    line.style.height = '30px';
+                    secDiv.appendChild(line);
+                }
+            } else if (part.type === 'handwriting') {
+                const sentenceDiv = document.createElement('div');
+                sentenceDiv.style.cssText = 'text-align:center;font-size:1.2em;margin:12px 0;font-weight:800;';
+                sentenceDiv.innerText = toArabicNumbers(part.sentence);
+                secDiv.appendChild(sentenceDiv);
+                const cb = document.createElement('div');
+                cb.className = 'calligraphy-box';
+                cb.style.height = '110px';
+                secDiv.appendChild(cb);
+            } else if (part.type === 'expression') {
+                (part.sentences || []).forEach(s => {
+                    const exprDiv = document.createElement('div');
+                    exprDiv.style.cssText = 'margin:6px 0;font-weight:700;font-size:1.05em;';
+                    exprDiv.innerHTML = `( &nbsp;&nbsp; ) ${toArabicNumbers(s)}`;
+                    secDiv.appendChild(exprDiv);
+                });
+            }
+        });
+        return secDiv;
+    }
+
+    function applyFromTextarea() {
+        try {
+            const raw = jsonArea.value.trim();
+            if (!raw) return;
+            const data = JSON.parse(raw);
+            buildExam(data);
+            jsonArea.value = JSON.stringify(data, null, 2);
+        } catch (e) {
+            alert('❌ خطأ في JSON: ' + e.message);
+        }
+    }
+
+    function loadDefault() {
+        jsonArea.value = JSON.stringify(DEFAULT_JSON, null, 2);
+        buildExam(DEFAULT_JSON);
+    }
+
+    function copyCurrentJson() {
+        navigator.clipboard?.writeText(jsonArea.value)
+            .then(() => alert('✅ تم نسخ JSON'))
+            .catch(() => alert('تعذر النسخ'));
+    }
+
+    document.getElementById('applyBtn').addEventListener('click', applyFromTextarea);
+    document.getElementById('loadDefaultBtn').addEventListener('click', loadDefault);
+    document.getElementById('copyJsonBtn').addEventListener('click', copyCurrentJson);
+
+    window.addEventListener('DOMContentLoaded', loadDefault);
+
+    function downloadWordFile() {
+        const pages = document.querySelectorAll('.page');
+        if (!pages.length) return;
+        let fullContent = '';
+        pages.forEach(p => { const clone = p.cloneNode(true); fullContent += clone.outerHTML; });
+        const styles = document.querySelector('style').innerHTML;
+        const html = `<!DOCTYPE html><html dir="rtl"><head><meta charset="UTF-8"><title>اختبار لغتي</title><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700;800&display=swap" rel="stylesheet"><style>body{font-family:'Cairo',sans-serif;direction:rtl;background:white;padding:20px;font-weight:500;}${styles}.json-panel,.action-bar{display:none;}.page{box-shadow:none;margin:0 auto 20px;border-radius:0;border:1px solid #000;transform:none;page-break-after:always;}</style></head><body>${fullContent}</body></html>`;
+        const blob = new Blob(['\ufeff' + html], { type: 'application/msword' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'اختبار_لغتي_ثاني_ابتدائي.doc';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    document.getElementById('downloadWordBtn').addEventListener('click', downloadWordFile);
+})();
+</script>
+</body>
+</html>
