@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>ملف التقويم الذاتي - مجال التعليم والتعلّم 1447هـ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0f6453',
+                        primaryDark: '#0a4035',
+                        accent: '#c5a059',
+                        accentLight: '#e5c687'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: #d1d9e6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+            padding: 25px 10px;
+            margin: 0;
+        }
+        .page {
+            width: 100%;
+            max-width: 210mm;
+            min-height: 297mm;
+            position: relative;
+            padding: 12mm 15mm;
+            display: flex;
+            flex-direction: column;
+            border-radius: 28px;
+            box-shadow: 0 25px 40px -12px rgba(0,0,0,0.25);
+            border: 1px solid rgba(255,255,255,0.6);
+            overflow: hidden;
+            background: linear-gradient(220deg, #faf9f6 0%, #f0ede6 100%);
+        }
+        .header-3d {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 18px;
+            box-shadow: 0 6px 0 #b0bec5, 0 8px 16px rgba(0,0,0,0.08);
+            border: 1px solid #e2e8f0;
+        }
+        .header-3d h2 { color: #0f6453; font-weight: 900; font-size: 1.4rem; margin: 0; }
+        .icon-circle-3d {
+            width: 44px; height: 44px; border-radius: 50%;
+            background: linear-gradient(145deg, #0f6453, #0a4035);
+            box-shadow: inset 0 2px 6px rgba(255,255,255,0.4), 0 8px 12px rgba(15,100,83,0.25);
+            display: flex; align-items: center; justify-content: center;
+            color: #c5a059; font-size: 1.3rem; border: 2px solid #ffffff; flex-shrink: 0;
+        }
+        .info-card {
+            background: #ffffff; border-radius: 20px; padding: 1.2rem 1.5rem;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.05), inset 0 -2px 0 rgba(0,0,0,0.03);
+            border-bottom: 4px solid;
+        }
+        .btn-3d {
+            background: #ffffff; border-radius: 18px; padding: 1rem 1.2rem;
+            box-shadow: 0 5px 0 #cbd5e1, 0 4px 8px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between;
+        }
+        .print-btn {
+            background: linear-gradient(145deg, #0f6453, #0a4035);
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 6px 0 #062b23, 0 10px 20px -5px rgba(0,0,0,0.3);
+            color: white; cursor: pointer; transition: all 0.1s;
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            z-index: 100; padding: 16px 32px; border-radius: 28px;
+            font-weight: 900; font-size: 1.2rem; display: flex; align-items: center; gap: 12px; white-space: nowrap;
+        }
+        .print-btn:active { transform: translateX(-50%) translateY(6px); box-shadow: 0 0 0 #062b23, 0 5px 12px rgba(0,0,0,0.2); }
+        .bg-pattern {
+            position: absolute; inset: 0;
+            background-image: radial-gradient(circle at 20% 30%, rgba(197,160,89,0.03) 0%, transparent 30%),
+                              repeating-linear-gradient(45deg, rgba(15,100,83,0.01) 0px, rgba(15,100,83,0.01) 2px, transparent 2px, transparent 12px);
+            opacity: 0.5; pointer-events: none; z-index: 0;
+        }
+        .z-10 { z-index: 10; position: relative; }
+        .page-number {
+            position: absolute; bottom: 12mm; left: 12mm; width: 36px; height: 36px;
+            background: rgba(15, 100, 83, 0.08); color: #0f6453; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 900; font-size: 1rem; z-index: 20; border: 2px solid rgba(15, 100, 83, 0.2);
+        }
+        @media print {
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+            body { background: white !important; padding: 0 !important; gap: 0 !important; margin: 0 !important; }
+            .page { box-shadow: none !important; border-radius: 0 !important; border: none !important; page-break-after: always; height: 297mm; width: 210mm; max-width: 210mm; min-height: 297mm; padding: 10mm 12mm !important; margin: 0 auto !important; background: linear-gradient(220deg, #faf9f6 0%, #f0ede6 100%) !important; }
+            .no-print, .bg-pattern, .print-btn { display: none !important; }
+            .header-3d { box-shadow: 0 3px 0 #b0bec5, 0 5px 10px rgba(0,0,0,0.05) !important; border: 1px solid #ddd !important; background: #fff !important; }
+            .page-number { background: transparent !important; border: 2px solid #0f6453 !important; }
+        }
+        /* ====== QR Code Styles ====== */
+        .qr-section {
+            margin-top: 8px; display: flex; align-items: center; gap: 12px;
+            background: #f9fafb; border-radius: 14px; padding: 8px 12px;
+            border: 1px solid #e5e7eb;
+        }
+        .qr-code-box {
+            width: 90px; height: 90px; flex-shrink: 0;
+            border: 2px solid #0f6453; border-radius: 12px;
+            background: #fff; display: flex; align-items: center; justify-content: center;
+            overflow: hidden; position: relative;
+        }
+        .qr-code-box canvas { border-radius: 8px; }
+        .qr-code-box a { display: flex; align-items: center; justify-content: center; width:100%; height:100%; }
+        .qr-empty-icon { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+        .qr-empty-icon i { font-size: 1.8rem; color: #0f6453; opacity: 0.7; }
+        .qr-empty-icon span { font-size: 0.5rem; font-weight: 700; color: #9ca3af; text-align: center; line-height: 1.4; }
+        .qr-controls { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+        .qr-label { font-size: 0.72rem; font-weight: 900; color: #0f6453; }
+        .qr-input-row { display: flex; gap: 6px; }
+        .qr-url-input {
+            flex: 1; border: 1.5px solid #d1d5db; border-radius: 10px;
+            padding: 6px 10px; font-family: 'Cairo', sans-serif;
+            font-size: 0.68rem; font-weight: 600; color: #374151;
+            background: #fff; outline: none; direction: ltr;
+        }
+        .qr-url-input:focus { border-color: #0f6453; }
+        .qr-gen-btn {
+            background: linear-gradient(135deg, #0f6453, #0a4035);
+            color: #fff; border: none; border-radius: 10px;
+            padding: 6px 14px; font-family: 'Cairo', sans-serif;
+            font-size: 0.68rem; font-weight: 900; cursor: pointer;
+            white-space: nowrap; box-shadow: 0 3px 0 #062b23; transition: all 0.1s;
+        }
+        .qr-gen-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 #062b23; }
+        .qr-hint { font-size: 0.6rem; color: #9ca3af; font-weight: 600; }
+        .qr-link-text { font-size: 0.6rem; color: #0f6453; font-weight: 700; display: none; word-break: break-all; direction: ltr; }
+        @media print {
+            .qr-controls input, .qr-gen-btn, .qr-hint { display: none !important; }
+            .qr-label { display: none !important; }
+            .qr-link-text { display: block !important; }
+            .qr-section { border: 1px solid #e5e7eb !important; background: #fff !important; }
+        }
+        .evidence-table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 12px; border-radius: 12px; overflow: hidden; border: 1px solid #d1d5db; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); font-size: 0.78rem; }
+        .evidence-table th { background-color: #e5d5b7; color: #000; padding: 8px 6px; font-weight: 900; border: 1px solid #9ca3af; text-align: center; font-size: 0.8rem; }
+        .evidence-table td { padding: 6px 5px; border: 1px solid #d1d5db; background-color: #fff; color: #374151; font-weight: 700; text-align: center; vertical-align: middle; font-size: 0.72rem; }
+        .check-cell { width: 45px; cursor: pointer; font-size: 1rem; color: #0f6453; transition: background-color 0.2s; }
+        .check-cell:hover { background-color: #f3f4f6; }
+        textarea { font-family: 'Cairo', sans-serif; resize: vertical; line-height: 1.8; }
+        .analysis-box { background: #fff; border-radius: 1.2rem; padding: 1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid #e5e7eb; }
+        .img-upload-box { width: 260px; height: 260px; border: 2px dashed #c5a059; border-radius: 24px; cursor: pointer; background: #fff; margin: 0 auto; display: flex; align-items: center; justify-content: center; flex-direction: column; transition: all 0.2s; position: relative; overflow: hidden; }
+        .img-upload-box:hover { border-color: #0f6453; background: #f9fafb; }
+        .img-upload-box img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 20px; }
+        .img-upload-box i { font-size: 3rem; color: #0f6453; opacity: 0.6; }
+        .img-upload-box span { font-size: 0.85rem; font-weight: 600; color: #6b7280; margin-top: 8px; }
+        .chart-container { background: #fff; border-radius: 1rem; padding: 0.8rem; box-shadow: 0 2px 8px rgba(0,0,0,0.03); border: 1px solid #e5e7eb; }
+        .chart-container h4 { color: #0f6453; font-weight: 900; text-align: center; margin-bottom: 0.5rem; font-size: 0.75rem; background: #f9fafb; padding: 0.4rem; border-radius: 0.6rem; }
+        .compact-text { font-size: 0.7rem; line-height: 1.5; }
+        .compact-list { font-size: 0.68rem; line-height: 1.6; }
+    </style>
+</head>
+<body>
+
+<button onclick="window.print()" class="no-print print-btn">
+    <i class="fa-solid fa-file-pdf text-2xl" style="color:#e5c687;"></i>
+    <span>استخراج الملف (PDF)</span>
+    <i class="fa-solid fa-arrow-left text-xl" style="color:#e5c687;"></i>
+</button>
+
+<!-- ==================== 1. الغلاف ==================== -->
+<div class="page justify-center items-center text-center">
+    <div class="bg-pattern"></div>
+    <div class="absolute inset-0 opacity-[0.04] pointer-events-none flex items-center justify-center" style="z-index:0;">
+        <i class="fa-solid fa-school" style="font-size:20rem; color:#0f6453;"></i>
+    </div>
+    <div class="z-10 w-full flex flex-col items-center px-4 mt-8">
+        <div class="flex flex-col items-center mb-8">
+            <i class="fa-solid fa-book-open-reader text-5xl mb-3" style="color:#0f6453;"></i>
+            <span class="font-black text-2xl" style="color:#0f6453;">وزارة التعليم</span>
+            <span class="text-xs font-bold text-gray-500 mt-1">Ministry of Education</span>
+        </div>
+        <div class="mb-8">
+            <span class="inline-block px-8 py-3 bg-white/90 rounded-full font-black border-2 border-dashed shadow-lg text-lg" style="color:#0f6453; border-color:rgba(15,100,83,0.3);">بسم الله الرحمن الرحيم</span>
+        </div>
+        <div class="bg-white/95 rounded-3xl p-8 shadow-2xl border-b-8 border-primary relative w-full max-w-2xl" style="border-color:#0f6453;">
+            <div class="w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-6 border-2 border-white" style="background:rgba(15,100,83,0.05);">
+                <i class="fa-solid fa-magnifying-glass-chart text-5xl" style="color:#0f6453;"></i>
+            </div>
+            <h1 class="text-4xl font-black leading-tight mb-4" style="color:#0f6453;">ملف التقويم الذاتي</h1>
+            <h2 class="text-2xl font-bold mb-6" style="color:#c5a059;">مجال التعليم والتعلّم</h2>
+            <div class="h-2 w-32 mx-auto rounded-full my-6" style="background:linear-gradient(to left, #c5a059, #0f6453, #c5a059);"></div>
+            <div class="bg-gray-50 p-5 rounded-2xl border border-gray-200 inline-block px-10 shadow-inner">
+                <p class="text-gray-500 text-sm font-bold mb-2">المدرسة</p>
+                <div contenteditable="true" class="text-2xl font-black outline-none border-b-2 border-dashed border-transparent focus:border-primary transition-colors min-w-[200px]" style="color:#0f6453;">.................................</div>
+            </div>
+        </div>
+    </div>
+    <div class="z-10 mt-8">
+        <p class="text-sm font-bold text-gray-400">العام الدراسي 1446 هـ - 1447 هـ</p>
+    </div>
+</div>
+
+<!-- ==================== 2. صفحة البسملة ==================== -->
+<div class="page numbered-page">
+    <div class="bg-pattern"></div>
+    <div class="header-3d z-10" style="justify-content:center;">
+        <div class="icon-circle-3d"><i class="fa-solid fa-star-and-crescent"></i></div>
+        <h2>بسم الله الرحمن الرحيم</h2>
+    </div>
+    <div class="z-10 flex flex-col items-center justify-center flex-1 gap-6">
+        <label class="img-upload-box" id="basmalaBox" style="width:280px; height:280px;">
+            <input type="file" accept="image/*" style="display:none;" onchange="previewBasmala(event)">
+            <i class="fa-solid fa-image"></i>
+            <span>اضغطي هنا لإدراج صورة البسملة</span>
+            <img id="basmalaImg" style="display:none;" alt="بسم الله">
+        </label>
+        <p class="text-xs text-gray-400 font-bold">يمكنك تغيير الصورة بالضغط عليها مرة أخرى</p>
+    </div>
+</div>
+
+<!-- ==================== 3. صفحة عنوان الملف ==================== -->
+<div class="page numbered-page">
+    <div class="bg-pattern"></div>
+    <div class="z-10 flex flex-col items-center justify-center flex-1 text-center gap-8">
+        <i class="fa-solid fa-file-signature text-7xl opacity-80" style="color:#0f6453;"></i>
+        <h1 class="text-4xl font-black" style="color:#0f6453;">ملف التقويم الذاتي</h1>
+        <h2 class="text-2xl font-bold" style="color:#c5a059;">مجال التعليم والتعلّم</h2>
+        <div class="h-2 w-28 rounded-full" style="background:linear-gradient(to left, #c5a059, #0f6453, #c5a059);"></div>
+        <p class="text-lg font-bold text-gray-500">العام الدراسي 1446 هـ - 1447 هـ</p>
+    </div>
+</div>
+
+<!-- ==================== 4. الفهرس ==================== -->
+<div class="page numbered-page">
+    <div class="bg-pattern"></div>
+    <div class="header-3d z-10">
+        <div class="icon-circle-3d"><i class="fa-solid fa-list-ul"></i></div>
+        <h2>فهرس المحتويات</h2>
+    </div>
+    <div class="z-10 grid grid-cols-2 gap-x-6 gap-y-3 mt-4" id="indexGrid"></div>
+</div>
+
+<!-- ==================== 5. المقدمة ==================== -->
+<div class="page numbered-page">
+    <div class="bg-pattern"></div>
+    <div class="header-3d z-10">
+        <div class="icon-circle-3d"><i class="fa-solid fa-pen-fancy"></i></div>
+        <h2>المقدمة</h2>
+    </div>
+    <div class="z-10 flex flex-col gap-6 mt-4">
+        <div class="bg-white rounded-3xl p-7 shadow-md border border-gray-100 relative">
+            <div class="absolute top-0 right-0 w-2 h-full rounded-r-3xl" style="background:linear-gradient(to bottom, #c5a059, #0f6453);"></div>
+            <p class="text-sm text-gray-700 leading-loose font-semibold text-justify" contenteditable="true">
+                يُعد التقويم الذاتي للمدرسة أداة أساسية لضمان جودة التعليم وتطوير الأداء المدرسي بشكل مستمر. فهو يمثل عملية منهجية تقوم بها المدرسة لفحص ممارساتها وتحديد جوانب القوة وتعزيزها، ورصد فُرص التحسين ووضع الخطط الكفيلة بمعالجتها.<br><br>
+                يركز هذا الملف على مجال "التعليم والتعلّم" الذي يمثل جوهر العملية التربوية، حيث يتناول تقويم جودة تخطيط الدروس وتنفيذها، وتنويع استراتيجيات التدريس، وتوظيف التقنيات والوسائل التعليمية، ومراعاة احتياجات الطالبات المتنوعة، وتقديم التغذية الراجعة الهادفة، وتحليل نتائج التعلم وتوظيفها في التحسين المستمر.<br><br>
+                يأتي هذا الملف ليسهم في تحقيق رؤية المدرسة نحو تعلم متميز لجميع الطالبات، ويوفر بيانات موضوعية وشواهد عملية تدعم اتخاذ القرارات التطويرية المبنية على الأدلة.
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== 6. الرؤية والرسالة ==================== -->
+<div class="page numbered-page">
+    <div class="bg-pattern"></div>
+    <div class="header-3d z-10">
+        <div class="icon-circle-3d"><i class="fa-solid fa-eye"></i></div>
+        <h2>الرؤية والرسالة</h2>
+    </div>
+    <div class="z-10 grid grid-cols-2 gap-6 mt-6">
+        <div class="bg-white rounded-3xl p-7 shadow-md border-t-4 text-center" style="border-color:#c5a059;">
+            <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow -mt-12 mb-5 mx-auto border">
+                <i class="fa-solid fa-eye text-3xl" style="color:#c5a059;"></i>
+            </div>
+            <h4 class="text-2xl font-black mb-4" style="color:#0f6453;">الرؤية</h4>
+            <p class="text-sm text-gray-700 leading-relaxed font-bold" contenteditable="true">تعليم متميز عالي الجودة بكوادر تعليمية مؤهلة لبناء مواطن معتز بقيمه الوطنية ومنافس عالمياً.</p>
+        </div>
+        <div class="bg-white rounded-3xl p-7 shadow-md border-t-4 text-center" style="border-color:#0f6453;">
+            <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow -mt-12 mb-5 mx-auto border">
+                <i class="fa-solid fa-bullseye text-3xl" style="color:#0f6453;"></i>
+            </div>
+            <h4 class="text-2xl font-black mb-4" style="color:#0f6453;">الرسالة</h4>
+            <p class="text-sm text-gray-700 leading-relaxed font-bold" contenteditable="true">تقديم تعليم وتعلم متميز للجميع بما يواكب رؤية المملكة 2030 وفي ضوء السياسات التعليمية للمملكة وبمشاركة مجتمعية في بيئة تعليمية جاذبة وآمنة ترتقي بالمهارات والقدرات وتشجع على الابتكار والإبداع.</p>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== 7. الأهداف ==================== -->
+<div class="page numbered-page">
+    <div class="bg-pattern"></div>
+    <div class="header-3d z-10">
+        <div class="icon-circle-3d"><i class="fa-solid fa-bullseye"></i></div>
+        <h2>أهداف تقويم مجال التعليم والتعلّم</h2>
+    </div>
+    <div class="z-10 flex flex-col gap-6 mt-4">
+        <div class="bg-white rounded-3xl p-7 shadow-md border-l-4" style="border-color:#0f6453;">
+            <ul class="space-y-4 text-sm font-semibold text-gray-700 leading-relaxed list-disc list-inside pr-3">
+                <li>تحديد درجة تحقيق معايير التعليم والتعلّم في المدرسة وفق مؤشرات الأداء المعتمدة.</li>
+                <li>رصد أبرز نقاط القوة وتعزيزها، وتحديد فُرص التحسين وترتيبها حسب الأولوية.</li>
+                <li>توفير بيانات موضوعية وشواهد عملية تدعم اتخاذ القرارات التطويرية.</li>
+                <li>تحسين ممارسات التدريس بما ينعكس إيجاباً على تحصيل الطالبات ونواتج التعلم.</li>
+                <li>تعزيز ثقافة التقويم الذاتي المستمر كأساس للتطوير المهني للمعلمات.</li>
+                <li>إعداد خطة تحسين واقعية قابلة للتنفيذ والمتابعة.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== صفحات المعايير (تُولَّد بـ JS بعد تحميل الصفحة) ==================== -->
+<div id="standardsContainer"></div>
+
+<!-- ==================== تحليل واقع المجال ==================== -->
+<div class="page numbered-page">
+    <div class="bg-pattern"></div>
+    <div class="header-3d z-10">
+        <div class="icon-circle-3d"><i class="fa-solid fa-magnifying-glass"></i></div>
+        <h2>تحليل واقع مجال التعليم والتعلّم</h2>
+    </div>
+    <div class="z-10 flex flex-col gap-6 mt-3">
+        <div class="analysis-box">
+            <h3 class="text-lg font-black mb-3 border-b pb-2" style="color:#0f6453;">أولاً: جوانب القوة</h3>
+            <textarea class="w-full h-32 outline-none text-sm font-semibold text-gray-700 p-3 rounded-xl border border-gray-200 bg-gray-50">• ...............................................................................................................................
+• ...............................................................................................................................
+• ...............................................................................................................................</textarea>
+        </div>
+        <div class="analysis-box">
+            <h3 class="text-lg font-black mb-3 border-b pb-2" style="color:#0f6453;">ثانياً: جوانب الضعف / فُرص التحسين</h3>
+            <textarea class="w-full h-32 outline-none text-sm font-semibold text-gray-700 p-3 rounded-xl border border-gray-200 bg-gray-50">• ...............................................................................................................................
+• ...............................................................................................................................
+• ...............................................................................................................................</textarea>
+        </div>
+        <div class="analysis-box">
+            <h3 class="text-lg font-black mb-3 border-b pb-2" style="color:#0f6453;">ثالثاً: التحديات والمعوّقات</h3>
+            <textarea class="w-full h-32 outline-none text-sm font-semibold text-gray-700 p-3 rounded-xl border border-gray-200 bg-gray-50">• ...............................................................................................................................
+• ...............................................................................................................................
+• ...............................................................................................................................</textarea>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== خطة التحسين ==================== -->
+<div class="page numbered-page">
+    <div class="bg-pattern"></div>
+    <div class="header-3d z-10">
+        <div class="icon-circle-3d"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+        <h2>خطة تحسين مجال التعليم والتعلّم</h2>
+    </div>
+    <div class="z-10 flex flex-col gap-4 mt-2">
+        <table class="evidence-table" style="font-size: 0.72rem;">
+            <thead>
+                <tr>
+                    <th>المجال / المعيار</th>
+                    <th>الإجراء التطويري</th>
+                    <th>المسؤول</th>
+                    <th>المدة</th>
+                    <th>مؤشر النجاح</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td contenteditable="true" class="font-bold">تخطيط الدروس</td><td contenteditable="true">تدريب المعلمات على صياغة أهداف ذكية ونماذج تحضير</td><td contenteditable="true">القائدة</td><td contenteditable="true">أسبوعان</td><td contenteditable="true">تحضير جيد 90%</td></tr>
+                <tr><td contenteditable="true" class="font-bold">التقنيات والوسائل</td><td contenteditable="true">ورشة تفعيل Wordwall و Padlet</td><td contenteditable="true">المعلمة الأولى</td><td contenteditable="true">شهر</td><td contenteditable="true">3 شواهد لكل معلمة</td></tr>
+                <tr><td contenteditable="true" class="font-bold">الفروق الفردية</td><td contenteditable="true">بنك أنشطة متمايزة وتعميمه</td><td contenteditable="true">فريق المجال</td><td contenteditable="true">3 أسابيع</td><td contenteditable="true">نشاطين لكل درس</td></tr>
+                <tr><td contenteditable="true" class="font-bold">التغذية الراجعة</td><td contenteditable="true">تطبيق أسلوب النجمة والهدف</td><td contenteditable="true">المعلمات</td><td contenteditable="true">فصل دراسي</td><td contenteditable="true">ملاحظات في 80% من الدفاتر</td></tr>
+                <tr><td contenteditable="true" class="font-bold">تحليل النتائج</td><td contenteditable="true">استمارة تحليل إلكترونية موحدة</td><td contenteditable="true">المرشدة</td><td contenteditable="true">شهر</td><td contenteditable="true">تقارير لجميع المواد</td></tr>
+                <tr><td contenteditable="true" class="font-bold">الإدارة الصفية</td><td contenteditable="true">برنامج القيم أولاً وتعزيز السلوك</td><td contenteditable="true">المعلمات</td><td contenteditable="true">مستمر</td><td contenteditable="true">انخفاض المخالفات 50%</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- ==================== التوصيات ==================== -->
+<div class="page numbered-page">
+    <div class="bg-pattern"></div>
+    <div class="header-3d z-10">
+        <div class="icon-circle-3d"><i class="fa-solid fa-lightbulb"></i></div>
+        <h2>التوصيات</h2>
+    </div>
+    <div class="z-10 flex flex-col gap-4 mt-2">
+        <div class="analysis-box">
+            <h3 class="text-lg font-black mb-3" style="color:#c5a059;">توصيات لتحسين عمليات التعليم والتعلّم</h3>
+            <textarea class="w-full h-40 outline-none text-sm font-semibold text-gray-700 p-4 rounded-xl border border-gray-200 bg-gray-50 leading-relaxed">1. ........................................................................
+2. ........................................................................
+3. ........................................................................
+4. ........................................................................
+5. ........................................................................
+</textarea>
+        </div>
+        <div class="analysis-box">
+            <h3 class="text-lg font-black mb-3" style="color:#c5a059;">توصيات للدعم الإداري والفني</h3>
+            <textarea class="w-full h-32 outline-none text-sm font-semibold text-gray-700 p-4 rounded-xl border border-gray-200 bg-gray-50 leading-relaxed">1. ........................................................................
+2. ........................................................................
+3. ........................................................................
+</textarea>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== الخاتمة والتوقيع ==================== -->
+<div class="page numbered-page">
+    <div class="bg-pattern"></div>
+    <div class="header-3d z-10">
+        <div class="icon-circle-3d"><i class="fa-solid fa-pen-nib"></i></div>
+        <h2>الخاتمة</h2>
+    </div>
+    <div class="z-10 flex-1 flex flex-col justify-center items-center">
+        <div class="bg-white p-10 rounded-3xl text-center border-t-8 shadow-2xl relative w-full max-w-3xl" style="border-color:#c5a059;">
+            <i class="fa-solid fa-quote-right absolute top-8 right-10 text-7xl text-gray-100"></i>
+            <h3 class="text-xl font-black mb-8 leading-loose px-6" style="color:#0f6453;" contenteditable="true">"نشكر الله تعالى على توفيقه، ونأمل أن يكون هذا الملف قد قدّم صورة واضحة عن واقع التعليم والتعلّم في مدرستنا، ورصداً دقيقاً لنقاط القوة وفرص التحسين. ونسأل الله أن ينفع به، وأن يكون خطوة جادة نحو تطوير الأداء التعليمي. والحمد لله رب العالمين."</h3>
+            <div class="h-1.5 w-28 bg-gradient-to-r from-transparent via-gray-300 to-transparent mx-auto rounded-full my-10"></div>
+            <div class="flex justify-center gap-14 flex-wrap">
+                <div class="text-center">
+                    <p class="text-sm text-gray-400 font-bold mb-4">إعداد فريق التقويم الذاتي</p>
+                    <div contenteditable="true" class="text-xl font-bold border-b-2 border-dashed border-gray-300 pb-2 px-6 outline-none min-w-[150px]" style="color:#0f6453;">..........................</div>
+                </div>
+                <div class="text-center">
+                    <p class="text-sm text-gray-400 font-bold mb-4">اعتماد المديرة</p>
+                    <div contenteditable="true" class="text-xl font-bold border-b-2 border-dashed border-gray-300 pb-2 px-6 outline-none min-w-[150px]" style="color:#0f6453;">..........................</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="z-10 text-center mt-auto text-white py-4 rounded-2xl text-sm font-bold tracking-wide" style="background:linear-gradient(to left, #0f6453, #0a4035);">
+        هذا الملف من إعداد فريق التقويم الذاتي بالمدرسة وفق معايير الجودة الشاملة
+    </div>
+</div>
+
+<script>
+// ===================== بيانات المعايير =====================
+const standardsData = [
+    {
+        num: 1, icon: 'fa-chalkboard-user', title: "تخطيط الدروس وتنفيذها",
+        desc: "إعداد خطط دراسية تتضمن أهدافاً تعليمية واضحة، وتنويعاً في استراتيجيات التدريس (تعلم نشط، تعاوني، استقصاء)، وتكاملاً في عناصر الخطة (تهيئة، عرض، تقويم)، مع أنشطة تناسب مستويات مختلفة.",
+        indicators: ["وضوح الأهداف", "تنوع الاستراتيجيات", "تكامل الخطة", "أنشطة متمايزة"],
+        indicatorValues: [85, 78, 90, 72],
+        evidences: ["نموذج تحضير درس", "فيديو استراتيجية (فكر-زاوج-شارك)", "صور أنشطة صفية متنوعة"],
+        evidenceTypes: ["PDF/صورة", "فيديو", "صورة"],
+        doughnutValues: [40, 30, 30],
+        doughnutLabels: ["ملفات PDF", "فيديوهات", "صور"]
+    },
+    {
+        num: 2, icon: 'fa-laptop', title: "استخدام التقنيات والوسائل",
+        desc: "دمج التقنية الرقمية والوسائل التعليمية في الدروس لتعزيز الفهم وتوسيع خبرات التعلم، مع توظيف منصة مدرستي والتطبيقات التفاعلية بفعالية.",
+        indicators: ["منصة مدرستي", "عروض تفاعلية", "تطبيقات رقمية", "مصادر بديلة"],
+        indicatorValues: [88, 82, 70, 65],
+        evidences: ["عرض بوربوينت تفاعلي", "تقرير استخدام Wordwall", "لقطات تفعيل المنصة"],
+        evidenceTypes: ["PPT", "رابط", "صورة"],
+        doughnutValues: [30, 35, 35],
+        doughnutLabels: ["عروض PPT", "روابط", "صور"]
+    },
+    {
+        num: 3, icon: 'fa-people-arrows', title: "مراعاة الفروق الفردية",
+        desc: "تقديم أنشطة تعليمية متمايزة تراعي احتياجات الطالبات المتنوعة، سواء الموهوبات أو ذوات صعوبات التعلم، لضمان تعلم شامل وعادل للجميع.",
+        indicators: ["أنشطة إثرائية", "أنشطة علاجية", "رصد الموهوبات", "تكييف التدريس"],
+        indicatorValues: [75, 80, 68, 73],
+        evidences: ["أوراق عمل ثلاثية المستوى", "سجل رصد الموهوبات", "فيديو تطبيق أنشطة متمايزة"],
+        evidenceTypes: ["صورة", "PDF", "فيديو"],
+        doughnutValues: [35, 30, 35],
+        doughnutLabels: ["صور", "ملفات PDF", "فيديوهات"]
+    },
+    {
+        num: 4, icon: 'fa-comment-dots', title: "التغذية الراجعة وتصحيح الأعمال",
+        desc: "تقديم تغذية راجعة بناءة ومستمرة للطالبات أثناء الحصص ومن خلال تصحيح الدفاتر والواجبات، بهدف توجيه تعلمهن وتحسين أدائهن.",
+        indicators: ["تصحيح الدفاتر", "تغذية فورية", "تقويم الأقران", "تقويم ذاتي"],
+        indicatorValues: [92, 78, 65, 60],
+        evidences: ["صورة دفتر بتعليقات", "فيديو مناقشة تغذية راجعة", "نماذج تقويم الأقران"],
+        evidenceTypes: ["صورة", "فيديو", "PDF"],
+        doughnutValues: [40, 35, 25],
+        doughnutLabels: ["صور", "فيديوهات", "ملفات PDF"]
+    },
+    {
+        num: 5, icon: 'fa-school-flag', title: "البيئة الصفية المحفزة",
+        desc: "تنظيم الصف ليكون جاذباً وآمناً، مع وجود أركان تعلم ولوحات تعليمية، وتفعيل قوانين إيجابية تعزز السلوك الجيد والمناخ الداعم نفسياً واجتماعياً.",
+        indicators: ["أركان تعلم", "لوحات تعليمية", "قوانين إيجابية", "مناخ داعم"],
+        indicatorValues: [85, 90, 88, 82],
+        evidences: ["صور أركان التعلم", "فيديو بانورامي للفصل", "لوحة القوانين الصفية"],
+        evidenceTypes: ["صورة", "فيديو", "صورة"],
+        doughnutValues: [50, 25, 25],
+        doughnutLabels: ["صور", "فيديوهات", "ملفات PDF"]
+    },
+    {
+        num: 6, icon: 'fa-clipboard-check', title: "توظيف أساليب التقويم",
+        desc: "استخدام أدوات تقويم متعددة (قبلي، بنائي، ختامي) مناسبة لنواتج التعلم، وبناء اختبارات وفق جداول مواصفات، بهدف قياس أداء الطالبات بدقة.",
+        indicators: ["تقويم قبلي", "تقويم بنائي", "تقويم ختامي", "جدول مواصفات"],
+        indicatorValues: [80, 75, 90, 85],
+        evidences: ["جدول مواصفات + اختبار", "ملف إنجاز طالبة", "قوائم رصد المهارات"],
+        evidenceTypes: ["PDF", "ملف", "PDF"],
+        doughnutValues: [55, 20, 25],
+        doughnutLabels: ["ملفات PDF", "صور", "روابط"]
+    },
+    {
+        num: 7, icon: 'fa-chart-bar', title: "تحليل النتائج وتشخيص الفجوات",
+        desc: "تحليل بيانات تحصيل الطالبات بشكل دوري لتحديد الفجوات ومواطن الضعف، وتصنيف الطالبات حسب المستوى، ووضع خطط علاجية تستهدف تحسين النتائج.",
+        indicators: ["تقارير تحليلية", "تصنيف مستويات", "خطط علاجية", "رسوم بيانية"],
+        indicatorValues: [78, 82, 70, 65],
+        evidences: ["تقرير تحليل النتائج", "خطة علاجية للفجوات", "سجل تصنيف المستويات"],
+        evidenceTypes: ["PDF/Excel", "PDF", "PDF"],
+        doughnutValues: [60, 15, 25],
+        doughnutLabels: ["ملفات PDF", "صور", "جداول Excel"]
+    },
+    {
+        num: 8, icon: 'fa-gavel', title: "الإدارة الصفية الفاعلة",
+        desc: "تطبيق ضوابط سلوكية واضحة وإجراءات منضبطة، واستثمار وقت الحصة بشكل أمثل، وتعزيز السلوك الإيجابي ومعالجة المشكلات الصفية بفاعلية.",
+        indicators: ["ضوابط سلوكية", "استثمار الوقت", "تعزيز إيجابي", "معالجة مشكلات"],
+        indicatorValues: [88, 80, 85, 75],
+        evidences: ["لوحة القوانين الصفية", "سجل تعزيز السلوك", "فيديو إدارة الحصة"],
+        evidenceTypes: ["صورة", "PDF", "فيديو"],
+        doughnutValues: [30, 35, 35],
+        doughnutLabels: ["صور", "ملفات PDF", "فيديوهات"]
+    },
+    {
+        num: 9, icon: 'fa-calendar-check', title: "تنفيذ خطة التعلم",
+        desc: "الالتزام بالخطة الأسبوعية والزمنية للمقرر، وتنفيذ الدروس التطبيقية والأنشطة المصاحبة، وتوثيق إنجاز المقرر في السجلات الرسمية.",
+        indicators: ["التزام بالخطة", "تنفيذ الدروس", "أنشطة مصاحبة", "توثيق الإنجاز"],
+        indicatorValues: [90, 92, 78, 85],
+        evidences: ["سجل إنجاز المقرر", "تقرير مشروع تطبيقي", "الخطة الأسبوعية المنفذة"],
+        evidenceTypes: ["PDF", "ملف", "PDF"],
+        doughnutValues: [50, 25, 25],
+        doughnutLabels: ["ملفات PDF", "صور", "روابط"]
+    }
+];
+
+// ===================== إنشاء صفحات المعايير =====================
+const ordinals = ['الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع'];
+const container = document.getElementById('standardsContainer');
+
+standardsData.forEach((std, index) => {
+    const ordinal = ordinals[index];
+    const div = document.createElement('div');
+    div.className = 'page numbered-page';
+    div.innerHTML = `
+        <div class="bg-pattern"></div>
+        <div class="header-3d z-10">
+            <div class="icon-circle-3d"><i class="fa-solid ${std.icon}"></i></div>
+            <h2>المعيار ${ordinal}: ${std.title}</h2>
+        </div>
+        <div class="z-10 flex flex-col gap-3" style="flex:1;">
+            <div class="flex gap-3">
+                <div class="bg-white rounded-2xl p-4 shadow-sm border-r-4 flex-1" style="border-color:#0f6453;">
+                    <h3 class="text-sm font-black mb-1" style="color:#0f6453;">📝 وصف المعيار</h3>
+                    <p class="compact-text text-gray-700 font-semibold" contenteditable="true">${std.desc}</p>
+                </div>
+                <div class="bg-white rounded-2xl p-4 shadow-sm border-r-4 flex-1" style="border-color:#c5a059;">
+                    <h3 class="text-sm font-black mb-1" style="color:#c5a059;">📌 مؤشرات الأداء</h3>
+                    <ul class="compact-list text-gray-700 font-semibold list-disc list-inside pr-2 space-y-0.5">
+                        ${std.indicators.map(i => `<li>${i}</li>`).join('')}
+                    </ul>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-sm font-black mb-1" style="color:#0f6453;">📁 الشواهد</h3>
+                <table class="evidence-table">
+                    <thead>
+                        <tr><th>الشاهد</th><th style="width:8%;">نفّذ</th><th style="width:8%;">لم ينفّذ</th><th>النوع</th></tr>
+                    </thead>
+                    <tbody>
+                        ${std.evidences.map((e,i) => `<tr><td contenteditable="true">${e}</td><td class="check-cell" onclick="toggleCheck(this)"></td><td class="check-cell" onclick="toggleCheck(this)"></td><td contenteditable="true">${std.evidenceTypes[i]}</td></tr>`).join('')}
+                    </tbody>
+                </table>
+
+                <!-- مربع QR Code الحقيقي -->
+                <div class="qr-section">
+                    <div class="qr-code-box" id="qrBox${std.num}">
+                        <div class="qr-empty-icon" id="qrEmpty${std.num}">
+                            <i class="fa-solid fa-qrcode"></i>
+                            <span>أدخلي الرابط<br>وانقري توليد</span>
+                        </div>
+                    </div>
+                    <div class="qr-controls">
+                        <div class="qr-label">📲 باركود شواهد المعيار ${ordinals[index]}</div>
+                        <div class="qr-input-row">
+                            <input type="url" class="qr-url-input" id="qrUrl${std.num}" placeholder="https://drive.google.com/..." />
+                            <button class="qr-gen-btn" onclick="generateQR(${std.num})">توليد ▶</button>
+                        </div>
+                        <div class="qr-hint no-print">📎 الصق رابط Google Drive أو أي رابط</div>
+                        <div class="qr-link-text" id="qrLinkText${std.num}"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex gap-3" style="flex:1; min-height:0;">
+                <div class="chart-container flex-1 flex flex-col">
+                    <h4>📊 مستوى تحقيق المؤشرات (%)</h4>
+                    <div class="relative flex-1" style="min-height:120px;"><canvas id="barChart${std.num}"></canvas></div>
+                </div>
+                <div class="chart-container flex-1 flex flex-col">
+                    <h4>🍩 توزيع الشواهد حسب النوع</h4>
+                    <div class="relative flex-1" style="min-height:120px;"><canvas id="doughnutChart${std.num}"></canvas></div>
+                </div>
+            </div>
+        </div>
+    `;
+    container.appendChild(div);
+});
+
+// ===================== تشغيل بعد تحميل الصفحة =====================
+document.addEventListener("DOMContentLoaded", function() {
+
+    // إنشاء الفهرس
+    const indexItems = [
+        "المقدمة", "الرؤية والرسالة", "أهداف التقويم الذاتي",
+        "المعيار الأول: تخطيط الدروس", "المعيار الثاني: التقنيات والوسائل",
+        "المعيار الثالث: الفروق الفردية", "المعيار الرابع: التغذية الراجعة",
+        "المعيار الخامس: البيئة الصفية", "المعيار السادس: أساليب التقويم",
+        "المعيار السابع: تحليل النتائج", "المعيار الثامن: الإدارة الصفية",
+        "المعيار التاسع: خطة التعلم", "تحليل واقع المجال", "خطة التحسين",
+        "التوصيات والخاتمة"
+    ];
+    const grid = document.getElementById('indexGrid');
+    indexItems.forEach((item, i) => {
+        const d = document.createElement('div');
+        d.className = 'btn-3d';
+        d.innerHTML = `<div class="flex items-center gap-4">
+            <span class="w-9 h-9 rounded-xl text-white flex items-center justify-center font-black text-sm" style="background:linear-gradient(135deg,#0f6453,#0a4035);">${i+1}</span>
+            <span class="text-sm font-bold" style="color:#0f6453;">${item}</span>
+        </div>`;
+        grid.appendChild(d);
+    });
+
+    // ترقيم الصفحات
+    const pages = document.querySelectorAll('.numbered-page');
+    pages.forEach((page, index) => {
+        if (!page.querySelector('.page-number')) {
+            const pn = document.createElement('div');
+            pn.className = 'page-number';
+            pn.innerText = index + 1;
+            page.appendChild(pn);
+        }
+    });
+
+    // الرسوم البيانية
+    standardsData.forEach(std => {
+        const barCanvas = document.getElementById(`barChart${std.num}`);
+        if (barCanvas) {
+            new Chart(barCanvas.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: std.indicators,
+                    datasets: [{
+                        label: 'نسبة التحقيق (%)',
+                        data: std.indicatorValues,
+                        backgroundColor: ['#0f6453', '#0a4035', '#c5a059', '#6ea3c1'],
+                        borderRadius: 8,
+                        borderSkipped: false
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, max: 100, ticks: { font: { family: 'Cairo', size: 8 } } },
+                        x: { ticks: { font: { family: 'Cairo', size: 8, weight: 'bold' } } }
+                    }
+                }
+            });
+        }
+
+        const doughCanvas = document.getElementById(`doughnutChart${std.num}`);
+        if (doughCanvas) {
+            new Chart(doughCanvas.getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: std.doughnutLabels,
+                    datasets: [{
+                        data: std.doughnutValues,
+                        backgroundColor: ['#0f6453', '#c5a059', '#6ea3c1'],
+                        hoverOffset: 4, borderWidth: 2, borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { font: { family: 'Cairo', weight: 'bold', size: 7 }, boxWidth: 8, padding: 8 } }
+                    },
+                    cutout: '60%'
+                }
+            });
+        }
+    });
+});
+
+// ===================== دوال مساعدة =====================
+function generateQR(num) {
+    const urlInput = document.getElementById('qrUrl' + num);
+    const box      = document.getElementById('qrBox' + num);
+    const empty    = document.getElementById('qrEmpty' + num);
+    const linkText = document.getElementById('qrLinkText' + num);
+    const url      = urlInput ? urlInput.value.trim() : '';
+    if (!url) { alert('يرجى إدخال الرابط أولاً'); return; }
+
+    // Clear previous QR
+    box.innerHTML = '';
+
+    // Create clickable wrapper
+    const a = document.createElement('a');
+    a.href = url;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    a.style.cssText = 'display:flex;align-items:center;justify-content:center;width:100%;height:100%;';
+    box.appendChild(a);
+
+    // Generate QR inside the anchor
+    new QRCode(a, {
+        text: url,
+        width: 84,
+        height: 84,
+        colorDark: '#0f6453',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.M
+    });
+
+    // Show link text for print
+    if (linkText) { linkText.textContent = url; }
+}
+
+function toggleCheck(cell) {
+    const row = cell.parentElement;
+    const cells = row.querySelectorAll('.check-cell');
+    if (cell.innerText === '✓') { cell.innerText = ''; }
+    else { cells.forEach(c => c.innerText = ''); cell.innerText = '✓'; }
+}
+
+function previewBasmala(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = document.getElementById('basmalaImg');
+            img.src = e.target.result;
+            img.style.display = 'block';
+            const icon = document.querySelector('#basmalaBox i');
+            const span = document.querySelector('#basmalaBox span');
+            if (icon) icon.style.display = 'none';
+            if (span) span.style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+    }
+}
+</script>
+
+</body>
+</html>
