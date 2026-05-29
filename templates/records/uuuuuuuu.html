@@ -1,0 +1,2033 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>نظام GOO • إدارة المحتوى التعليمي (محلي)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js">
+    </script>
+    <style>
+        :root {
+            --primary: #0062cc;
+            --primary-light: #1a8cff;
+            --primary-dark: #004a9e;
+            --accent: #00c896;
+            --bg: #dde6f0;
+            --surface: #ffffff;
+            --surface2: #f4f8fd;
+            --border: #e2ecf7;
+            --text-main: #0a2540;
+            --text-sec: #4a6a8a;
+            --text-muted: #8aaac8;
+            --shadow-sm: 0 2px 12px rgba(0, 98, 204, 0.07);
+            --shadow-md: 0 6px 24px rgba(0, 98, 204, 0.12);
+            --radius-sm: 14px;
+            --radius-md: 22px;
+            --radius-lg: 32px;
+            --danger: #e03c3c;
+            --success: #00a87a;
+            --warning: #e07000;
+            --nav-height: 70px;
+            --safe-bottom: env(safe-area-inset-bottom, 10px);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+        }
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            background: var(--bg);
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .screen {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            scroll-behavior: smooth;
+            padding-bottom: calc(var(--nav-height) + var(--safe-bottom) + 20px);
+            -webkit-overflow-scrolling: touch;
+        }
+        .screen::-webkit-scrollbar {
+            display: none;
+        }
+        .app-header {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 60%, var(--primary-light) 100%);
+            padding: 12px 16px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            overflow: hidden;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .app-header::before {
+            content: '';
+            position: absolute;
+            top: -40px;
+            left: -40px;
+            width: 180px;
+            height: 180px;
+            background: rgba(255, 255, 255, 0.07);
+            border-radius: 50%;
+        }
+        .greeting h2 {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        .greeting h2 .star {
+            color: #ffd04e;
+        }
+        .greeting p {
+            font-size: 1rem;
+            color: #fff;
+            font-weight: 700;
+            margin-top: 2px;
+        }
+        .header-badge {
+            background: rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            padding: 6px 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.8rem;
+            z-index: 1;
+        }
+        .header-badge i {
+            color: #ffd04e;
+        }
+        .back-button {
+            background: rgba(255, 255, 255, 0.18);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            padding: 5px 10px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 0.95rem;
+            cursor: pointer;
+            z-index: 2;
+            transition: all 0.2s;
+            width: 34px;
+            height: 34px;
+            flex-shrink: 0;
+        }
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.28);
+        }
+        .back-button:active {
+            transform: scale(0.9);
+        }
+        .search-container {
+            margin: 10px 14px;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            padding: 12px 50px 12px 16px;
+            border-radius: 28px;
+            border: 2px solid var(--border);
+            background: var(--surface);
+            font-size: 0.9rem;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s;
+            outline: none;
+        }
+        .search-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(0, 98, 204, 0.1);
+        }
+        .search-icon-btn {
+            position: absolute;
+            left: 6px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .search-suggestions {
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            margin: 4px 0;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+            display: none;
+            position: absolute;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            max-height: 220px;
+            overflow-y: auto;
+        }
+        .search-suggestions.active {
+            display: block;
+        }
+        .suggestion-item {
+            padding: 10px 16px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f5fc;
+            font-size: 0.82rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.15s;
+        }
+        .suggestion-item:hover {
+            background: #f4f8fd;
+        }
+        .suggestion-item .sug-type {
+            font-size: 0.65rem;
+            background: #e8f0ff;
+            color: var(--primary);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+        .balance-card {
+            background: linear-gradient(135deg, #00b37a 0%, #00c896 50%, #00d9a8 100%);
+            margin: 10px 14px 0;
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0, 200, 150, 0.35);
+        }
+        .balance-card::before {
+            content: '';
+            position: absolute;
+            top: -30px;
+            right: -30px;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .balance-label {
+            font-size: 0.75rem;
+            opacity: 0.85;
+        }
+        .balance-amount {
+            font-size: 1.5rem;
+            font-weight: 800;
+            direction: ltr;
+            text-align: right;
+        }
+        .balance-amount span {
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-right: 4px;
+            opacity: 0.85;
+        }
+        .balance-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(255, 255, 255, 0.25);
+            font-size: 0.73rem;
+        }
+        .eye-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 30px;
+            color: #fff;
+            padding: 4px 10px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .quick-actions {
+            display: flex;
+            gap: 7px;
+            margin: 10px 14px 0;
+            flex-wrap: wrap;
+        }
+        .quick-btn {
+            flex: 1 1 22%;
+            min-width: 65px;
+            background: var(--surface);
+            border-radius: var(--radius-sm);
+            padding: 10px 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid var(--border);
+        }
+        .quick-btn:active {
+            transform: scale(0.95);
+            box-shadow: var(--shadow-md);
+        }
+        .quick-btn .qb-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+        .quick-btn span {
+            font-size: 0.62rem;
+            font-weight: 600;
+            color: var(--text-main);
+            text-align: center;
+            line-height: 1.3;
+        }
+        .qb-blue {
+            background: #e8f0ff;
+            color: var(--primary);
+        }
+        .qb-green {
+            background: #e6faf4;
+            color: #00a87a;
+        }
+        .qb-orange {
+            background: #fff5ea;
+            color: #e07000;
+        }
+        .qb-purple {
+            background: #f2eaff;
+            color: #7c3aed;
+        }
+        .section-title {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin: 14px 14px 6px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+        .section-title i {
+            width: 24px;
+            height: 24px;
+            border-radius: 7px;
+            background: var(--primary);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.68rem;
+        }
+        .section-title .see-all {
+            margin-right: auto;
+            font-size: 0.7rem;
+            color: var(--primary);
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .service-card {
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            margin: 0 14px 10px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+        .service-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 11px 14px;
+            border-bottom: 1px solid #f0f5fc;
+            cursor: pointer;
+            transition: background 0.15s;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .service-row:last-child {
+            border-bottom: none;
+        }
+        .service-row:active {
+            background: #f0f5fc;
+        }
+        .service-row .right {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-weight: 500;
+            color: var(--text-main);
+            font-size: 0.82rem;
+            flex: 1;
+            min-width: 120px;
+        }
+        .service-row .actions-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+        }
+        .srv-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.72rem;
+            flex-shrink: 0;
+        }
+        .si-blue {
+            background: #e8f0ff;
+            color: var(--primary);
+        }
+        .si-green {
+            background: #e6faf4;
+            color: #00a87a;
+        }
+        .si-orange {
+            background: #fff5ea;
+            color: #e07000;
+        }
+        .si-purple {
+            background: #f2eaff;
+            color: #7c3aed;
+        }
+        .si-red {
+            background: #fff0f0;
+            color: #e03c3c;
+        }
+        .si-teal {
+            background: #e6f6fa;
+            color: #0096b4;
+        }
+        .arrow-badge {
+            width: 24px;
+            height: 24px;
+            border-radius: 7px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 0.65rem;
+        }
+        .empty-state {
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            margin: 0 14px 10px;
+            padding: 28px 16px;
+            text-align: center;
+            border: 2px dashed #d0dff0;
+        }
+        .empty-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--surface2);
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            border: 2px solid var(--border);
+        }
+        .empty-state h3 {
+            font-size: 0.88rem;
+            color: var(--text-main);
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .empty-state p {
+            font-size: 0.73rem;
+            color: var(--text-sec);
+        }
+        .report-stat {
+            margin: 0 14px 10px;
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            padding: 12px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+        .stat-row {
+            display: flex;
+            gap: 7px;
+            flex-wrap: wrap;
+        }
+        .stat-item {
+            flex: 1 1 28%;
+            min-width: 60px;
+            text-align: center;
+            padding: 8px;
+            background: var(--surface2);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+        }
+        .stat-item.green {
+            background: #e6faf4;
+            border-color: #b3f0d8;
+        }
+        .stat-item.orange {
+            background: #fff5ea;
+            border-color: #ffd9b3;
+        }
+        .stat-item .num {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+        .stat-item.green .num {
+            color: #00a87a;
+        }
+        .stat-item.orange .num {
+            color: #e07000;
+        }
+        .stat-item .lbl {
+            font-size: 0.65rem;
+            color: var(--text-sec);
+            margin-top: 3px;
+            font-weight: 600;
+        }
+        .profile-hero {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            margin: 0 14px 12px;
+            border-radius: var(--radius-md);
+            padding: 16px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+        .avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            color: #fff;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .profile-info-text h3 {
+            font-size: 0.88rem;
+            font-weight: 800;
+            margin-bottom: 3px;
+        }
+        .profile-info-text .iban {
+            font-size: 0.68rem;
+            opacity: 0.75;
+        }
+        .menu-card {
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            margin: 0 14px 10px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 14px;
+            border-bottom: 1px solid #f0f5fc;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+        .menu-item:active {
+            background: #f0f5fc;
+        }
+        .menu-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 9px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.72rem;
+            color: var(--primary);
+        }
+        .menu-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-main);
+            flex: 1;
+        }
+        .menu-arrow {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+        }
+        .content {
+            flex: 1;
+        }
+        .screen-page {
+            display: none;
+            animation: fadeSlide 0.2s ease;
+        }
+        .screen-page.active {
+            display: block;
+        }
+        .sub-section {
+            display: none;
+        }
+        .sub-section.active {
+            display: block;
+        }
+        @keyframes fadeSlide {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .plus-tag {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 30px;
+            font-size: 0.73rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 4px 12px rgba(0, 98, 204, 0.3);
+            cursor: pointer;
+            transition: transform 0.1s;
+            white-space: nowrap;
+        }
+        .plus-tag:active {
+            transform: scale(0.95);
+        }
+        .bottom-nav-wrapper {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 999;
+            padding: 6px 10px calc(6px + var(--safe-bottom));
+            background: linear-gradient(to top, rgba(221, 230, 240, 0.98) 70%, transparent);
+            display: none;
+            pointer-events: none;
+        }
+        .bottom-nav-wrapper.active {
+            display: block;
+            pointer-events: auto;
+        }
+        .bottom-nav {
+            background: var(--surface);
+            border-radius: 26px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 5px 4px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            padding: 6px 4px;
+            cursor: pointer;
+            border-radius: 16px;
+            transition: all 0.2s ease;
+            color: var(--text-muted);
+            font-size: 0.6rem;
+            font-weight: 600;
+            text-align: center;
+            min-width: 0;
+            position: relative;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .nav-item i {
+            font-size: 0.9rem;
+            transition: transform 0.2s;
+        }
+        .nav-item.active {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(0, 98, 204, 0.35);
+        }
+        .nav-item.active i {
+            transform: scale(1.1);
+        }
+        .nav-item:active {
+            transform: scale(0.9);
+        }
+        .whatsapp-fab {
+            position: fixed;
+            bottom: calc(var(--nav-height) + var(--safe-bottom) + 20px);
+            left: 16px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #25d366, #128c7e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.3rem;
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5);
+            text-decoration: none;
+            animation: pulse 2s infinite;
+            z-index: 998;
+            transition: bottom 0.3s;
+        }
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5);
+            }
+            50% {
+                box-shadow: 0 6px 28px rgba(37, 211, 102, 0.8), 0 0 0 8px rgba(37, 211, 102, 0.1);
+            }
+            100% {
+                box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5);
+            }
+        }
+        .chart-container {
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            margin: 0 14px 10px;
+            padding: 12px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+        .chart-container canvas {
+            max-height: 180px;
+        }
+        .resource-link-card {
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            margin: 0 14px 8px;
+            padding: 14px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .resource-link-card:active {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-1px);
+        }
+        .r-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        .ri-wordwall {
+            background: #e8f0ff;
+            color: #0062cc;
+        }
+        .ri-forms {
+            background: #e6faf4;
+            color: #00a87a;
+        }
+        .ri-drive {
+            background: #fff5ea;
+            color: #e07000;
+        }
+        .ri-locutions {
+            background: #f2eaff;
+            color: #7c3aed;
+        }
+        .r-info {
+            flex: 1;
+        }
+        .r-name {
+            font-weight: 700;
+            color: var(--text-main);
+            font-size: 0.82rem;
+        }
+        .r-desc {
+            font-size: 0.7rem;
+            color: var(--text-sec);
+            margin-top: 2px;
+        }
+        .r-arrow {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+        }
+        .tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.6rem;
+            font-weight: 600;
+            margin: 1px;
+        }
+        .tag-semester {
+            background: #e8f0ff;
+            color: #0062cc;
+        }
+        .tag-grade {
+            background: #e6faf4;
+            color: #00a87a;
+        }
+        .tag-subject {
+            background: #fff5ea;
+            color: #e07000;
+        }
+        .tag-exam {
+            background: #f2eaff;
+            color: #7c3aed;
+        }
+        .json-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 10px;
+            border-radius: var(--radius-sm);
+            border: 2px solid var(--border);
+            font-family: monospace;
+            font-size: 0.75rem;
+            background: #fafbff;
+            resize: vertical;
+            outline: none;
+            direction: ltr;
+        }
+        .json-textarea:focus {
+            border-color: var(--primary);
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.78rem;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+        .btn-primary:active {
+            background: var(--primary-dark);
+        }
+        .btn-danger-sm {
+            background: #fff0f0;
+            color: #e03c3c;
+            border: 1px solid #fcc;
+            padding: 4px 10px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.65rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .btn-danger-sm:active {
+            background: #ffe0e0;
+        }
+        .btn-outline-sm {
+            background: #fff;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 4px 10px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.65rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .btn-outline-sm:active {
+            background: #e8f0ff;
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal-box {
+            background: #fff;
+            border-radius: var(--radius-md);
+            padding: 18px;
+            width: 100%;
+            max-width: 700px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+        .modal-box h3 {
+            margin-bottom: 12px;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .modal-box label {
+            display: block;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 4px;
+            margin-top: 10px;
+        }
+        .modal-box input[type="text"],
+        .modal-box textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: var(--radius-sm);
+            border: 2px solid var(--border);
+            font-family: 'Tajawal', sans-serif;
+            font-size: 0.8rem;
+            outline: none;
+            transition: border 0.2s;
+            background: #fafbff;
+        }
+        .modal-box input[type="text"]:focus,
+        .modal-box textarea:focus {
+            border-color: var(--primary);
+        }
+        .modal-box textarea.html-code-area {
+            font-family: 'Courier New', 'Consolas', monospace;
+            font-size: 0.72rem;
+            direction: ltr;
+            min-height: 350px;
+            resize: vertical;
+            line-height: 1.5;
+            tab-size: 2;
+            white-space: pre;
+            overflow-wrap: normal;
+            overflow-x: auto;
+        }
+        .modal-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            margin-top: 14px;
+            flex-wrap: wrap;
+        }
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #e2ecf7;
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            margin-left: 8px;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        .sync-badge {
+            font-size: 0.6rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            background: #e6faf4;
+            color: #00a87a;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        select {
+            background: var(--surface);
+            font-family: 'Tajawal', sans-serif;
+        }
+        .github-upload-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 4px;
+        }
+        .btn-github-upload {
+            background: #24292e;
+            color: #fff;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.65rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: opacity 0.2s;
+            white-space: nowrap;
+        }
+        .btn-github-upload:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .github-uploaded-check {
+            background: #e6faf4;
+            color: #00a87a;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            cursor: default;
+            white-space: nowrap;
+        }
+        .github-status-inline {
+            font-size: 0.6rem;
+            color: var(--text-muted);
+        }
+        .github-settings-bar {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            margin: 0 14px 8px;
+            flex-wrap: wrap;
+        }
+        .github-settings-bar input {
+            padding: 6px;
+            border-radius: 12px;
+            border: 2px solid var(--border);
+            font-size: 0.7rem;
+            width: 120px;
+        }
+        .template-preview-iframe {
+            width: 100%;
+            height: 400px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: #fff;
+        }
+        .info-badge {
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            white-space: nowrap;
+        }
+        .template-count-badge {
+            background: var(--primary);
+            color: #fff;
+            font-size: 0.65rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: 600;
+            margin-right: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="screen" id="main-screen">
+        <div class="app-header">
+            <div style="display:flex;align-items:center;gap:8px;">
+                <div class="back-button" id="global-back-btn" onclick="goBack()" title="الرجوع خطوة">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+                <div class="greeting"><h2>أهلاً وسهلاً <span class="star">★</span></h2><p id="app-title">نظام GOO</p></div>
+            </div>
+            <div class="header-badge"><i class="fas fa-graduation-cap"></i><span>تعليمي</span> <span class="sync-badge" id="sync-status"><i class="fas fa-cloud"></i> متصل</span></div>
+        </div>
+
+        <div class="content">
+            <div id="page-home" class="screen-page active">
+                <div class="search-container" style="position:relative;">
+                    <input type="text" class="search-input" id="global-search" placeholder="🔍 بحث عن أي شيء... طلبات، خطط، اختبارات، ألعاب..." oninput="handleGlobalSearch()" onfocus="handleGlobalSearch()">
+                    <button class="search-icon-btn"><i class="fas fa-search"></i></button>
+                    <div class="search-suggestions" id="search-suggestions"></div>
+                </div>
+                <div class="balance-card"><div class="balance-label"><i class="fas fa-circle" style="font-size:0.4rem;margin-left:3px;"></i> إجمالي الموارد</div><div class="balance-amount"><span>عنصر</span> <span id="total-resources">0</span></div><div class="balance-footer"><span class="account">محلي - LocalStorage</span><button class="eye-btn"><i class="fas fa-check-circle"></i> نشط</button></div></div>
+                <div class="quick-actions">
+                    <div class="quick-btn" onclick="navigateTo('orders')"><div class="qb-icon qb-orange"><i class="fas fa-shopping-cart"></i></div><span>الطلبات</span></div>
+                    <div class="quick-btn" onclick="navigateTo('templates')"><div class="qb-icon qb-blue"><i class="fas fa-file-code"></i></div><span>القوالب</span></div>
+                    <div class="quick-btn" onclick="navigateTo('resources')"><div class="qb-icon qb-green"><i class="fas fa-link"></i></div><span>الموارد</span></div>
+                    <div class="quick-btn" onclick="navigateTo('invoices')"><div class="qb-icon qb-purple"><i class="fas fa-file-invoice-dollar"></i></div><span>الفواتير</span></div>
+                </div>
+                <div class="section-title"><i class="fas fa-chart-bar"></i> ملخص</div>
+                <div class="report-stat"><div class="stat-row">
+                        <div class="stat-item"><div class="num" id="stat-orders">0</div><div class="lbl">الطلبات</div></div>
+                        <div class="stat-item green"><div class="num" id="stat-templates">0</div><div class="lbl">القوالب</div></div>
+                        <div class="stat-item orange"><div class="num" id="stat-invoices">0</div><div class="lbl">الفواتير</div></div>
+                </div></div>
+                <div class="section-title"><i class="fas fa-fire"></i> الأكثر استخداماً</div>
+                <div id="top-used-container"><div class="empty-state"><div class="empty-icon"><i class="fas fa-star"></i></div><h3>جاري التحميل...</h3><p>يتم تحميل البيانات المحلية</p></div></div>
+            </div>
+
+            <div id="page-orders" class="screen-page">
+                <div class="section-title" style="justify-content:space-between;"><span><i class="fas fa-shopping-cart"></i>الطلبات</span><span class="plus-tag" onclick="addNewOrder()"><i class="fas fa-plus"></i>طلب جديد</span></div>
+                <div id="orders-filter-row" style="display:flex;gap:6px;margin:0 14px 8px;flex-wrap:wrap;">
+                    <select onchange="renderOrders()" id="order-status-filter" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;"><option value="">كل الحالات</option><option value="جديد">جديد</option><option value="قيد التصميم">قيد التصميم</option><option value="مكتمل">مكتمل</option><option value="تم التسليم">تم التسليم</option></select>
+                    <select onchange="renderOrders()" id="order-designer-filter" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;"><option value="">كل المصممين</option></select>
+                </div>
+                <div id="orders-container"><div class="empty-state"><h3>جاري التحميل...</h3></div></div>
+            </div>
+
+            <div id="page-templates" class="screen-page">
+                <div class="section-title" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
+                    <span><i class="fas fa-file-code"></i>القوالب</span>
+                    <span class="plus-tag" onclick="openTemplateModal()"><i class="fas fa-plus"></i>رفع قالب HTML</span>
+                </div>
+                <div class="github-settings-bar" id="github-settings-bar">
+                    <input type="text" id="gh-token-inline" placeholder="Token" style="width:100px;">
+                    <input type="text" id="gh-repo-inline" placeholder="repo" value="goo" style="width:80px;">
+                    <input type="text" id="gh-folder-inline" placeholder="folder" value="database" style="width:80px;">
+                    <button class="btn-primary" onclick="saveGithubInlineSettings()" style="font-size:0.65rem; padding:4px 10px;">💾 حفظ</button>
+                    <span class="github-status-inline" id="github-inline-status"></span>
+                </div>
+                <div style="margin:0 14px 8px;">
+                    <input type="text" id="template-search-input" placeholder="🔍 بحث في القوالب..." oninput="renderCurrentTemplateTab()" style="width:100%;padding:10px;border-radius:20px;border:2px solid var(--border);font-size:0.78rem;outline:none;">
+                </div>
+                <div id="templates-files-section" class="sub-section active"><div id="templates-files-container" class="service-card"><div class="empty-state" style="margin:0;border:none;"><div class="empty-icon"><i class="fas fa-folder-open"></i></div><h3>جاري التحميل...</h3></div></div></div>
+                <div id="templates-records-section" class="sub-section"><div id="templates-records-container" class="service-card"><div class="empty-state" style="margin:0;border:none;"><div class="empty-icon"><i class="fas fa-clipboard-list"></i></div><h3>جاري التحميل...</h3></div></div></div>
+                <div id="templates-exams-section" class="sub-section"><div id="templates-exams-container" class="service-card"><div class="empty-state" style="margin:0;border:none;"><div class="empty-icon"><i class="fas fa-pencil-alt"></i></div><h3>جاري التحميل...</h3></div></div></div>
+                <div id="templates-reports-section" class="sub-section"><div id="templates-reports-container" class="service-card"><div class="empty-state" style="margin:0;border:none;"><div class="empty-icon"><i class="fas fa-chart-bar"></i></div><h3>جاري التحميل...</h3></div></div></div>
+                <div id="templates-plans-section" class="sub-section"><div id="templates-plans-container" class="service-card"><div class="empty-state" style="margin:0;border:none;"><div class="empty-icon"><i class="fas fa-calendar-alt"></i></div><h3>جاري التحميل...</h3></div></div></div>
+            </div>
+
+            <div id="page-resources" class="screen-page">
+                <div class="section-title"><i class="fas fa-link"></i>الموارد التعليمية</div>
+                <div id="resources-wordwall-section" class="sub-section active">
+                    <div class="section-title" style="font-size:0.8rem;">Wordwall - ألعاب تفاعلية <span class="plus-tag" style="margin-right:auto;" onclick="openJsonModal('wordwall')"><i class="fas fa-upload"></i> رفع JSON</span></div>
+                    <div id="wordwall-filter-row" style="display:flex;gap:6px;margin:0 14px 8px;flex-wrap:wrap;">
+                        <select onchange="renderWordwall()" id="ww-semester" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;"><option value="">كل الفصول</option><option value="الأول">الفصل الأول</option><option value="الثاني">الفصل الثاني</option></select>
+                        <select onchange="renderWordwall()" id="ww-grade" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;"><option value="">كل الصفوف</option></select>
+                        <select onchange="renderWordwall()" id="ww-subject" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;"><option value="">كل المواد</option></select>
+                    </div>
+                    <div id="wordwall-container"><div class="empty-state"><div class="empty-icon"><i class="fas fa-th-large"></i></div><h3>جاري التحميل...</h3></div></div>
+                </div>
+                <div id="resources-forms-section" class="sub-section">
+                    <div class="section-title" style="font-size:0.8rem;">Google Forms <span class="plus-tag" style="margin-right:auto;" onclick="openJsonModal('forms')"><i class="fas fa-upload"></i> رفع JSON</span></div>
+                    <div id="forms-exams-section2" class="sub-section active"><div id="forms-exams-container"><div class="empty-state"><h3>جاري التحميل...</h3></div></div></div>
+                    <div id="forms-surveys-section2" class="sub-section"><div id="forms-surveys-container"><div class="empty-state"><h3>جاري التحميل...</h3></div></div></div>
+                    <div id="forms-other-section2" class="sub-section"><div id="forms-other-container"><div class="empty-state"><h3>جاري التحميل...</h3></div></div></div>
+                </div>
+                <div id="resources-drive-section" class="sub-section">
+                    <div class="section-title" style="font-size:0.8rem;">Google Drive <span class="plus-tag" style="margin-right:auto;" onclick="openJsonModal('drive')"><i class="fas fa-upload"></i> رفع JSON</span></div>
+                    <div id="drive-bags-section" class="sub-section active"><div id="drive-bags-container"><div class="empty-state"><h3>جاري التحميل...</h3></div></div></div>
+                    <div id="drive-enrich-section" class="sub-section"><div id="drive-enrich-container"><div class="empty-state"><h3>جاري التحميل...</h3></div></div></div>
+                    <div id="drive-records-section" class="sub-section"><div id="drive-records-container"><div class="empty-state"><h3>جاري التحميل...</h3></div></div></div>
+                    <div id="drive-other-section" class="sub-section"><div id="drive-other-container"><div class="empty-state"><h3>جاري التحميل...</h3></div></div></div>
+                </div>
+                <div id="resources-locutions-section" class="sub-section">
+                    <div class="section-title" style="font-size:0.8rem;">Locutions - ملفات وعروض <span class="plus-tag" style="margin-right:auto;" onclick="addLocution()"><i class="fas fa-plus"></i> جديد</span></div>
+                    <input type="text" placeholder="بحث في الملفات..." oninput="renderLocutions()" id="loc-search" style="margin:0 14px 8px;width:calc(100% - 28px);padding:8px;border-radius:20px;border:2px solid var(--border);font-size:0.78rem;">
+                    <div id="locutions-container"><div class="empty-state"><h3>جاري التحميل...</h3></div></div>
+                </div>
+            </div>
+
+            <div id="page-invoices" class="screen-page">
+                <div class="section-title" style="justify-content:space-between;"><span><i class="fas fa-file-invoice-dollar"></i>الفواتير</span><span class="plus-tag" onclick="addNewInvoice()"><i class="fas fa-plus"></i>جديد</span></div>
+                <div class="report-stat"><div class="stat-row"><div class="stat-item"><div class="num" id="total-sales">0</div><div class="lbl">الفواتير</div></div><div class="stat-item green"><div class="num" id="total-paid">0</div><div class="lbl">المدفوع</div></div><div class="stat-item orange"><div class="num" id="total-debt">0</div><div class="lbl">المتبقي</div></div></div></div>
+                <div id="invoices-container" class="service-card"><div class="empty-state" style="margin:0;border:none;"><h3>جاري التحميل...</h3></div></div>
+                <div id="invoice-pdf-template" style="display:none;padding:30px;font-family:'Tajawal',sans-serif;direction:rtl;background:#fff;color:#333;"><div style="display:flex;justify-content:space-between;border-bottom:2px solid #0062cc;padding-bottom:15px;margin-bottom:20px;"><div><h1 style="color:#0062cc;margin:0;font-size:22px;">نظام GOO</h1></div><div style="text-align:left;"><div id="pdf-invoice-number" style="font-weight:bold;">#INV-0000</div><div id="pdf-invoice-date" style="color:#666;">-</div></div></div><div style="margin-bottom:20px;"><p><strong>العميل:</strong> <span id="pdf-customer-name">-</span></p></div><table style="width:100%;border-collapse:collapse;margin-bottom:20px;"><thead><tr style="background:#f4f8fd;"><th style="padding:10px;border:1px solid #e2ecf7;">الوصف</th><th style="padding:10px;border:1px solid #e2ecf7;">المبلغ</th></tr></thead><tbody><tr><td style="padding:10px;border:1px solid #e2ecf7;">خدمات تصميم</td><td style="padding:10px;border:1px solid #e2ecf7;text-align:left;"><span id="pdf-amount">0</span> ر.س</td></tr></tbody></table><div style="display:flex;justify-content:flex-end;"><div style="width:200px;"><div style="display:flex;justify-content:space-between;padding:6px 0;"><span>الإجمالي:</span><span id="pdf-total">0</span></div><div style="display:flex;justify-content:space-between;padding:6px 0;"><span>المدفوع:</span><span id="pdf-paid">0</span></div><div style="display:flex;justify-content:space-between;padding:6px 0;font-weight:bold;color:#0062cc;"><span>المتبقي:</span><span id="pdf-debt">0</span></div></div></div></div>
+            </div>
+
+            <div id="page-admin" class="screen-page">
+                <div class="profile-hero"><div class="avatar"><i class="fas fa-user-tie"></i></div><div class="profile-info-text"><h3>فيصل الصوفي</h3><div class="iban">قائد الفريق | مدير النظام</div></div></div>
+                <div id="admin-users-section" class="sub-section active"><div class="section-title"><i class="fas fa-users"></i>المستخدمين</div><div id="users-container" class="service-card"><div class="empty-state" style="margin:0;border:none;"><h3>لا يوجد مستخدمين</h3></div></div></div>
+                <div id="admin-customers-section" class="sub-section"><div class="section-title"><i class="fas fa-user-tag"></i>العملاء والوسطاء</div><div id="customers-container2" class="service-card"><div class="empty-state" style="margin:0;border:none;"><h3>لا يوجد عملاء</h3></div></div></div>
+                <div id="admin-analytics-section" class="sub-section"><div class="section-title"><i class="fas fa-chart-bar"></i>الإحصائيات</div><div class="chart-container"><canvas id="revenueChart"></canvas></div></div>
+                <div id="admin-settings-section" class="sub-section">
+                    <div class="section-title"><i class="fas fa-cog"></i>الإعدادات</div>
+                    <div class="menu-card">
+                        <div class="menu-item" onclick="openGithubSettings()"><div class="menu-icon"><i class="fab fa-github"></i></div><span class="menu-label">إعدادات GitHub والرفع</span><i class="fas fa-chevron-left menu-arrow"></i></div>
+                        <div class="menu-item" onclick="exportAllData()"><div class="menu-icon"><i class="fas fa-download"></i></div><span class="menu-label">تصدير جميع البيانات (JSON)</span><i class="fas fa-chevron-left menu-arrow"></i></div>
+                        <div class="menu-item" onclick="importAllData()"><div class="menu-icon"><i class="fas fa-upload"></i></div><span class="menu-label">استيراد البيانات</span><i class="fas fa-chevron-left menu-arrow"></i></div>
+                        <div class="menu-item" onclick="syncNow()"><div class="menu-icon"><i class="fas fa-sync-alt"></i></div><span class="menu-label">حفظ البيانات محلياً</span><i class="fas fa-chevron-left menu-arrow"></i></div>
+                        <div class="menu-item" onclick="clearAllData()"><div class="menu-icon" style="background:#fff0f0;"><i class="fas fa-trash" style="color:#e03c3c;"></i></div><span class="menu-label" style="color:#e03c3c;">مسح جميع البيانات</span><i class="fas fa-chevron-left menu-arrow"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a class="whatsapp-fab" href="https://wa.me/966562184385" target="_blank" id="whatsapp-fab"><i class="fab fa-whatsapp"></i></a>
+
+    <!-- JSON Upload Modal -->
+    <div class="modal-overlay" id="json-modal">
+        <div class="modal-box">
+            <h3>رفع بيانات JSON <span id="json-modal-type"></span></h3>
+            <textarea class="json-textarea" id="json-textarea" placeholder="الصق بيانات JSON هنا..." style="min-height:180px;"></textarea>
+            <div id="upload-progress" style="display:none; margin:10px 0; padding:8px; background:#f4f8fd; border-radius:10px; font-weight:bold; color:var(--primary); text-align:center;"></div>
+            <div class="modal-actions">
+                <button class="btn-primary" onclick="submitJsonData()">حفظ محلياً</button>
+                <button onclick="closeJsonModal()" style="background:#ccc;border:none;padding:8px 16px;border-radius:20px;cursor:pointer;">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Template Add/Edit Modal -->
+    <div class="modal-overlay" id="template-modal">
+        <div class="modal-box">
+            <h3 id="template-modal-title"><i class="fas fa-file-code"></i> رفع قالب HTML جديد</h3>
+            <label for="template-name-input">اسم القالب <span style="color:#e03c3c;">*</span></label>
+            <input type="text" id="template-name-input" placeholder="مثال: خطة أسبوعية للصف الثالث">
+            <label for="template-keywords-input">كلمات مفتاحية (للبحث - مفصولة بفواصل)</label>
+            <input type="text" id="template-keywords-input" placeholder="مثال: خطة, أسبوعية, رياضيات, صف ثالث">
+            <label for="template-html-textarea">كود HTML <span style="color:#e03c3c;">*</span> <span style="font-weight:400;font-size:0.68rem;color:var(--text-muted);">(يدعم حتى 5000 سطر)</span></label>
+            <textarea id="template-html-textarea" class="html-code-area" placeholder="<div>الصق كود HTML الكامل هنا...</div>" rows="25"></textarea>
+            <div style="font-size:0.65rem;color:var(--text-muted);margin-top:4px;display:flex;justify-content:space-between;">
+                <span id="template-char-count">عدد الأحرف: 0</span>
+                <span id="template-line-count">عدد الأسطر: 0</span>
+            </div>
+            <input type="hidden" id="template-edit-id" value="">
+            <div class="modal-actions">
+                <button class="btn-primary" id="template-save-btn" onclick="saveTemplateItem()"><i class="fas fa-save"></i> حفظ القالب</button>
+                <button class="btn-outline-sm" id="template-preview-btn" onclick="previewTemplateInModal()" style="display:none;"><i class="fas fa-eye"></i> معاينة</button>
+                <button onclick="closeTemplateModal()" style="background:#ccc;border:none;padding:8px 16px;border-radius:20px;cursor:pointer;">إلغاء</button>
+            </div>
+            <div id="template-modal-status" style="margin-top:8px;font-size:0.7rem;text-align:center;"></div>
+        </div>
+    </div>
+
+    <!-- Template Preview Modal -->
+    <div class="modal-overlay" id="template-preview-modal">
+        <div class="modal-box" style="max-width:95vw;max-height:90vh;">
+            <h3 style="justify-content:space-between;">
+                <span><i class="fas fa-eye"></i> معاينة: <span id="preview-template-name"></span></span>
+                <button onclick="closeTemplatePreviewModal()" style="background:#ccc;border:none;padding:6px 12px;border-radius:16px;cursor:pointer;font-size:0.7rem;">✕ إغلاق</button>
+            </h3>
+            <iframe id="template-preview-iframe" class="template-preview-iframe" sandbox="allow-scripts allow-same-origin" title="معاينة القالب"></iframe>
+            <div class="modal-actions" style="margin-top:10px;">
+                <button class="btn-outline-sm" onclick="openTemplateInNewTab()"><i class="fas fa-external-link-alt"></i> فتح في نافذة جديدة</button>
+                <button onclick="closeTemplatePreviewModal()" style="background:#ccc;border:none;padding:8px 16px;border-radius:20px;cursor:pointer;">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- GitHub Settings Modal -->
+    <div class="modal-overlay" id="github-modal">
+        <div class="modal-box">
+            <h3>إعدادات GitHub</h3>
+            <p style="font-size:0.75rem;color:var(--text-sec);margin-bottom:8px;">خاص بمدير النظام فقط</p>
+            <input type="password" id="github-password" placeholder="كلمة مرور المدير" style="width:100%;padding:8px;border-radius:10px;border:2px solid var(--border);margin-bottom:8px;font-size:0.8rem;">
+            <button class="btn-primary" onclick="verifyGithubAccess()">تحقق ورفع إلى GitHub</button>
+            <p style="font-size:0.7rem;color:var(--text-muted);margin-top:8px;">كلمة المرور الافتراضية: admin123</p>
+        </div>
+    </div>
+
+    <!-- Navigation Bars -->
+    <div id="navigation-container">
+        <div class="bottom-nav-wrapper active" id="nav-main">
+            <div class="bottom-nav">
+                <div class="nav-item active" data-page="home" onclick="navigateTo('home')"><i class="fas fa-home"></i><span>الرئيسية</span></div>
+                <div class="nav-item" data-page="orders" onclick="navigateTo('orders')"><i class="fas fa-shopping-cart"></i><span>الطلبات</span></div>
+                <div class="nav-item" data-page="templates" onclick="navigateTo('templates')"><i class="fas fa-file-code"></i><span>القوالب</span></div>
+                <div class="nav-item" data-page="resources" onclick="navigateTo('resources')"><i class="fas fa-link"></i><span>الموارد</span></div>
+                <div class="nav-item" data-page="invoices" onclick="navigateTo('invoices')"><i class="fas fa-file-invoice-dollar"></i><span>الفواتير</span></div>
+                <div class="nav-item" data-page="admin" onclick="navigateTo('admin')"><i class="fas fa-cog"></i><span>الإدارة</span></div>
+            </div>
+        </div>
+        <div class="bottom-nav-wrapper" id="nav-templates">
+            <div class="bottom-nav">
+                <div class="nav-item active" data-sub="files" onclick="switchTemplateTab('files')"><i class="fas fa-folder"></i><span>ملفات</span></div>
+                <div class="nav-item" data-sub="records" onclick="switchTemplateTab('records')"><i class="fas fa-clipboard-list"></i><span>سجلات</span></div>
+                <div class="nav-item" data-sub="exams" onclick="switchTemplateTab('exams')"><i class="fas fa-pencil-alt"></i><span>اختبارات</span></div>
+                <div class="nav-item" data-sub="reports" onclick="switchTemplateTab('reports')"><i class="fas fa-chart-bar"></i><span>تقارير</span></div>
+                <div class="nav-item" data-sub="plans" onclick="switchTemplateTab('plans')"><i class="fas fa-calendar-alt"></i><span>خطط</span></div>
+            </div>
+        </div>
+        <div class="bottom-nav-wrapper" id="nav-resources">
+            <div class="bottom-nav">
+                <div class="nav-item active" data-sub="wordwall" onclick="switchResourceTab('wordwall')"><i class="fas fa-th-large"></i><span>Wordwall</span></div>
+                <div class="nav-item" data-sub="forms" onclick="switchResourceTab('forms')"><i class="fas fa-wpforms"></i><span>Forms</span></div>
+                <div class="nav-item" data-sub="drive" onclick="switchResourceTab('drive')"><i class="fas fa-cloud"></i><span>Drive</span></div>
+                <div class="nav-item" data-sub="locutions" onclick="switchResourceTab('locutions')"><i class="fas fa-microphone-alt"></i><span>Locutions</span></div>
+            </div>
+        </div>
+        <div class="bottom-nav-wrapper" id="nav-forms-sub">
+            <div class="bottom-nav">
+                <div class="nav-item active" data-sub="exams" onclick="switchFormsSubTab('exams')"><i class="fas fa-pencil-alt"></i><span>اختبارات</span></div>
+                <div class="nav-item" data-sub="surveys" onclick="switchFormsSubTab('surveys')"><i class="fas fa-poll"></i><span>استبيانات</span></div>
+                <div class="nav-item" data-sub="other" onclick="switchFormsSubTab('other')"><i class="fas fa-ellipsis-h"></i><span>أخرى</span></div>
+            </div>
+        </div>
+        <div class="bottom-nav-wrapper" id="nav-drive-sub">
+            <div class="bottom-nav">
+                <div class="nav-item active" data-sub="bags" onclick="switchDriveSubTab('bags')"><i class="fas fa-briefcase"></i><span>حقائب</span></div>
+                <div class="nav-item" data-sub="enrich" onclick="switchDriveSubTab('enrich')"><i class="fas fa-star"></i><span>إثراءات</span></div>
+                <div class="nav-item" data-sub="records" onclick="switchDriveSubTab('records')"><i class="fas fa-file-alt"></i><span>سجلات</span></div>
+                <div class="nav-item" data-sub="other" onclick="switchDriveSubTab('other')"><i class="fas fa-ellipsis-h"></i><span>أخرى</span></div>
+            </div>
+        </div>
+        <div class="bottom-nav-wrapper" id="nav-admin">
+            <div class="bottom-nav">
+                <div class="nav-item active" data-sub="users" onclick="switchAdminTab('users')"><i class="fas fa-users"></i><span>المستخدمين</span></div>
+                <div class="nav-item" data-sub="customers" onclick="switchAdminTab('customers')"><i class="fas fa-user-tag"></i><span>العملاء</span></div>
+                <div class="nav-item" data-sub="analytics" onclick="switchAdminTab('analytics')"><i class="fas fa-chart-bar"></i><span>إحصائيات</span></div>
+                <div class="nav-item" data-sub="settings" onclick="switchAdminTab('settings')"><i class="fas fa-cog"></i><span>إعدادات</span></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== Local Storage Data Management ====================
+        const STORAGE_KEYS = {
+            T_FILES: 'app_t_files',
+            T_RECORDS: 'app_t_records',
+            T_EXAMS: 'app_t_exams',
+            T_REPORTS: 'app_t_reports',
+            T_PLANS: 'app_t_plans',
+            WORDWALL: 'app_wordwall',
+            FORMS_EXAMS: 'app_forms_exams',
+            FORMS_SURVEYS: 'app_forms_surveys',
+            FORMS_OTHER: 'app_forms_other',
+            DRIVE_BAGS: 'app_drive_bags',
+            DRIVE_ENRICH: 'app_drive_enrich',
+            DRIVE_RECORDS: 'app_drive_records',
+            DRIVE_OTHER: 'app_drive_other',
+            LOCUTIONS: 'app_locutions',
+            CUSTOMERS: 'app_customers',
+            INVOICES: 'app_invoices',
+            ORDERS: 'app_orders',
+            ACTIVITIES: 'app_activities'
+        };
+
+        function loadCollection(key) {
+            try {
+                const data = localStorage.getItem(key);
+                return data ? JSON.parse(data) : [];
+            } catch (e) {
+                console.warn('Error loading ' + key, e);
+                return [];
+            }
+        }
+
+        function saveCollection(key, data) {
+            try {
+                localStorage.setItem(key, JSON.stringify(data));
+            } catch (e) {
+                alert('⚠️ سعة التخزين المحلية ممتلئة! قد تحتاج لحذف بعض البيانات.');
+                console.error('LocalStorage quota exceeded', e);
+            }
+        }
+
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
+        }
+
+        // ==================== Application Data ====================
+        const appData = {
+            templates: { files: [], records: [], exams: [], reports: [], plans: [] },
+            wordwall: [],
+            formsExams: [],
+            formsSurveys: [],
+            formsOther: [],
+            driveBags: [],
+            driveEnrich: [],
+            driveRecords: [],
+            driveOther: [],
+            locutions: [],
+            customers: [],
+            invoices: [],
+            orders: [],
+            activities: []
+        };
+
+        function loadAllData() {
+            appData.templates.files = loadCollection(STORAGE_KEYS.T_FILES);
+            appData.templates.records = loadCollection(STORAGE_KEYS.T_RECORDS);
+            appData.templates.exams = loadCollection(STORAGE_KEYS.T_EXAMS);
+            appData.templates.reports = loadCollection(STORAGE_KEYS.T_REPORTS);
+            appData.templates.plans = loadCollection(STORAGE_KEYS.T_PLANS);
+            appData.wordwall = loadCollection(STORAGE_KEYS.WORDWALL);
+            appData.formsExams = loadCollection(STORAGE_KEYS.FORMS_EXAMS);
+            appData.formsSurveys = loadCollection(STORAGE_KEYS.FORMS_SURVEYS);
+            appData.formsOther = loadCollection(STORAGE_KEYS.FORMS_OTHER);
+            appData.driveBags = loadCollection(STORAGE_KEYS.DRIVE_BAGS);
+            appData.driveEnrich = loadCollection(STORAGE_KEYS.DRIVE_ENRICH);
+            appData.driveRecords = loadCollection(STORAGE_KEYS.DRIVE_RECORDS);
+            appData.driveOther = loadCollection(STORAGE_KEYS.DRIVE_OTHER);
+            appData.locutions = loadCollection(STORAGE_KEYS.LOCUTIONS);
+            appData.customers = loadCollection(STORAGE_KEYS.CUSTOMERS);
+            appData.invoices = loadCollection(STORAGE_KEYS.INVOICES);
+            appData.orders = loadCollection(STORAGE_KEYS.ORDERS);
+            appData.activities = loadCollection(STORAGE_KEYS.ACTIVITIES);
+            console.log('✅ All local data loaded. Templates:', totalTemplateCount());
+        }
+
+        function saveAllData() {
+            saveCollection(STORAGE_KEYS.T_FILES, appData.templates.files);
+            saveCollection(STORAGE_KEYS.T_RECORDS, appData.templates.records);
+            saveCollection(STORAGE_KEYS.T_EXAMS, appData.templates.exams);
+            saveCollection(STORAGE_KEYS.T_REPORTS, appData.templates.reports);
+            saveCollection(STORAGE_KEYS.T_PLANS, appData.templates.plans);
+            saveCollection(STORAGE_KEYS.WORDWALL, appData.wordwall);
+            saveCollection(STORAGE_KEYS.FORMS_EXAMS, appData.formsExams);
+            saveCollection(STORAGE_KEYS.FORMS_SURVEYS, appData.formsSurveys);
+            saveCollection(STORAGE_KEYS.FORMS_OTHER, appData.formsOther);
+            saveCollection(STORAGE_KEYS.DRIVE_BAGS, appData.driveBags);
+            saveCollection(STORAGE_KEYS.DRIVE_ENRICH, appData.driveEnrich);
+            saveCollection(STORAGE_KEYS.DRIVE_RECORDS, appData.driveRecords);
+            saveCollection(STORAGE_KEYS.DRIVE_OTHER, appData.driveOther);
+            saveCollection(STORAGE_KEYS.LOCUTIONS, appData.locutions);
+            saveCollection(STORAGE_KEYS.CUSTOMERS, appData.customers);
+            saveCollection(STORAGE_KEYS.INVOICES, appData.invoices);
+            saveCollection(STORAGE_KEYS.ORDERS, appData.orders);
+            saveCollection(STORAGE_KEYS.ACTIVITIES, appData.activities);
+        }
+
+        function addDocument(collectionArray, data) {
+            const newItem = { id: generateId(), ...data, usageCount: data.usageCount || 0, createdAt: new Date().toISOString() };
+            collectionArray.unshift(newItem);
+            saveAllData();
+            return newItem;
+        }
+
+        function updateDocument(collectionArray, docId, updates) {
+            const index = collectionArray.findIndex(d => d.id === docId);
+            if (index >= 0) {
+                collectionArray[index] = { ...collectionArray[index], ...updates };
+                saveAllData();
+                return true;
+            }
+            return false;
+        }
+
+        function deleteDocument(collectionArray, docId) {
+            const index = collectionArray.findIndex(d => d.id === docId);
+            if (index >= 0) {
+                collectionArray.splice(index, 1);
+                saveAllData();
+                return true;
+            }
+            return false;
+        }
+
+        function incrementUsageLocally(collectionArray, docId) {
+            const item = collectionArray.find(d => d.id === docId);
+            if (item) {
+                item.usageCount = (item.usageCount || 0) + 1;
+                saveAllData();
+            }
+        }
+
+        function totalTemplateCount() {
+            return appData.templates.files.length + appData.templates.records.length + appData.templates.exams.length +
+                appData.templates.reports.length + appData.templates.plans.length;
+        }
+
+        function updateSyncStatus() {
+            const badge = document.getElementById('sync-status');
+            if (badge) {
+                badge.innerHTML = '<i class="fas fa-hdd"></i> محلي';
+                badge.style.background = '#e6faf4';
+                badge.style.color = '#00a87a';
+            }
+        }
+
+        // ==================== GitHub Upload State ====================
+        const GH_UPLOADED_KEY = 'gh_uploaded_templates';
+        function getUploadedTemplatesMap() {
+            try { return JSON.parse(localStorage.getItem(GH_UPLOADED_KEY) || '{}'); } catch (e) { return {}; }
+        }
+        function markTemplateUploadedToGithub(tab, itemId) {
+            const map = getUploadedTemplatesMap();
+            if (!map[tab]) map[tab] = [];
+            if (!map[tab].includes(itemId)) { map[tab].push(itemId);
+                localStorage.setItem(GH_UPLOADED_KEY, JSON.stringify(map)); }
+        }
+        function isTemplateUploadedToGithub(tab, itemId) {
+            const map = getUploadedTemplatesMap(); return map[tab] && map[tab].includes(itemId);
+        }
+        function removeTemplateUploadState(tab, itemId) {
+            const map = getUploadedTemplatesMap(); if (map[tab]) { map[tab] = map[tab].filter(id => id !== itemId); if (map[
+                    tab].length === 0) delete map[tab];
+                localStorage.setItem(GH_UPLOADED_KEY, JSON.stringify(map)); }
+        }
+
+        // ==================== Navigation ====================
+        const navHistory = [];
+        let isRestoring = false;
+        let currentPage = 'home';
+        let currentTemplateTab = 'files';
+        let currentResourceTab = 'wordwall';
+        let currentFormsSubTab = 'exams';
+        let currentDriveSubTab = 'bags';
+        let currentAdminTab = 'users';
+        let currentJsonType = '';
+        let currentPreviewItem = null;
+
+        function pushNavState() { if (isRestoring) return;
+            navHistory.push({ page: currentPage, templateTab: currentTemplateTab, resourceTab: currentResourceTab,
+                formsSubTab: currentFormsSubTab, driveSubTab: currentDriveSubTab, adminTab: currentAdminTab }); if (
+                navHistory.length > 50) navHistory.shift();
+            updateBackButtonVisibility(); }
+
+        function goBack() { if (navHistory.length === 0) { if (currentPage !== 'home') { isRestoring = true;
+                    currentPage = 'home';
+                    currentTemplateTab = 'files';
+                    currentResourceTab = 'wordwall';
+                    currentFormsSubTab = 'exams';
+                    currentDriveSubTab = 'bags';
+                    currentAdminTab = 'users';
+                    navigateTo('home');
+                    isRestoring = false; }
+                updateBackButtonVisibility(); return; }
+            isRestoring = true; const prev = navHistory.pop();
+            currentPage = prev.page;
+            currentTemplateTab = prev.templateTab;
+            currentResourceTab = prev.resourceTab;
+            currentFormsSubTab = prev.formsSubTab;
+            currentDriveSubTab = prev.driveSubTab;
+            currentAdminTab = prev.adminTab;
+            navigateTo(prev.page);
+            isRestoring = false;
+            updateBackButtonVisibility(); }
+
+        function updateBackButtonVisibility() { const btn = document.getElementById('global-back-btn'); if (btn) btn.style
+                .display = (navHistory.length > 0 || currentPage !== 'home') ? 'flex' : 'none'; }
+
+        function hideAllNavs() { document.querySelectorAll('.bottom-nav-wrapper').forEach(n => n.classList.remove('active')); }
+
+        function showMainNav() { hideAllNavs();
+            document.getElementById('nav-main').classList.add('active'); }
+
+        function showTemplatesNav() { hideAllNavs();
+            document.getElementById('nav-templates').classList.add('active'); }
+
+        function showResourcesNav() { hideAllNavs();
+            document.getElementById('nav-resources').classList.add('active'); }
+
+        function showFormsSubNav() { hideAllNavs();
+            document.getElementById('nav-forms-sub').classList.add('active'); }
+
+        function showDriveSubNav() { hideAllNavs();
+            document.getElementById('nav-drive-sub').classList.add('active'); }
+
+        function showAdminNav() { hideAllNavs();
+            document.getElementById('nav-admin').classList.add('active'); }
+
+        function updateActiveNavItems() {
+            document.querySelectorAll('.bottom-nav-wrapper.active .nav-item').forEach(i => i.classList.remove('active'));
+            const wrapper = document.querySelector('.bottom-nav-wrapper.active'); if (!wrapper) return;
+            wrapper.querySelectorAll('.nav-item').forEach(item => {
+                const page = item.dataset.page;
+                const sub = item.dataset.sub; if (page && page === currentPage) item.classList.add('active'); if (
+                    sub) { if (wrapper.id === 'nav-templates' && sub === currentTemplateTab) item.classList.add(
+                        'active'); else if (wrapper.id === 'nav-resources' && sub === currentResourceTab) item
+                    .classList.add('active'); else if (wrapper.id === 'nav-forms-sub' && sub === currentFormsSubTab)
+                    item.classList.add('active'); else if (wrapper.id === 'nav-drive-sub' && sub ===
+                        currentDriveSubTab) item.classList.add('active'); else if (wrapper.id === 'nav-admin' && sub ===
+                        currentAdminTab) item.classList.add('active'); }
+            });
+        }
+
+        function navigateTo(pageId) { if (!pageId) return; if (!isRestoring && pageId === currentPage) { document
+                .querySelector('.screen').scrollTop = 0; return; } if (!isRestoring) pushNavState();
+            currentPage = pageId;
+            document.querySelectorAll('.screen-page').forEach(p => p.classList.remove('active')); const target = document
+                .getElementById('page-' + pageId); if (target) target.classList.add('active');
+            document.querySelector('.screen').scrollTop = 0;
+            updateBackButtonVisibility(); if (pageId === 'home') { showMainNav(); } else if (pageId === 'orders' || pageId ===
+                'invoices') { showMainNav(); if (pageId === 'orders') renderOrders(); if (pageId === 'invoices')
+                renderInvoices(); } else if (pageId === 'templates') { showTemplatesNav();
+                switchTemplateTab(currentTemplateTab, true); } else if (pageId === 'resources') { showResourcesNav();
+                switchResourceTab(currentResourceTab, true); } else if (pageId === 'admin') { showAdminNav();
+                switchAdminTab(currentAdminTab, true); } else { showMainNav(); }
+            updateActiveNavItems();
+            refreshAll(); }
+
+        function switchTemplateTab(tab, silent = false) { if (!silent && !isRestoring) pushNavState();
+            currentTemplateTab = tab; const page = document.getElementById('page-templates'); if (!page) return;
+            page.querySelectorAll('.sub-section').forEach(s => s.classList.remove('active')); const target = document
+                .getElementById('templates-' + tab + '-section'); if (target) target.classList.add('active');
+            updateActiveNavItems(); if (!silent && currentPage !== 'templates') { navigateTo('templates'); } else {
+                renderCurrentTemplateTab(); } }
+
+        function switchResourceTab(tab, silent = false) { if (!silent && !isRestoring) pushNavState();
+            currentResourceTab = tab; const page = document.getElementById('page-resources'); if (!page) return;
+            page.querySelectorAll('.sub-section').forEach(s => s.classList.remove('active')); const target = document
+                .getElementById('resources-' + tab + '-section'); if (target) target.classList.add('active'); if (tab ===
+                'forms') { showFormsSubNav();
+                switchFormsSubTab(currentFormsSubTab, true); } else if (tab === 'drive') { showDriveSubNav();
+                switchDriveSubTab(currentDriveSubTab, true); } else { showResourcesNav(); }
+            updateActiveNavItems(); if (!silent && currentPage !== 'resources') { navigateTo('resources'); } else { if (tab ===
+                    'wordwall') renderWordwall(); if (tab === 'forms') renderFormsSubData(); if (tab === 'drive')
+                renderDriveSubData(); if (tab === 'locutions') renderLocutions(); } }
+
+        function switchFormsSubTab(tab, silent = false) { if (!silent && !isRestoring) pushNavState();
+            currentFormsSubTab = tab; const section = document.getElementById('resources-forms-section'); if (!section)
+                return;
+            section.querySelectorAll('.sub-section').forEach(s => s.classList.remove('active')); const target = document
+                .getElementById('forms-' + tab + '-section2'); if (target) target.classList.add('active');
+            updateActiveNavItems(); if (!silent) { showFormsSubNav();
+                renderFormsSubData(); } }
+
+        function switchDriveSubTab(tab, silent = false) { if (!silent && !isRestoring) pushNavState();
+            currentDriveSubTab = tab; const section = document.getElementById('resources-drive-section'); if (!section)
+                return;
+            section.querySelectorAll('.sub-section').forEach(s => s.classList.remove('active')); const target = document
+                .getElementById('drive-' + tab + '-section'); if (target) target.classList.add('active');
+            updateActiveNavItems(); if (!silent) { showDriveSubNav();
+                renderDriveSubData(); } }
+
+        function switchAdminTab(tab, silent = false) { if (!silent && !isRestoring) pushNavState();
+            currentAdminTab = tab; const page = document.getElementById('page-admin'); if (!page) return;
+            page.querySelectorAll('.sub-section').forEach(s => s.classList.remove('active')); const target = document
+                .getElementById('admin-' + tab + '-section'); if (target) target.classList.add('active');
+            updateActiveNavItems(); if (!silent && currentPage !== 'admin') { navigateTo('admin'); } else { if (tab ===
+                    'customers') renderCustomers(); if (tab === 'analytics') initChart(); } }
+
+        function getTabLabel(t) { const m = { files: 'ملفات', records: 'سجلات', exams: 'اختبارات', reports: 'تقارير',
+                plans: 'خطط' }; return m[t] || t; }
+
+        // ==================== Template Modal ====================
+        function openTemplateModal(editId = null) {
+            const modal = document.getElementById('template-modal');
+            const titleEl = document.getElementById('template-modal-title');
+            const nameInp = document.getElementById('template-name-input');
+            const keyInp = document.getElementById('template-keywords-input');
+            const htmlTa = document.getElementById('template-html-textarea');
+            const editInp = document.getElementById('template-edit-id');
+            const saveBtn = document.getElementById('template-save-btn');
+            const previewBtn = document.getElementById('template-preview-btn');
+            document.getElementById('template-modal-status').textContent = '';
+            if (editId) { const item = appData.templates[currentTemplateTab].find(d => d.id === editId); if (!item)
+                    return alert('القالب غير موجود');
+                titleEl.innerHTML = '<i class="fas fa-edit"></i> تعديل قالب: ' + (item.name || '');
+                nameInp.value = item.name || '';
+                keyInp.value = item.keywords || '';
+                htmlTa.value = item.htmlContent || '';
+                editInp.value = editId;
+                saveBtn.innerHTML = '<i class="fas fa-save"></i> تحديث القالب';
+                previewBtn.style.display = 'inline-flex'; } else { titleEl.innerHTML =
+                    '<i class="fas fa-file-code"></i> رفع قالب HTML جديد';
+                nameInp.value = '';
+                keyInp.value = '';
+                htmlTa.value = '';
+                editInp.value = '';
+                saveBtn.innerHTML = '<i class="fas fa-save"></i> حفظ القالب';
+                previewBtn.style.display = 'none'; }
+            updateTemplateCharCount();
+            modal.classList.add('active');
+            setTimeout(() => htmlTa.focus(), 200);
+        }
+
+        function closeTemplateModal() { document.getElementById('template-modal').classList.remove('active'); }
+
+        function updateTemplateCharCount() { const ta = document.getElementById('template-html-textarea'); const text = ta
+                .value;
+            document.getElementById('template-char-count').textContent = 'عدد الأحرف: ' + text.length.toLocaleString(
+            'ar-SA');
+            document.getElementById('template-line-count').textContent = 'عدد الأسطر: ' + text.split(/\n/).length
+            .toLocaleString('ar-SA'); }
+        document.getElementById('template-html-textarea')?.addEventListener('input', updateTemplateCharCount);
+
+        function previewTemplateInModal() { const html = document.getElementById('template-html-textarea').value; if (!html
+                .trim()) return alert('لا يوجد كود HTML');
+            document.getElementById('preview-template-name').textContent = document.getElementById('template-name-input')
+                .value || 'معاينة';
+            document.getElementById('template-preview-iframe').srcdoc = html;
+            document.getElementById('template-preview-modal').classList.add('active'); }
+
+        function closeTemplatePreviewModal() { document.getElementById('template-preview-modal').classList.remove(
+            'active'); }
+
+        function openTemplateInNewTab() { const html = document.getElementById('template-html-textarea').value; if (!html
+                .trim()) return;
+            const win = window.open('', '_blank'); if (win) { win.document.write(html);
+                win.document.close(); } else alert('تعذر فتح النافذة.'); }
+
+        function saveTemplateItem() {
+            const name = document.getElementById('template-name-input').value.trim();
+            const keywords = document.getElementById('template-keywords-input').value.trim();
+            const htmlContent = document.getElementById('template-html-textarea').value;
+            const editId = document.getElementById('template-edit-id').value;
+            const statusEl = document.getElementById('template-modal-status'); if (!name) { statusEl.textContent =
+                    '⚠️ الرجاء إدخال اسم القالب';
+                statusEl.style.color = '#e03c3c'; return; } if (!htmlContent.trim()) { statusEl.textContent =
+                    '⚠️ الرجاء لصق كود HTML';
+                statusEl.style.color = '#e03c3c'; return; }
+            statusEl.textContent = '⏳ جاري الحفظ...';
+            statusEl.style.color = 'var(--primary)';
+            const collectionArray = appData.templates[currentTemplateTab];
+            try {
+                if (editId) { updateDocument(collectionArray, editId, { name, keywords, htmlContent }); } else {
+                    addDocument(collectionArray, { name, keywords, htmlContent }); }
+                statusEl.textContent = '✅ تم الحفظ بنجاح';
+                statusEl.style.color = '#00a87a';
+                renderCurrentTemplateTab();
+                updateStats();
+                setTimeout(() => { statusEl.textContent = ''; }, 2000); if (!editId) { setTimeout(() => { document
+                        .getElementById('template-name-input').value = '';
+                        document.getElementById('template-keywords-input').value = '';
+                        document.getElementById('template-html-textarea').value = '';
+                        document.getElementById('template-edit-id').value = '';
+                        updateTemplateCharCount(); }, 800); }
+            } catch (e) { statusEl.textContent = '❌ خطأ: ' + e.message;
+                statusEl.style.color = '#e03c3c'; }
+        }
+
+        // ==================== Template Rendering ====================
+        function renderCurrentTemplateTab() { renderTemplateSection(currentTemplateTab); }
+
+        function renderTemplateSection(tab) {
+            const data = appData.templates[tab] || [];
+            const query = (document.getElementById('template-search-input')?.value || '').toLowerCase().trim();
+            let filtered = data; if (query) { filtered = data.filter(d => (d.name || '').toLowerCase().includes(query) || (
+                    d.keywords || '').toLowerCase().includes(query)); }
+            const container = document.getElementById('templates-' + tab + '-container'); if (!container) return;
+            const label = getTabLabel(tab); if (filtered.length === 0) { container.innerHTML =
+                    '<div class="empty-state" style="margin:0;border:none;"><div class="empty-icon"><i class="fas fa-folder-open"></i></div><h3>لا توجد ' +
+                    label + (query ? ' تطابق البحث' : '') + '</h3></div>'; return; }
+            const iconMap = { files: 'fa-file-code', records: 'fa-clipboard-list', exams: 'fa-pencil-alt',
+                reports: 'fa-chart-bar', plans: 'fa-calendar-alt' };
+            const icon = iconMap[tab] || 'fa-file';
+            container.innerHTML = filtered.map(item => {
+                const preview = (item.htmlContent || '').replace(/<[^>]*>/g, '').substring(0, 80) || 'كود HTML';
+                const uploaded = isTemplateUploadedToGithub(tab, item.id);
+                const ghBtn = uploaded ?
+                    '<span class="github-uploaded-check"><i class="fas fa-check-circle"></i> ✓</span>' :
+                    `<button class="btn-github-upload" data-upload-id="${item.id}" onclick="event.stopPropagation();uploadTemplateToGithub('${tab}','${item.id}')"><i class="fab fa-github"></i> رفع</button>`;
+                return `<div class="service-row">
+                    <span class="right" onclick="viewTemplateItem('${tab}','${item.id}')">
+                        <span class="srv-icon si-blue"><i class="fas ${icon}"></i></span>
+                        <span style="flex:1;min-width:0;"><span style="display:block;font-weight:600;">${item.name || 'بدون اسم'}</span>
+                        <span style="font-size:0.62rem;color:var(--text-muted);">${preview}</span></span>
+                    </span>
+                    <span class="actions-group">
+                        <span class="info-badge">📄 ${(item.htmlContent||'').length.toLocaleString('ar-SA')} حرف</span>
+                        <span class="info-badge">👁 ${item.usageCount||0}</span>
+                        <button class="btn-outline-sm" onclick="event.stopPropagation();openTemplateModal('${item.id}')"><i class="fas fa-edit"></i></button>
+                        ${ghBtn}
+                        <button class="btn-danger-sm" onclick="event.stopPropagation();deleteTemplateItem('${tab}','${item.id}')"><i class="fas fa-trash"></i></button>
+                    </span>
+                </div>`;
+            }).join('');
+        }
+
+        function viewTemplateItem(tab, id) { const item = appData.templates[tab].find(d => d.id === id); if (!item)
+            return;
+            incrementUsageLocally(appData.templates[tab], id);
+            document.getElementById('preview-template-name').textContent = item.name || 'معاينة';
+            document.getElementById('template-preview-iframe').srcdoc = item.htmlContent || '';
+            document.getElementById('template-preview-modal').classList.add('active');
+            renderCurrentTemplateTab(); }
+
+        function deleteTemplateItem(tab, id) { const item = appData.templates[tab].find(d => d.id === id); if (!item)
+            return; if (!confirm('حذف "' + (item.name || 'القالب') + '"؟')) return;
+            deleteDocument(appData.templates[tab], id);
+            removeTemplateUploadState(tab, id);
+            renderCurrentTemplateTab();
+            updateStats(); }
+
+        // ==================== GitHub Upload ====================
+        function getGithubFolderForTab(tab) { const m = { files: 'templates/files', records: 'templates/records',
+                exams: 'templates/exams', reports: 'templates/reports', plans: 'templates/plans' }; return m[tab] ||
+                'templates'; }
+        async function uploadTemplateToGithub(tab, itemId) { const item = appData.templates[tab].find(d => d.id ===
+                itemId); if (!item) return;
+            const token = localStorage.getItem('gh_token') || ''; if (!token) return alert('يرجى إعداد Token GitHub');
+            const repo = localStorage.getItem('gh_repo') || 'goo';
+            const user = localStorage.getItem('gh_user') || 'fa78383012736al-a11y';
+            const folder = getGithubFolderForTab(tab);
+            const slug = (item.name || item.id).replace(/\s+/g, '-').toLowerCase();
+            const btn = document.querySelector(`[data-upload-id="${itemId}"]`); if (btn) { btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; } try { const upload = async (path, content) => {
+                    const url = `https://api.github.com/repos/${user}/${repo}/contents/${path}`;
+                    const getRes = await fetch(url, { headers: { 'Authorization': `token ${token}` } });
+                    const existing = getRes.status === 200 ? await getRes.json() : null;
+                    const body = { message: `Update ${path}`,
+                        content: btoa(unescape(encodeURIComponent(content))), branch: 'main' }; if (existing && existing
+                        .sha) body.sha = existing.sha;
+                    const res = await fetch(url, { method: 'PUT', headers: { 'Authorization': `token ${token}`,
+                            'Content-Type': 'application/json' }, body: JSON.stringify(body) }); if (!res.ok) throw new
+                        Error('فشل الرفع');
+                }; await upload(`${folder}/${slug}.html`, item.htmlContent || '<div></div>'); if (item.keywords) { await
+                        upload(`${folder}/${slug}-meta.json`, JSON.stringify({ name: item.name, keywords: item
+                            .keywords }, null, 2)); }
+                markTemplateUploadedToGithub(tab, itemId);
+                alert('✅ تم الرفع إلى GitHub');
+                renderCurrentTemplateTab(); } catch (e) { alert('❌ ' + e.message); } finally { if (btn) { btn.disabled =
+                        false;
+                    btn.innerHTML = '<i class="fab fa-github"></i> رفع'; } }
+        }
+
+        // ==================== Resources Rendering ====================
+        function renderWordwall() {
+            const semester = document.getElementById('ww-semester')?.value || '';
+            const grade = document.getElementById('ww-grade')?.value || '';
+            const subject = document.getElementById('ww-subject')?.value || '';
+            let data = appData.wordwall || []; if (semester) data = data.filter(d => d.semester === semester); if (grade)
+                data = data.filter(d => d.grade === grade); if (subject) data = data.filter(d => d.subject === subject);
+            data = data.slice(0, 10);
+            const container = document.getElementById('wordwall-container'); if (!container) return;
+            container.innerHTML = data.length === 0 ?
+                '<div class="empty-state"><h3>لا توجد ألعاب</h3></div>' : data.map(d =>
+                    '<div class="resource-link-card" onclick="handleWordwallClick(\'' + d.id + '\',\'' + (d.url || '') +
+                    '\')"><div class="r-icon ri-wordwall"><i class="fas fa-gamepad"></i></div><div class="r-info"><div class="r-name">' +
+                    (d.lesson || '') + '</div><div class="r-desc"><span class="tag tag-semester">' + (d.semester || '') +
+                    '</span> <span class="tag tag-grade">' + (d.grade || '') + '</span> <span class="tag tag-subject">' + (
+                        d.subject || '') + '</span></div></div></div>').join('');
+            const grades = [...new Set(appData.wordwall.map(d => d.grade).filter(Boolean))].sort();
+            const subjects = [...new Set(appData.wordwall.map(d => d.subject).filter(Boolean))].sort();
+            document.getElementById('ww-grade').innerHTML = '<option value="">كل الصفوف</option>' + grades.map(g =>
+                '<option>' + g + '</option>').join('');
+            document.getElementById('ww-subject').innerHTML = '<option value="">كل المواد</option>' + subjects.map(s =>
+                '<option>' + s + '</option>').join('');
+        }
+
+        function handleWordwallClick(id, url) { incrementUsageLocally(appData.wordwall, id); if (url && url !== '#')
+            window.open(url, '_blank');
+            renderWordwall(); }
+
+        function renderFormsSubData() { const map = { exams: appData.formsExams, surveys: appData.formsSurveys,
+                other: appData.formsOther }; const data = (map[currentFormsSubTab] || []).slice(0, 10);
+            const container = document.getElementById('forms-' + currentFormsSubTab + '-container'); if (!container)
+            return;
+            container.innerHTML = data.length === 0 ? '<div class="empty-state"><h3>لا توجد نماذج</h3></div>' : data.map(d =>
+                '<div class="resource-link-card" onclick="handleFormsClick(\'' + d.id + '\',\'' + (d.url || '') +
+                '\')"><div class="r-icon ri-forms"><i class="fas fa-wpforms"></i></div><div class="r-info"><div class="r-name">' +
+                (d.name || d.title || 'نموذج') + '</div></div></div>').join(''); }
+
+        function handleFormsClick(id, url) { incrementUsageLocally(appData.formsExams, id); if (url && url !== '#')
+            window.open(url, '_blank');
+            renderFormsSubData(); }
+
+        function renderDriveSubData() { const map = { bags: appData.driveBags, enrich: appData.driveEnrich,
+                records: appData.driveRecords, other: appData.driveOther }; const data = (map[currentDriveSubTab] || [])
+                .slice(0, 10);
+            const container = document.getElementById('drive-' + currentDriveSubTab + '-container'); if (!container)
+            return;
+            container.innerHTML = data.length === 0 ? '<div class="empty-state"><h3>لا توجد ملفات</h3></div>' : data.map(d =>
+                '<div class="resource-link-card" onclick="handleDriveClick(\'' + d.id + '\',\'' + (d.url || '') +
+                '\')"><div class="r-icon ri-drive"><i class="fas fa-cloud"></i></div><div class="r-info"><div class="r-name">' +
+                (d.name || d.title || 'ملف') + '</div></div></div>').join(''); }
+
+        function handleDriveClick(id, url) { incrementUsageLocally(appData.driveBags, id); if (url && url !== '#')
+            window.open(url, '_blank');
+            renderDriveSubData(); }
+
+        function renderLocutions() { const q = (document.getElementById('loc-search')?.value || '').toLowerCase(); let data =
+                appData.locutions || []; if (q) data = data.filter(d => (d.name || '').toLowerCase().includes(q) || (d
+                    .type || '').toLowerCase().includes(q));
+            data = data.slice(0, 10);
+            const container = document.getElementById('locutions-container'); if (!container) return;
+            container.innerHTML = data.length === 0 ? '<div class="empty-state"><h3>لا توجد ملفات</h3></div>' : data.map(d =>
+                '<div class="resource-link-card" onclick="handleLocutionClick(\'' + d.id + '\',\'' + (d.url || '') +
+                '\')"><div class="r-icon ri-locutions"><i class="fas fa-microphone-alt"></i></div><div class="r-info"><div class="r-name">' +
+                (d.name || '') + '</div></div></div>').join(''); }
+
+        function handleLocutionClick(id, url) { incrementUsageLocally(appData.locutions, id); if (url && url !== '#')
+            window.open(url, '_blank');
+            renderLocutions(); }
+
+        function renderOrders() { const status = document.getElementById('order-status-filter')?.value || '';
+            const designer = document.getElementById('order-designer-filter')?.value || ''; let data = appData.orders ||
+                []; if (status) data = data.filter(o => o.status === status); if (designer) data = data.filter(o => o
+                    .designer === designer);
+            data = data.slice(0, 20);
+            const container = document.getElementById('orders-container'); if (!container) return;
+            container.innerHTML = data.length === 0 ?
+                '<div class="empty-state"><h3>لا توجد طلبات</h3></div>' : data.map(o => { const badge = o.status ===
+                        'تم التسليم' ? '✅ تم التسليم' : o.status === 'مكتمل' ? '✔️ مكتمل' : o.status ===
+                        'قيد التصميم' ? '🔄 قيد التصميم' : '🆕 جديد'; return '<div class="service-row" onclick="editOrder(\'' +
+                        o.id + '\')"><span class="right"><span class="srv-icon si-orange"><i class="fas fa-tasks"></i></span>' +
+                        (o.description || 'طلب') + '</span><span>' + badge + '</span></div>'; }).join(''); }
+
+        function addNewOrder() { const broker = prompt('اسم الوسيط:'); if (!broker) return;
+            const customer = prompt('الزبون:'); if (!customer) return;
+            const desc = prompt('وصف الملف:'); if (!desc) return;
+            const amount = parseFloat(prompt('المبلغ (ر.س):')); if (isNaN(amount)) return;
+            const designer = prompt('المصمم:'); if (!designer) return;
+            addDocument(appData.orders, { broker, customer, description: desc, amount, designer, status: 'جديد' });
+            renderOrders();
+            updateStats(); }
+
+        function editOrder(id) { const order = appData.orders.find(o => o.id === id); if (!order) return;
+            const newStatus = prompt('الحالة:', order.status); if (!newStatus) return;
+            updateDocument(appData.orders, id, { status: newStatus });
+            renderOrders(); }
+
+        function renderInvoices() { const container = document.getElementById('invoices-container'); if (!container)
+            return;
+            container.innerHTML = appData.invoices.length === 0 ?
+                '<div class="empty-state"><h3>لا توجد فواتير</h3></div>' : appData.invoices.map(inv => { const rem = (inv
+                        .amount || 0) - (inv.paid || 0); return '<div class="service-row"><span class="right"><span class="srv-icon si-orange"><i class="fas fa-file-invoice"></i></span>' +
+                        (inv.customer || '') + ' - ' + (inv.amount || 0) + ' ر.س</span><span>' + (inv.status ===
+                        'paid' ? 'مدفوعة' : 'متبقي ' + rem) + '</span></div>'; }).join(''); }
+
+        function addNewInvoice() { const customer = prompt('اسم العميل:'); if (!customer) return;
+            const amount = parseFloat(prompt('المبلغ (ر.س):')); if (isNaN(amount)) return;
+            addDocument(appData.invoices, { customer, amount, paid: 0, status: 'unpaid' });
+            renderInvoices();
+            updateStats(); }
+
+        function updateStats() {
+            document.getElementById('stat-orders').textContent = appData.orders.length;
+            document.getElementById('stat-templates').textContent = totalTemplateCount();
+            document.getElementById('stat-invoices').textContent = appData.invoices.length;
+            document.getElementById('total-resources').textContent = (totalTemplateCount() + appData.wordwall.length + appData
+                .formsExams.length + appData.locutions.length).toLocaleString('ar-SA');
+        }
+
+        function renderCustomers() { document.getElementById('customers-container2').innerHTML = appData.customers
+            .length === 0 ? '<div class="empty-state"><h3>لا يوجد عملاء</h3></div>' : appData.customers.map(c =>
+                '<div class="service-row"><span class="right">' + (c.name || '') + '</span></div>').join(''); }
+
+        function refreshAll() { renderCurrentTemplateTab(); if (currentResourceTab === 'wordwall') renderWordwall(); if (
+                currentResourceTab === 'forms') renderFormsSubData(); if (currentResourceTab === 'drive')
+            renderDriveSubData(); if (currentResourceTab === 'locutions') renderLocutions();
+            renderOrders();
+            renderInvoices();
+            updateStats(); }
+
+        // ==================== JSON Modal ====================
+        function openJsonModal(type) { currentJsonType = type;
+            document.getElementById('json-modal-type').textContent = '(' + type + ')';
+            document.getElementById('json-modal').classList.add('active'); }
+
+        function closeJsonModal() { document.getElementById('json-modal').classList.remove('active'); }
+
+        function submitJsonData() { const raw = document.getElementById('json-textarea').value.trim(); if (!raw) return
+            alert('الصق JSON'); try { const arr = JSON.parse(raw); const items = Array.isArray(arr) ? arr : [arr]; let
+                targetArray; if (currentJsonType === 'wordwall') targetArray = appData.wordwall; else if (currentJsonType ===
+                    'forms') targetArray = appData.formsExams; else if (currentJsonType === 'drive') targetArray = appData
+                    .driveBags; else return;
+                items.forEach(item => { if (!targetArray.some(ex => ex.url && ex.url === item.url)) { addDocument(
+                        targetArray, item); } });
+                refreshAll();
+                alert('✅ تم الحفظ محلياً');
+                closeJsonModal(); } catch (e) { alert('❌ خطأ في JSON: ' + e.message); } }
+
+        // ==================== GitHub Settings ====================
+        function loadGithubSettings() { document.getElementById('gh-token-inline').value = localStorage.getItem(
+            'gh_token') || '';
+            document.getElementById('gh-repo-inline').value = localStorage.getItem('gh_repo') || 'goo';
+            document.getElementById('gh-folder-inline').value = localStorage.getItem('gh_folder') || 'database'; }
+
+        function saveGithubInlineSettings() { const token = document.getElementById('gh-token-inline').value.trim(); if (
+                !token) return;
+            localStorage.setItem('gh_token', token);
+            localStorage.setItem('gh_repo', document.getElementById('gh-repo-inline').value.trim() || 'goo');
+            localStorage.setItem('gh_user', 'fa78383012736al-a11y');
+            localStorage.setItem('gh_folder', document.getElementById('gh-folder-inline').value.trim() || 'database');
+            document.getElementById('github-inline-status').textContent = '✅ تم الحفظ';
+            setTimeout(() => { document.getElementById('github-inline-status').textContent = ''; }, 2000); }
+
+        function openGithubSettings() { document.getElementById('github-modal').classList.add('active'); }
+
+        function verifyGithubAccess() { if (document.getElementById('github-password').value !== 'admin123')
+            return alert('❌ كلمة مرور غير صحيحة!');
+            document.getElementById('github-modal').classList.remove('active');
+            navigateTo('templates'); }
+
+        // ==================== Export/Import/Clear ====================
+        function exportAllData() { const blob = new Blob([JSON.stringify(appData, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'goo-local-backup.json';
+            a.click(); }
+
+        function importAllData() { const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = e => { const f = e.target.files[0]; if (!f) return;
+                const reader = new FileReader();
+                reader.onload = ev => { try { const data = JSON.parse(ev.target.result); if (data.templates) { for (
+                            const tab of ['files', 'records', 'exams', 'reports', 'plans']) { if (data.templates[
+                                tab]) appData.templates[tab] = data.templates[tab]; } } if (data.wordwall) appData
+                            .wordwall = data.wordwall; if (data.orders) appData.orders = data.orders;
+                        saveAllData();
+                        refreshAll();
+                        alert('✅ تم الاستيراد'); } catch (err) { alert('❌ ملف غير صالح'); } };
+                reader.readAsText(f); };
+            input.click(); }
+
+        function clearAllData() { if (!confirm('مسح جميع البيانات؟')) return;
+            Object.keys(STORAGE_KEYS).forEach(k => localStorage.removeItem(STORAGE_KEYS[k]));
+            localStorage.removeItem(GH_UPLOADED_KEY);
+            loadAllData();
+            refreshAll(); }
+
+        function syncNow() { saveAllData();
+            alert('✅ تم حفظ البيانات محلياً'); }
+
+        function initChart() { setTimeout(() => { const ctx = document.getElementById('revenueChart'); if (!ctx)
+                return;
+                new Chart(ctx, { type: 'bar', data: { labels: ['1', '2', '3', '4', '5', '6'],
+                    datasets: [{ label: 'الإيرادات', data: [0, 0, 0, 0, 0, 0] }] } }); }, 500); }
+
+        // ==================== Init ====================
+        function init() { loadAllData();
+            navigateTo('home');
+            updateSyncStatus();
+            updateBackButtonVisibility();
+            loadGithubSettings(); }
+        document.addEventListener('DOMContentLoaded', init);
+        document.addEventListener('click', e => { if (!e.target.closest('.search-container')) document.getElementById(
+                'search-suggestions')?.classList.remove('active'); });
+    </script>
+</body>
+</html>
