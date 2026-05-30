@@ -1785,11 +1785,23 @@
         }
 
         function openTemplateInNewTab() {
-            const htmlContent = document.getElementById('template-html-textarea').value;
-            if (!htmlContent.trim()) return alert('لا يوجد كود HTML');
+            // جلب الكود من محتوى المعاينة أولاً، ثم من صندوق النص
+            let htmlContent = "";
+            if (currentPreviewItem && currentPreviewItem.htmlContent) {
+                htmlContent = currentPreviewItem.htmlContent;
+            } else {
+                htmlContent = document.getElementById('template-html-textarea').value;
+            }
+            
+            if (!htmlContent || !htmlContent.trim()) return alert('لا يوجد كود HTML لعرضه');
+            
             const win = window.open('', '_blank');
-            if (win) { win.document.write(htmlContent);
-                win.document.close(); } else { alert('تعذر فتح نافذة جديدة. تأكد من السماح بالنوافذ المنبثقة.'); }
+            if (win) {
+                win.document.write(htmlContent);
+                win.document.close();
+            } else {
+                alert('تعذر فتح نافذة جديدة. تأكد من السماح بالنوافذ المنبثقة.');
+            }
         }
 
         async function saveTemplateItem() {
@@ -1876,12 +1888,14 @@
                 const githubButtonHtml = uploaded ?
                     '<span class="github-uploaded-check" title="تم الرفع إلى GitHub"><i class="fas fa-check-circle"></i> ✓</span>' :
                     `<button class="btn-github-upload" data-upload-id="${item.id}" onclick="event.stopPropagation();uploadTemplateToGithub('${tab}','${item.id}')" title="رفع إلى GitHub"><i class="fab fa-github"></i> رفع</button>`;
+                // مؤشر لملفات GitHub
+                const githubSourceBadge = item.source === 'github' ? '<span style="font-size:0.65rem;background:#e8f0ff;color:var(--primary);padding:2px 8px;border-radius:10px;font-weight:600;margin-right:4px;"><i class="fab fa-github"></i> GitHub</span>' : '';
                 return `
                 <div class="service-row">
                     <span class="right" onclick="viewTemplateItem('${tab}','${item.id}')" title="اضغط للمعاينة">
                         <span class="srv-icon si-blue"><i class="fas ${icon}"></i></span>
                         <span style="flex:1;min-width:0;">
-                            <span style="display:block;font-weight:600;">${item.name || 'بدون اسم'}</span>
+                            <span style="display:block;font-weight:600;">${githubSourceBadge}${item.name || 'بدون اسم'}</span>
                             <span style="display:block;font-size:0.62rem;color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px;">${codePreview}</span>
                             ${item.keywords ? '<span style="font-size:0.58rem;color:var(--text-sec);">🏷 ' + item.keywords.split(',').slice(0,4).map(k=>k.trim()).join(' · ') + '</span>' : ''}
                         </span>
@@ -1889,9 +1903,9 @@
                     <span class="actions-group">
                         <span class="info-badge" title="حجم الكود">📄 ${codeLength.toLocaleString('ar-SA')} حرف</span>
                         <span class="info-badge" title="مرات الاستخدام">👁 ${item.usageCount || 0}</span>
-                        <button class="btn-outline-sm" onclick="event.stopPropagation();openTemplateModal('${item.id}')" title="تعديل"><i class="fas fa-edit"></i></button>
-                        ${githubButtonHtml}
-                        <button class="btn-danger-sm" onclick="event.stopPropagation();deleteTemplateItem('${tab}','${item.id}')" title="حذف"><i class="fas fa-trash"></i></button>
+                        ${item.source !== 'github' ? `<button class="btn-outline-sm" onclick="event.stopPropagation();openTemplateModal('${item.id}')" title="تعديل"><i class="fas fa-edit"></i></button>` : ''}
+                        ${item.source === 'github' ? `<a href="${item.rawUrl}" target="_blank" class="btn-outline-sm" title="معاينة من GitHub"><i class="fas fa-external-link-alt"></i></a>` : githubButtonHtml}
+                        ${item.source !== 'github' ? `<button class="btn-danger-sm" onclick="event.stopPropagation();deleteTemplateItem('${tab}','${item.id}')" title="حذف"><i class="fas fa-trash"></i></button>` : ''}
                     </span>
                 </div>`;
             }).join('');
@@ -1900,9 +1914,17 @@
         async function viewTemplateItem(tab, id) {
             const item = appData.templates[tab].find(d => d.id === id);
             if (!item) return;
+            
+            // إذا كان الملف من GitHub ولم يحمل بعد
+            if (item.source === 'github' && !item.htmlContent && item.rawUrl) {
+                item.htmlContent = await loadGithubFileContent(item.rawUrl);
+            }
+            
             const colMap = { files: COL.T_FILES, records: COL.T_RECORDS, exams: COL.T_EXAMS, reports: COL.T_REPORTS,
                 plans: COL.T_PLANS };
-            await incrementUsage(colMap[tab], id);
+            if (item.source !== 'github') {
+                await incrementUsage(colMap[tab], id);
+            }
             item.usageCount = (item.usageCount || 0) + 1;
             document.getElementById('preview-template-name').textContent = item.name || 'معاينة';
             currentPreviewItem = { name: item.name, htmlContent: item.htmlContent, tab, id: item.id };
@@ -1937,9 +1959,11 @@
         async function uploadTemplateToGithub(tab, itemId) {
             const item = appData.templates[tab].find(d => d.id === itemId);
             if (!item) return alert('القالب غير موجود');
-            const token = localStorage.getItem('gh_token') || '';
-            const repo = localStorage.getItem('gh_repo') || 'goo';
-            const user = localStorage.getItem('gh_user') || 'fa78383012736al-a11y';
+            // جلب الإعدادات من Firestore بدلاً من localStorage
+            const settings = await loadGithubSettingsFromFirestore();
+            const token = settings.token || '';
+            const repo = settings.repo || 'goo';
+            const user = settings.user || 'fa78383012736al-a11y';
             const folder = getGithubFolderForTab(tab);
             if (!token) return alert('يرجى إعداد Token GitHub من الإعدادات أولاً');
             const name = item.name || item.id;
@@ -2332,6 +2356,96 @@
                 renderDriveSubData(); } catch (e) { alert('❌ خطأ في صيغة JSON: ' + e.message); } }
 
         // ==================== GitHub Integration ====================
+        // جلب إعدادات GitHub من Firestore
+        async function loadGithubSettingsFromFirestore() {
+            try {
+                const docRef = db.collection('settings').doc('github_config');
+                const docSnap = await docRef.get();
+                if (docSnap.exists) {
+                    const data = docSnap.data();
+                    return {
+                        token: data.gh_token || '',
+                        repo: data.gh_repo || 'goo',
+                        user: data.gh_user || 'fa78383012736al-a11y',
+                        folder: data.gh_folder || 'database'
+                    };
+                }
+            } catch (e) {
+                console.error('Error loading GitHub settings from Firestore:', e);
+            }
+            return { token: '', repo: 'goo', user: 'fa78383012736al-a11y', folder: 'database' };
+        }
+        
+        // جلب ملفات GitHub من المستودع
+        async function fetchGithubFiles() {
+            try {
+                const settings = await loadGithubSettingsFromFirestore();
+                if (!settings.token) {
+                    console.warn('GitHub token not configured');
+                    return { files: [], records: [], exams: [], reports: [], plans: [] };
+                }
+                
+                const folders = ['templates/files', 'templates/records', 'templates/exams', 'templates/reports', 'templates/plans'];
+                const result = { files: [], records: [], exams: [], reports: [], plans: [] };
+                const tabMap = { 'templates/files': 'files', 'templates/records': 'records', 'templates/exams': 'exams', 'templates/reports': 'reports', 'templates/plans': 'plans' };
+                
+                for (const folder of folders) {
+                    try {
+                        const url = `https://api.github.com/repos/${settings.user}/${settings.repo}/contents/${folder}`;
+                        const response = await fetch(url, {
+                            headers: { 'Authorization': `token ${settings.token}`, 'Accept': 'application/vnd.github.v3+json' }
+                        });
+                        
+                        if (!response.ok) {
+                            console.warn(`Failed to fetch ${folder}:`, response.status);
+                            continue;
+                        }
+                        
+                        const files = await response.json();
+                        const tabKey = tabMap[folder];
+                        
+                        if (Array.isArray(files)) {
+                            for (const file of files) {
+                                if (file.type === 'file' && (file.name.endsWith('.html') || file.name.endsWith('.htm'))) {
+                                    result[tabKey].push({
+                                        id: file.sha,
+                                        name: file.name.replace(/\.(html|htm)$/, ''),
+                                        path: file.path,
+                                        url: file.download_url,
+                                        rawUrl: file.download_url,
+                                        size: file.size,
+                                        htmlContent: '',
+                                        usageCount: 0,
+                                        source: 'github'
+                                    });
+                                }
+                            }
+                        }
+                    } catch (e) {
+                        console.error(`Error fetching ${folder}:`, e);
+                    }
+                }
+                
+                return result;
+            } catch (e) {
+                console.error('Error fetching GitHub files:', e);
+                return { files: [], records: [], exams: [], reports: [], plans: [] };
+            }
+        }
+        
+        // تحميل محتوى ملف GitHub
+        async function loadGithubFileContent(url) {
+            try {
+                const response = await fetch(url);
+                if (response.ok) {
+                    return await response.text();
+                }
+            } catch (e) {
+                console.error('Error loading GitHub file content:', e);
+            }
+            return '';
+        }
+        
         function loadGithubSettings() { const token = localStorage.getItem('gh_token') || '';
             const repo = localStorage.getItem('gh_repo') || 'goo';
             const folder = localStorage.getItem('gh_folder') || 'database';
@@ -2436,6 +2550,15 @@
 
         // ==================== Initialization ====================
         async function init() { showMainNav(); await loadAllData();
+            // جلب ملفات GitHub وإضافتها إلى البيانات
+            const githubFiles = await fetchGithubFiles();
+            if (githubFiles.files.length > 0 || githubFiles.records.length > 0 || githubFiles.exams.length > 0 || githubFiles.reports.length > 0 || githubFiles.plans.length > 0) {
+                appData.templates.files = [...appData.templates.files, ...githubFiles.files];
+                appData.templates.records = [...appData.templates.records, ...githubFiles.records];
+                appData.templates.exams = [...appData.templates.exams, ...githubFiles.exams];
+                appData.templates.reports = [...appData.templates.reports, ...githubFiles.reports];
+                appData.templates.plans = [...appData.templates.plans, ...githubFiles.plans];
+            }
             navigateTo('home');
             initChart();
             updateSyncStatus(true);
