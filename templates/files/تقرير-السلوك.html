@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تقرير السلوك المميز - المرشدة الطلابية نوال الشهري</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=El+Messiri:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-deep: #006c35;
+            --primary-gold: #c5a059;
+            --accent-teal: #1A7F7A;
+            --light-bg: #f0f4f2;
+            --border-light: #d1d9d6;
+            --text-dark: #1E2A38;
+            --white: #ffffff;
+            --shadow-sm: 0 6px 12px -6px rgba(0, 0, 0, 0.08);
+            --shadow-lux: 0 12px 20px -8px rgba(0, 108, 53, 0.15);
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: #e8e3d9;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-dark);
+        }
+
+        .luxury-report {
+            width: 210mm;
+            min-height: 297mm;
+            margin: 0 auto 30px auto;
+            background: var(--white);
+            box-shadow: var(--shadow-lux), 0 0 0 1px rgba(0, 108, 53, 0.1);
+            position: relative;
+            border-radius: 4px;
+            overflow: hidden;
+            border: 1px solid rgba(197, 160, 89, 0.3);
+            page-break-after: always;
+        }
+
+        .luxury-report::before {
+            content: "";
+            position: absolute;
+            top: 10mm;
+            left: 10mm;
+            right: 10mm;
+            bottom: 10mm;
+            border: 2.5px solid var(--primary-gold);
+            border-radius: 6px;
+            pointer-events: none;
+            z-index: 5;
+            opacity: 0.4;
+        }
+
+        .report-content {
+            position: relative;
+            z-index: 10;
+            padding: 10mm 12mm 8mm 12mm;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .luxury-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 7px;
+            border-bottom: 2px solid var(--primary-gold);
+            padding-bottom: 7px;
+            background: linear-gradient(to bottom, rgba(0, 108, 53, 0.02), transparent);
+        }
+
+        .kingdom-info {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--primary-deep);
+            line-height: 1.6;
+            border-right: 3px solid var(--primary-gold);
+            padding-right: 12px;
+            text-align: right;
+        }
+
+        .logo-area {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .luxury-logo {
+            max-height: 65px;
+            object-fit: contain;
+        }
+
+        .school-info {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--primary-deep);
+            line-height: 1.6;
+            border-left: 3px solid var(--primary-gold);
+            padding-left: 12px;
+            text-align: left;
+        }
+
+        .title-bar-lux {
+            background: linear-gradient(135deg, #006c35 0%, #004d26 100%);
+            margin: 9px 0 17px 0;
+            padding: 11px 20px;
+            border-radius: 30px 6px 30px 6px;
+            box-shadow: 0 8px 12px -4px rgba(0, 108, 53, 0.25);
+            text-align: center;
+            border-bottom: 3px solid var(--primary-gold);
+        }
+
+        .title-bar-lux h1 {
+            color: white;
+            font-size: 24px;
+            font-weight: 900;
+            font-family: 'El Messiri', sans-serif;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 11px 16px;
+            margin-bottom: 19px;
+            background: rgba(244, 247, 246, 0.5);
+            padding: 11px 14px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-light);
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            border-bottom: 1px dashed rgba(197, 160, 89, 0.3);
+            padding-bottom: 5px;
+        }
+
+        .info-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--primary-deep);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 10px;
+            color: var(--primary-gold);
+            font-size: 14px;
+            border: 1px solid var(--primary-gold);
+        }
+
+        .info-label {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--accent-teal);
+            margin-bottom: 2px;
+        }
+
+        .info-value {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--primary-deep);
+            background: white;
+            padding: 3px 12px;
+            border-radius: 30px;
+            display: inline-block;
+            border: 1px solid #eee;
+        }
+
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 17px;
+            margin-bottom: 17px;
+        }
+
+        .luxury-card {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 15px 18px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-light);
+            min-height: 180px;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 13px;
+            border-bottom: 2px solid var(--primary-gold);
+            padding-bottom: 7px;
+        }
+
+        .card-header i {
+            font-size: 20px;
+            color: var(--primary-gold);
+            margin-left: 10px;
+            background: var(--primary-deep);
+            padding: 6px;
+            border-radius: 12px;
+        }
+
+        .card-header h3 {
+            font-size: 18px;
+            font-weight: 900;
+            color: var(--primary-deep);
+        }
+
+        .list-style {
+            list-style: none;
+        }
+
+        .list-style li {
+            margin-bottom: 7px;
+            font-weight: 600;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 13px;
+            line-height: 1.4;
+            color: #1e3a4d;
+        }
+
+        .list-style li i {
+            color: var(--primary-gold);
+            font-size: 12px;
+            background: var(--primary-deep);
+            padding: 4px;
+            border-radius: 50%;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .target-badge-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .target-badge {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 12px;
+            border: 1px solid #c8e6c9;
+        }
+
+        .evidence-area {
+            background: #faf8f4;
+            border-radius: 20px;
+            padding: 15px 20px;
+            margin-bottom: 19px;
+            border: 2px dashed var(--primary-gold);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .single-evidence {
+            display: flex;
+            justify-content: center;
+            margin-top: 14px;
+        }
+
+        .photo-placeholder {
+            width: 100%;
+            background: white;
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .photo-placeholder:hover {
+            border-color: var(--primary-gold);
+            background: #fffcf5;
+        }
+
+        .photo-placeholder i {
+            font-size: 40px;
+            color: var(--primary-gold);
+            margin-bottom: 10px;
+        }
+
+        .photo-text {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--primary-deep);
+        }
+
+        .signatures-lux {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 9px;
+        }
+
+        .sig-card {
+            text-align: center;
+            width: 200px;
+            padding: 9px;
+            background: rgba(244, 247, 246, 0.6);
+            border-radius: 30px 6px 30px 6px;
+            border-bottom: 3px solid var(--primary-gold);
+        }
+
+        .sig-role {
+            font-size: 14px;
+            font-weight: 900;
+            color: var(--primary-deep);
+        }
+
+        .sig-name {
+            font-size: 16px;
+            font-weight: 800;
+            margin: 5px 0;
+        }
+
+        .sig-line {
+            font-size: 12px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            margin-top: 5px;
+        }
+
+        .control-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .btn-lux {
+            background: var(--primary-deep);
+            border: none;
+            padding: 10px 22px;
+            border-radius: 40px;
+            color: white;
+            font-weight: 800;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--primary-gold);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        @media print {
+            .control-bar,
+            .luxury-report::before {
+                display: none;
+            }
+            body {
+                background: white;
+                padding: 0;
+            }
+            .luxury-report {
+                box-shadow: none;
+                border: none;
+                width: 100%;
+                margin-bottom: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="control-bar">
+        <button class="btn-lux" onclick="window.print()"><i class="fas fa-print"></i> طباعة التقرير</button>
+        <button class="btn-lux" onclick="document.getElementById('logoUpload').click()"><i class="fas fa-image"></i> تغيير الشعار</button>
+        <input type="file" id="logoUpload" style="display:none" accept="image/*" onchange="updateLogo(this)">
+    </div>
+
+    <!-- الصفحة الأولى (تقرير السلوك المميز) -->
+    <div class="luxury-report page-one">
+        <div class="report-content">
+
+            <header class="luxury-header">
+                <div class="kingdom-info">
+                    المملكة العربية السعودية<br>
+                    وزارة التعليم<br>
+                    إدارة التعليم
+                </div>
+                <div class="logo-area">
+                    <img src="https://upload.wikimedia.org/wikipedia/ar/thumb/0/03/Logo_of_the_Ministry_of_Education_%28Saudi_Arabia%29.svg/1200px-Logo_of_the_Ministry_of_Education_%28Saudi_Arabia%29.svg.png" alt="شعار الوزارة" class="luxury-logo" id="mainLogo">
+                </div>
+                <div class="school-info">
+                    المرحلة المتوسطة<br>
+                    العام الدراسي: 1447 هـ
+                </div>
+            </header>
+
+            <div class="title-bar-lux">
+                <h1>تقرير برنامج السلوك المميز</h1>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-icon"><i class="fas fa-user-tie"></i></div>
+                    <div>
+                        <div class="info-label">إعداد المرشدة الطلابية</div>
+                        <div class="info-value">نوال الشهري</div>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-icon"><i class="fas fa-calendar-alt"></i></div>
+                    <div>
+                        <div class="info-label">تاريخ التنفيذ</div>
+                        <div class="info-value">الفصل الدراسي الثاني</div>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-icon"><i class="fas fa-users"></i></div>
+                    <div>
+                        <div class="info-label">المستهدفون</div>
+                        <div class="target-badge-container">
+                            <span class="target-badge">طلاب المرحلة المتوسطة</span>
+                            <span class="target-badge">المتميزون سلوكياً</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-icon"><i class="fas fa-star"></i></div>
+                    <div>
+                        <div class="info-label">نوع البرنامج</div>
+                        <div class="info-value">إرشادي تعزيزي</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="two-columns">
+                <div class="luxury-card">
+                    <div class="card-header">
+                        <i class="fas fa-bullseye"></i>
+                        <h3>أهداف البرنامج</h3>
+                    </div>
+                    <ul class="list-style" contenteditable="true">
+                        <li><i class="fas fa-check"></i> تعزيز السلوك الإيجابي داخل المدرسة.</li>
+                        <li><i class="fas fa-check"></i> غرس قيم الاحترام والتعاون بين الطلاب.</li>
+                        <li><i class="fas fa-check"></i> اكتشاف الطلاب المتميزين سلوكياً ودعمهم.</li>
+                        <li><i class="fas fa-check"></i> نشر ثقافة التقدير والتحفيز في البيئة المدرسية.</li>
+                    </ul>
+                </div>
+
+                <div class="luxury-card">
+                    <div class="card-header">
+                        <i class="fas fa-tasks"></i>
+                        <h3>خطوات التنفيذ</h3>
+                    </div>
+                    <ul class="list-style" contenteditable="true">
+                        <li><i class="fas fa-arrow-left"></i> حصر الطلاب المرشحين من قبل المعلمين.</li>
+                        <li><i class="fas fa-arrow-left"></i> عقد جلسات إرشادية فردية وجماعية.</li>
+                        <li><i class="fas fa-arrow-left"></i> تنفيذ مسابقة "السلوك المميز" الأسبوعية.</li>
+                        <li><i class="fas fa-arrow-left"></i> تكريم الطلاب في الإذاعة المدرسية ومنح الشهادات.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="evidence-area">
+                <div class="card-header">
+                    <i class="fas fa-camera-retro"></i>
+                    <h3>شاهد من تفعيل البرنامج</h3>
+                </div>
+                <div class="single-evidence">
+                    <div class="photo-placeholder" style="aspect-ratio: 16/9; max-width: 500px;" onclick="uploadImg(this)">
+                        <i class="fas fa-plus-circle"></i>
+                        <span class="photo-text">اضغط هنا لإضافة صورة من البرنامج</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="signatures-lux">
+                <div class="sig-card">
+                    <div class="sig-role">المرشدة الطلابية</div>
+                    <div class="sig-name">نوال الشهري</div>
+                    <div class="sig-line">التوقيع: ...........................</div>
+                </div>
+                <div class="sig-card">
+                    <div class="sig-role">مديرة المدرسة</div>
+                    <div class="sig-name">سرى جريس</div>
+                    <div class="sig-line">الختم والتوقيع: ...........................</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function updateLogo(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    const logos = document.querySelectorAll('.luxury-logo');
+                    logos.forEach(logo => logo.src = e.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function uploadImg(el) {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = e => {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = event => {
+                    el.innerHTML =
+                        `<img src="${event.target.result}" style="width:100%; height:100%; object-fit:contain; border-radius:12px;">`;
+                };
+                reader.readAsDataURL(file);
+            };
+            input.click();
+        }
+    </script>
+</body>
+</html>
