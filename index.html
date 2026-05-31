@@ -1141,12 +1141,12 @@
                     <span><i class="fas fa-file-code"></i>القوالب</span>
                     <span class="plus-tag" onclick="openTemplateModal()"><i class="fas fa-plus"></i>رفع قالب HTML</span>
                 </div>
-                <div class="github-settings-bar" id="github-settings-bar">
+                <div class="github-settings-bar" id="cloud-settings-bar">
                     <input type="text" id="gh-token-inline" placeholder="Token" style="width:100px;">
                     <input type="text" id="gh-repo-inline" placeholder="repo" value="goo" style="width:80px;">
                     <input type="text" id="gh-folder-inline" placeholder="folder" value="database" style="width:80px;">
-                    <button class="btn-primary" onclick="saveGithubInlineSettings()" style="font-size:0.65rem; padding:4px 10px;">💾 حفظ</button>
-                    <span class="github-status-inline" id="github-inline-status"></span>
+                    <button class="btn-primary" onclick="saveCloudInlineSettings()" style="font-size:0.65rem; padding:4px 10px;">💾 حفظ</button>
+                    <span class="github-status-inline" id="cloud-inline-status"></span>
                 </div>
                 <div style="margin:0 14px 8px;">
                     <input type="text" id="template-search-input" placeholder="🔍 بحث في القوالب..." oninput="renderCurrentTemplateTab()" style="width:100%;padding:10px;border-radius:20px;border:2px solid var(--border);font-size:0.78rem;outline:none;">
@@ -1204,7 +1204,7 @@
                 <div id="admin-settings-section" class="sub-section">
                     <div class="section-title"><i class="fas fa-cog"></i>الإعدادات</div>
                     <div class="menu-card">
-                        <div class="menu-item" onclick="openGithubSettings()"><div class="menu-icon"><i class="fab fa-github"></i></div><span class="menu-label">إعدادات GitHub والرفع</span><i class="fas fa-chevron-left menu-arrow"></i></div>
+                        <div class="menu-item" onclick="openGithubSettings()"><div class="menu-icon"><i class="fas fa-cloud"></i></div><span class="menu-label">إعدادات التزامن السحابي</span><i class="fas fa-chevron-left menu-arrow"></i></div>
                         <div class="menu-item" onclick="exportAllData()"><div class="menu-icon"><i class="fas fa-download"></i></div><span class="menu-label">تصدير جميع البيانات (JSON)</span><i class="fas fa-chevron-left menu-arrow"></i></div>
                         <div class="menu-item" onclick="importAllData()"><div class="menu-icon"><i class="fas fa-upload"></i></div><span class="menu-label">استيراد البيانات</span><i class="fas fa-chevron-left menu-arrow"></i></div>
                         <div class="menu-item" onclick="syncNow()"><div class="menu-icon"><i class="fas fa-sync-alt"></i></div><span class="menu-label">مزامنة الآن</span><i class="fas fa-chevron-left menu-arrow"></i></div>
@@ -1275,10 +1275,10 @@
     <!-- ==================== GitHub Settings Modal ==================== -->
     <div class="modal-overlay" id="github-modal">
         <div class="modal-box">
-            <h3>إعدادات GitHub</h3>
+            <h3>إعدادات التزامن السحابي</h3>
             <p style="font-size:0.75rem;color:var(--text-sec);margin-bottom:8px;">خاص بمدير النظام فقط</p>
             <input type="password" id="github-password" placeholder="كلمة مرور المدير" style="width:100%;padding:8px;border-radius:10px;border:2px solid var(--border);margin-bottom:8px;font-size:0.8rem;">
-            <button class="btn-primary" onclick="verifyGithubAccess()">تحقق ورفع إلى GitHub</button>
+            <button class="btn-primary" onclick="verifyGithubAccess()">تحقق وتفعيل المزامنة</button>
             <p style="font-size:0.7rem;color:var(--text-muted);margin-top:8px;">كلمة المرور الافتراضية: admin123</p>
         </div>
     </div>
@@ -1886,16 +1886,15 @@
                 const codeLength = (item.htmlContent || '').length;
                 const uploaded = isTemplateUploadedToGithub(tab, item.id);
                 const githubButtonHtml = uploaded ?
-                    '<span class="github-uploaded-check" title="تم الرفع إلى GitHub"><i class="fas fa-check-circle"></i> ✓</span>' :
-                    `<button class="btn-github-upload" data-upload-id="${item.id}" onclick="event.stopPropagation();uploadTemplateToGithub('${tab}','${item.id}')" title="رفع إلى GitHub"><i class="fab fa-github"></i> رفع</button>`;
-                // مؤشر لملفات GitHub
-                const githubSourceBadge = item.source === 'github' ? '<span style="font-size:0.65rem;background:#e8f0ff;color:var(--primary);padding:2px 8px;border-radius:10px;font-weight:600;margin-right:4px;"><i class="fab fa-github"></i> GitHub</span>' : '';
+                    '<span class="github-uploaded-check" title="تم الرفع"><i class="fas fa-check-circle"></i> ✓</span>' :
+                    `<button class="btn-github-upload" data-upload-id="${item.id}" onclick="event.stopPropagation();uploadTemplateToGithub('${tab}','${item.id}')" title="رفع سحابي"><i class="fas fa-cloud-upload-alt"></i> رفع</button>`;
+
                 return `
                 <div class="service-row">
                     <span class="right" onclick="viewTemplateItem('${tab}','${item.id}')" title="اضغط للمعاينة">
                         <span class="srv-icon si-blue"><i class="fas ${icon}"></i></span>
                         <span style="flex:1;min-width:0;">
-                            <span style="display:block;font-weight:600;">${githubSourceBadge}${item.name || 'بدون اسم'}</span>
+                            <span style="display:block;font-weight:600;">${item.name || 'بدون اسم'}</span>
                             <span style="display:block;font-size:0.62rem;color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px;">${codePreview}</span>
                             ${item.keywords ? '<span style="font-size:0.58rem;color:var(--text-sec);">🏷 ' + item.keywords.split(',').slice(0,4).map(k=>k.trim()).join(' · ') + '</span>' : ''}
                         </span>
@@ -1904,7 +1903,7 @@
                         <span class="info-badge" title="حجم الكود">📄 ${codeLength.toLocaleString('ar-SA')} حرف</span>
                         <span class="info-badge" title="مرات الاستخدام">👁 ${item.usageCount || 0}</span>
                         ${item.source !== 'github' ? `<button class="btn-outline-sm" onclick="event.stopPropagation();openTemplateModal('${item.id}')" title="تعديل"><i class="fas fa-edit"></i></button>` : ''}
-                        ${item.source === 'github' ? `<a href="${item.rawUrl}" target="_blank" class="btn-outline-sm" title="معاينة من GitHub"><i class="fas fa-external-link-alt"></i></a>` : githubButtonHtml}
+                        <button class="btn-outline-sm" onclick="event.stopPropagation();viewTemplateItem('${tab}','${item.id}')" title="معاينة"><i class="fas fa-eye"></i></button>
                         ${item.source !== 'github' ? `<button class="btn-danger-sm" onclick="event.stopPropagation();deleteTemplateItem('${tab}','${item.id}')" title="حذف"><i class="fas fa-trash"></i></button>` : ''}
                     </span>
                 </div>`;
@@ -1965,7 +1964,7 @@
             const repo = settings.repo || 'goo';
             const user = settings.user || 'fa78383012736al-a11y';
             const folder = getGithubFolderForTab(tab);
-            if (!token) return alert('يرجى إعداد Token GitHub من الإعدادات أولاً');
+            if (!token) return alert('يرجى ضبط إعدادات التزامن السحابي أولاً');
             const name = item.name || item.id;
             const slug = name.replace(/\s+/g, '-').toLowerCase();
             const btn = document.querySelector(`[data-upload-id="${itemId}"]`);
@@ -1988,12 +1987,12 @@
                         keywords: item.keywords, usageCount: item.usageCount || 0 }, null, 2)); }
                 // تسجيل حالة الرفع الناجح
                 markTemplateUploadedToGithub(tab, itemId);
-                alert('✅ تم رفع القالب إلى GitHub بنجاح');
-                await addActivityCloud('رفع قالب إلى GitHub: ' + name);
+                alert('✅ تم رفع القالب بنجاح');
+                await addActivityCloud('رفع قالب سحابي: ' + name);
                 // إعادة عرض القسم لإظهار علامة الصح
                 renderCurrentTemplateTab();
             } catch (e) { alert('❌ فشل الرفع: ' + e.message); } finally { if (btn) { btn.disabled = false;
-                    btn.innerHTML = '<i class="fab fa-github"></i> رفع'; } }
+                    btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> رفع'; } }
         }
 
         // ==================== Resource Rendering (بدون تقييد بعدد 10) ====================
@@ -2376,60 +2375,63 @@
             return { token: '', repo: 'goo', user: 'fa78383012736al-a11y', folder: 'database' };
         }
         
-        // جلب ملفات GitHub من المستودع
+        // جلب ملفات GitHub من المستودع (نسخة مطورة وسريعة)
         async function fetchGithubFiles() {
             try {
                 const settings = await loadGithubSettingsFromFirestore();
                 if (!settings.token) {
                     console.warn('GitHub token not configured');
-                    return { files: [], records: [], exams: [], reports: [], plans: [] };
+                    return;
                 }
                 
                 const folders = ['templates/files', 'templates/records', 'templates/exams', 'templates/reports', 'templates/plans'];
-                const result = { files: [], records: [], exams: [], reports: [], plans: [] };
                 const tabMap = { 'templates/files': 'files', 'templates/records': 'records', 'templates/exams': 'exams', 'templates/reports': 'reports', 'templates/plans': 'plans' };
                 
-                for (const folder of folders) {
+                // جلب جميع المجلدات في وقت واحد باستخدام Promise.all لتسريع العملية
+                await Promise.all(folders.map(async (folder) => {
                     try {
                         const url = `https://api.github.com/repos/${settings.user}/${settings.repo}/contents/${folder}`;
                         const response = await fetch(url, {
                             headers: { 'Authorization': `token ${settings.token}`, 'Accept': 'application/vnd.github.v3+json' }
                         });
                         
-                        if (!response.ok) {
-                            console.warn(`Failed to fetch ${folder}:`, response.status);
-                            continue;
-                        }
+                        if (!response.ok) return;
                         
                         const files = await response.json();
                         const tabKey = tabMap[folder];
                         
                         if (Array.isArray(files)) {
-                            for (const file of files) {
-                                if (file.type === 'file' && (file.name.endsWith('.html') || file.name.endsWith('.htm'))) {
-                                    result[tabKey].push({
-                                        id: file.sha,
-                                        name: file.name.replace(/\.(html|htm)$/, ''),
-                                        path: file.path,
-                                        url: file.download_url,
-                                        rawUrl: file.download_url,
-                                        size: file.size,
-                                        htmlContent: '',
-                                        usageCount: 0,
-                                        source: 'github'
-                                    });
+                            const githubItems = files
+                                .filter(file => file.type === 'file' && (file.name.endsWith('.html') || file.name.endsWith('.htm')))
+                                .map(file => ({
+                                    id: file.sha,
+                                    name: file.name.replace(/\.(html|htm)$/, ''),
+                                    path: file.path,
+                                    url: file.download_url,
+                                    rawUrl: file.download_url,
+                                    size: file.size,
+                                    htmlContent: '',
+                                    usageCount: 0,
+                                    source: 'github'
+                                }));
+                            
+                            if (githubItems.length > 0) {
+                                // إضافة الملفات المجلوبة فوراً وتحديث الواجهة (Live Update)
+                                appData.templates[tabKey] = [...appData.templates[tabKey], ...githubItems];
+                                if (currentPage === 'templates' && currentTemplateTab === tabKey) {
+                                    renderCurrentTemplateTab();
                                 }
+                                updateStats(); // تحديث العدادات في الواجهة
                             }
                         }
                     } catch (e) {
                         console.error(`Error fetching ${folder}:`, e);
                     }
-                }
+                }));
                 
-                return result;
+                console.log('✅ تم جلب جميع الملفات وتحديث الواجهة');
             } catch (e) {
-                console.error('Error fetching GitHub files:', e);
-                return { files: [], records: [], exams: [], reports: [], plans: [] };
+                console.error('Error in fetchGithubFiles:', e);
             }
         }
         
@@ -2452,23 +2454,23 @@
             document.getElementById('gh-token-inline').value = token;
             document.getElementById('gh-repo-inline').value = repo;
             document.getElementById('gh-folder-inline').value = folder; }
-        function saveGithubInlineSettings() { const token = document.getElementById('gh-token-inline').value.trim();
+        function saveCloudInlineSettings() { const token = document.getElementById('gh-token-inline').value.trim();
             const repo = document.getElementById('gh-repo-inline').value.trim() || 'goo';
             const folder = document.getElementById('gh-folder-inline').value.trim() || 'database'; if (!token) { document
-                .getElementById('github-inline-status').textContent = 'يجب إدخال Token'; return; }
+                .getElementById('cloud-inline-status').textContent = 'يجب إدخال Token'; return; }
             localStorage.setItem('gh_token', token);
             localStorage.setItem('gh_repo', repo);
             localStorage.setItem('gh_user', 'fa78383012736al-a11y');
             localStorage.setItem('gh_folder', folder);
-            document.getElementById('github-inline-status').textContent = '✅ تم الحفظ';
-            setTimeout(() => { document.getElementById('github-inline-status').textContent = ''; }, 2000); }
+            document.getElementById('cloud-inline-status').textContent = '✅ تم الحفظ';
+            setTimeout(() => { document.getElementById('cloud-inline-status').textContent = ''; }, 2000); }
         function openGithubSettings() { document.getElementById('github-password').value = '';
             document.getElementById('github-modal').classList.add('active'); }
         function verifyGithubAccess() { const pw = document.getElementById('github-password').value; if (pw !==
                 'admin123') return alert('❌ كلمة مرور غير صحيحة!');
             document.getElementById('github-modal').classList.remove('active');
             navigateTo('templates');
-            setTimeout(() => { document.getElementById('github-settings-bar').scrollIntoView({ behavior: 'smooth' }); },
+            setTimeout(() => { document.getElementById('cloud-settings-bar').scrollIntoView({ behavior: 'smooth' }); },
                 300); }
 
         // ==================== Admin ====================
@@ -2549,22 +2551,21 @@
             500); }
 
         // ==================== Initialization ====================
-        async function init() { showMainNav(); await loadAllData();
-            // جلب ملفات GitHub وإضافتها إلى البيانات
-            const githubFiles = await fetchGithubFiles();
-            if (githubFiles.files.length > 0 || githubFiles.records.length > 0 || githubFiles.exams.length > 0 || githubFiles.reports.length > 0 || githubFiles.plans.length > 0) {
-                appData.templates.files = [...appData.templates.files, ...githubFiles.files];
-                appData.templates.records = [...appData.templates.records, ...githubFiles.records];
-                appData.templates.exams = [...appData.templates.exams, ...githubFiles.exams];
-                appData.templates.reports = [...appData.templates.reports, ...githubFiles.reports];
-                appData.templates.plans = [...appData.templates.plans, ...githubFiles.plans];
-            }
+        async function init() { 
+            showMainNav(); 
+            // تحميل بيانات Firebase أولاً لعرضها بسرعة
+            await loadAllData();
             navigateTo('home');
             initChart();
             updateSyncStatus(true);
             updateBackButtonVisibility();
             loadGithubSettings();
-            console.log('🚀 نظام GOO سحابي - عرض جميع القوالب والموارد بدون حد أقصى'); }
+            
+            // جلب الملفات السحابية في الخلفية وتحديث الواجهة فورياً عند وصول أي بيانات
+            fetchGithubFiles().catch(console.error);
+            
+            console.log('🚀 نظام GOO سحابي - الواجهة جاهزة وجاري جلب الملفات السحابية...'); 
+        }
         document.addEventListener('DOMContentLoaded', () => init().catch(console.error));
         document.addEventListener('click', function(e) { if (!e.target.closest('.search-container')) { document
                 .getElementById('search-suggestions')?.classList.remove('active'); } });
