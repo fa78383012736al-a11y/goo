@@ -8,6 +8,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0062cc">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="GOO">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js">
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js">
@@ -1161,16 +1166,42 @@
             <div id="page-resources" class="screen-page">
                 <div class="section-title"><i class="fas fa-link"></i>الموارد التعليمية</div>
                 <div id="resources-wordwall-section" class="sub-section active">
-                    <div class="section-title" style="font-size:0.8rem;">Wordwall - ألعاب تفاعلية <span class="plus-tag" style="margin-right:auto;" onclick="openJsonModal('wordwall')"><i class="fas fa-upload"></i> رفع JSON</span></div>
+                    <div class="section-title" style="font-size:0.8rem;flex-wrap:wrap;gap:6px;">
+                        <span>Wordwall - ألعاب تفاعلية</span>
+                        <span style="display:flex;gap:5px;margin-right:auto;flex-wrap:wrap;">
+                            <span class="plus-tag" style="background:linear-gradient(135deg,#e07000,#ff9a00);" onclick="validateAndCleanWordwall()"><i class="fas fa-broom"></i> تنظيف</span>
+                            <span class="plus-tag" onclick="openJsonModal('wordwall')"><i class="fas fa-upload"></i> رفع JSON</span>
+                        </span>
+                    </div>
                     <div id="wordwall-filter-row" style="display:flex;gap:6px;margin:0 14px 8px;flex-wrap:wrap;">
-                        <select onchange="renderWordwall()" id="ww-semester" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;"><option value="">كل الفصول</option><option value="الأول">الفصل الأول</option><option value="الثاني">الفصل الثاني</option></select>
-                        <select onchange="renderWordwall()" id="ww-grade" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;"><option value="">كل الصفوف</option></select>
+                        <select onchange="renderWordwall()" id="ww-semester" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;">
+                            <option value="">كل الفصول</option>
+                            <option value="الأول">الفصل الأول</option>
+                            <option value="الثاني">الفصل الثاني</option>
+                        </select>
+                        <select onchange="onWwStageChange()" id="ww-stage" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;">
+                            <option value="">كل المراحل</option>
+                            <option value="ابتدائي">ابتدائية</option>
+                            <option value="متوسط">متوسطة</option>
+                            <option value="ثانوي">ثانوية</option>
+                        </select>
+                        <select onchange="onWwGradeChange()" id="ww-grade" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;"><option value="">كل الصفوف</option></select>
                         <select onchange="renderWordwall()" id="ww-subject" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;"><option value="">كل المواد</option></select>
                     </div>
                     <div id="wordwall-container"><div class="empty-state"><div class="empty-icon"><i class="fas fa-th-large"></i></div><h3>جاري التحميل...</h3></div></div>
                 </div>
                 <div id="resources-forms-section" class="sub-section">
                     <div class="section-title" style="font-size:0.8rem;">Google Forms <span class="plus-tag" style="margin-right:auto;" onclick="openJsonModal('forms')"><i class="fas fa-upload"></i> رفع JSON</span></div>
+                    <div id="forms-filter-row" style="display:flex;gap:6px;margin:0 14px 8px;flex-wrap:wrap;">
+                        <select onchange="onFormsStageChange()" id="forms-stage" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;">
+                            <option value="">كل المراحل</option>
+                            <option value="ابتدائي">ابتدائية</option>
+                            <option value="متوسط">متوسطة</option>
+                            <option value="ثانوي">ثانوية</option>
+                        </select>
+                        <select onchange="onFormsGradeChange()" id="forms-grade" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;"><option value="">كل الصفوف</option></select>
+                        <select onchange="renderFormsSubData()" id="forms-subject" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;"><option value="">كل المواد</option></select>
+                    </div>
                     <div id="forms-exams-section2" class="sub-section active"><div id="forms-exams-container"><div class="empty-state"><h3>جاري التحميل...</h3></div></div></div>
                     <div id="forms-surveys-section2" class="sub-section"><div id="forms-surveys-container"><div class="empty-state"><h3>جاري التحميل...</h3></div></div></div>
                     <div id="forms-other-section2" class="sub-section"><div id="forms-other-container"><div class="empty-state"><h3>جاري التحميل...</h3></div></div></div>
@@ -1190,10 +1221,69 @@
             </div>
 
             <div id="page-invoices" class="screen-page">
-                <div class="section-title" style="justify-content:space-between;"><span><i class="fas fa-file-invoice-dollar"></i>الفواتير</span><span class="plus-tag" onclick="addNewInvoice()"><i class="fas fa-plus"></i>جديد</span></div>
-                <div class="report-stat"><div class="stat-row"><div class="stat-item"><div class="num" id="total-sales">0</div><div class="lbl">الفواتير</div></div><div class="stat-item green"><div class="num" id="total-paid">0</div><div class="lbl">المدفوع</div></div><div class="stat-item orange"><div class="num" id="total-debt">0</div><div class="lbl">المتبقي</div></div></div></div>
-                <div id="invoices-container" class="service-card"><div class="empty-state" style="margin:0;border:none;"><h3>جاري التحميل...</h3></div></div>
-                <div id="invoice-pdf-template" style="display:none;padding:30px;font-family:'Tajawal',sans-serif;direction:rtl;background:#fff;color:#333;"><div style="display:flex;justify-content:space-between;border-bottom:2px solid #0062cc;padding-bottom:15px;margin-bottom:20px;"><div><h1 style="color:#0062cc;margin:0;font-size:22px;">نظام GOO</h1></div><div style="text-align:left;"><div id="pdf-invoice-number" style="font-weight:bold;">#INV-0000</div><div id="pdf-invoice-date" style="color:#666;">-</div></div></div><div style="margin-bottom:20px;"><p><strong>العميل:</strong> <span id="pdf-customer-name">-</span></p></div><table style="width:100%;border-collapse:collapse;margin-bottom:20px;"><thead><tr style="background:#f4f8fd;"><th style="padding:10px;border:1px solid #e2ecf7;">الوصف</th><th style="padding:10px;border:1px solid #e2ecf7;">المبلغ</th></tr></thead><tbody><tr><td style="padding:10px;border:1px solid #e2ecf7;">خدمات تصميم</td><td style="padding:10px;border:1px solid #e2ecf7;text-align:left;"><span id="pdf-amount">0</span> ر.س</td></tr></tbody></table><div style="display:flex;justify-content:flex-end;"><div style="width:200px;"><div style="display:flex;justify-content:space-between;padding:6px 0;"><span>الإجمالي:</span><span id="pdf-total">0</span></div><div style="display:flex;justify-content:space-between;padding:6px 0;"><span>المدفوع:</span><span id="pdf-paid">0</span></div><div style="display:flex;justify-content:space-between;padding:6px 0;font-weight:bold;color:#0062cc;"><span>المتبقي:</span><span id="pdf-debt">0</span></div></div></div></div>
+                <!-- ===== تبويب: الفواتير ===== -->
+                <div id="inv-invoices-section" class="sub-section active">
+                    <div class="section-title" style="justify-content:space-between;">
+                        <span><i class="fas fa-file-invoice-dollar"></i>الفواتير</span>
+                        <span class="plus-tag" onclick="addNewInvoice()"><i class="fas fa-plus"></i>جديد</span>
+                    </div>
+                    <div style="display:flex;gap:6px;margin:0 14px 8px;flex-wrap:wrap;">
+                        <select onchange="renderInvoices()" id="inv-broker-filter" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;"><option value="">كل الوسطاء</option></select>
+                        <select onchange="renderInvoices()" id="inv-status-filter" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;">
+                            <option value="">كل الحالات</option>
+                            <option value="no_receipt">لم يُستلم الإيصال بعد</option>
+                            <option value="has_receipt">تم استلام الإيصال</option>
+                            <option value="settled">مسوية بالكامل</option>
+                        </select>
+                    </div>
+                    <div class="report-stat"><div class="stat-row">
+                        <div class="stat-item"><div class="num" id="total-sales">0</div><div class="lbl">الفواتير</div></div>
+                        <div class="stat-item green"><div class="num" id="total-paid">0</div><div class="lbl">حصة مستلمة</div></div>
+                        <div class="stat-item orange"><div class="num" id="total-debt">0</div><div class="lbl">حصة متبقية</div></div>
+                    </div></div>
+                    <div id="invoices-container" class="service-card"><div class="empty-state" style="margin:0;border:none;"><h3>جاري التحميل...</h3></div></div>
+                </div>
+
+                <!-- ===== تبويب: حسابات الوسطاء ===== -->
+                <div id="inv-brokers-section" class="sub-section">
+                    <div class="section-title"><i class="fas fa-user-tie"></i>حسابات الوسطاء</div>
+                    <div style="margin:0 14px 8px;font-size:0.72rem;color:var(--text-sec);background:var(--surface2);border-radius:12px;padding:10px 12px;border:1px solid var(--border);">
+                        <i class="fas fa-info-circle" style="color:var(--primary);"></i>
+                        يظهر هنا إجمالي ما في ذمة كل وسيط للمصمم — الفواتير التي استلم إيصالها ولم يحوّل الحصة بعد.
+                    </div>
+                    <div id="broker-accounts-container"></div>
+                </div>
+
+                <!-- ===== تبويب: الدفعات المستلمة ===== -->
+                <div id="inv-payments-section" class="sub-section">
+                    <div class="section-title" style="justify-content:space-between;">
+                        <span><i class="fas fa-money-bill-wave"></i>الدفعات المستلمة</span>
+                        <span class="plus-tag" onclick="addBrokerPayment()"><i class="fas fa-plus"></i>دفعة جديدة</span>
+                    </div>
+                    <div style="margin:0 14px 8px;font-size:0.72rem;color:var(--text-sec);background:var(--surface2);border-radius:12px;padding:10px 12px;border:1px solid var(--border);">
+                        <i class="fas fa-info-circle" style="color:var(--primary);"></i>
+                        سجّل هنا كل مبلغ يحوّله الوسيط إليك، ثم اضغط "توزيع" لتوزيعه على الفواتير.
+                    </div>
+                    <div id="broker-payments-container" class="service-card"><div class="empty-state" style="margin:0;border:none;"><h3>لا توجد دفعات مسجّلة</h3></div></div>
+                </div>
+
+                <!-- ===== تبويب: كشف الحساب ===== -->
+                <div id="inv-statement-section" class="sub-section">
+                    <div class="section-title"><i class="fas fa-file-alt"></i>كشف الحساب</div>
+                    <div style="margin:0 14px 8px;display:flex;gap:8px;flex-wrap:wrap;">
+                        <select id="stmt-type" onchange="loadStatementNames()" style="padding:8px;border-radius:10px;border:1px solid var(--border);font-size:0.75rem;flex:1;">
+                            <option value="broker">كشف حساب وسيط</option>
+                            <option value="customer">كشف حساب عميل</option>
+                        </select>
+                        <select id="stmt-name" onchange="renderStatement()" style="padding:8px;border-radius:10px;border:1px solid var(--border);font-size:0.75rem;flex:1;">
+                            <option value="">اختر...</option>
+                        </select>
+                    </div>
+                    <div id="statement-container"></div>
+                </div>
+
+                <!-- PDF template hidden -->
+                <div id="invoice-pdf-template" style="display:none;padding:30px;font-family:'Tajawal',sans-serif;direction:rtl;background:#fff;color:#333;"><div style="display:flex;justify-content:space-between;border-bottom:2px solid #0062cc;padding-bottom:15px;margin-bottom:20px;"><div><h1 style="color:#0062cc;margin:0;font-size:22px;">نظام GOO</h1></div><div style="text-align:left;"><div id="pdf-invoice-number" style="font-weight:bold;">#INV-0000</div><div id="pdf-invoice-date" style="color:#666;">-</div></div></div><div style="margin-bottom:20px;"><p><strong>العميل:</strong> <span id="pdf-customer-name">-</span></p><p><strong>الوسيط:</strong> <span id="pdf-broker-name">-</span></p><p><strong>المصمم:</strong> <span id="pdf-designer-name">-</span></p></div><table style="width:100%;border-collapse:collapse;margin-bottom:20px;"><thead><tr style="background:#f4f8fd;"><th style="padding:10px;border:1px solid #e2ecf7;">الوصف</th><th style="padding:10px;border:1px solid #e2ecf7;">المبلغ الإجمالي</th><th style="padding:10px;border:1px solid #e2ecf7;">حصة المصمم (50%)</th></tr></thead><tbody><tr><td style="padding:10px;border:1px solid #e2ecf7;">خدمات تصميم</td><td style="padding:10px;border:1px solid #e2ecf7;text-align:left;"><span id="pdf-amount">0</span> ر.س</td><td style="padding:10px;border:1px solid #e2ecf7;text-align:left;"><span id="pdf-designer-share">0</span> ر.س</td></tr></tbody></table><div style="display:flex;justify-content:flex-end;"><div style="width:240px;"><div style="display:flex;justify-content:space-between;padding:6px 0;"><span>إجمالي الفاتورة:</span><span id="pdf-total">0</span></div><div style="display:flex;justify-content:space-between;padding:6px 0;"><span>حصة المصمم (50%):</span><span id="pdf-paid">0</span></div><div style="display:flex;justify-content:space-between;padding:6px 0;"><span>المستلم من الوسيط:</span><span id="pdf-broker-received">0</span></div><div style="display:flex;justify-content:space-between;padding:6px 0;font-weight:bold;color:#0062cc;"><span>المتبقي على الوسيط:</span><span id="pdf-debt">0</span></div></div></div></div>
             </div>
 
             <div id="page-admin" class="screen-page">
@@ -1210,6 +1300,31 @@
                         <div class="menu-item" onclick="syncNow()"><div class="menu-icon"><i class="fas fa-sync-alt"></i></div><span class="menu-label">مزامنة الآن</span><i class="fas fa-chevron-left menu-arrow"></i></div>
                         <div class="menu-item" onclick="clearAllData()"><div class="menu-icon" style="background:#fff0f0;"><i class="fas fa-trash" style="color:#e03c3c;"></i></div><span class="menu-label" style="color:#e03c3c;">مسح جميع البيانات</span><i class="fas fa-chevron-left menu-arrow"></i></div>
                     </div>
+
+                    <div class="section-title" style="margin-top:14px;"><i class="fas fa-broom" style="background:#e07000;"></i>تنظيف وتحقق</div>
+                    <div class="menu-card">
+                        <div class="menu-item" onclick="validateAndCleanWordwall()">
+                            <div class="menu-icon" style="background:#fff5ea;"><i class="fas fa-link" style="color:#e07000;"></i></div>
+                            <span class="menu-label">فحص روابط Wordwall وحذف المعطوب</span>
+                            <i class="fas fa-chevron-left menu-arrow"></i>
+                        </div>
+                        <div class="menu-item" onclick="removeDuplicates()">
+                            <div class="menu-icon" style="background:#f2eaff;"><i class="fas fa-copy" style="color:#7c3aed;"></i></div>
+                            <span class="menu-label">حذف العناصر المكررة</span>
+                            <i class="fas fa-chevron-left menu-arrow"></i>
+                        </div>
+                        <div class="menu-item" onclick="fixBrokenUrls()">
+                            <div class="menu-icon" style="background:#e8f0ff;"><i class="fas fa-wrench" style="color:#0062cc;"></i></div>
+                            <span class="menu-label">إصلاح الروابط الناقصة تلقائياً</span>
+                            <i class="fas fa-chevron-left menu-arrow"></i>
+                        </div>
+                        <div class="menu-item" onclick="showDataReport()">
+                            <div class="menu-icon" style="background:#e6faf4;"><i class="fas fa-clipboard-check" style="color:#00a87a;"></i></div>
+                            <span class="menu-label">تقرير صحة البيانات</span>
+                            <i class="fas fa-chevron-left menu-arrow"></i>
+                        </div>
+                    </div>
+                    <div id="clean-status-box" style="display:none;margin:0 14px 10px;background:var(--surface);border-radius:var(--radius-md);border:1px solid var(--border);padding:12px 14px;font-size:0.78rem;line-height:1.8;"></div>
                 </div>
             </div>
         </div>
@@ -1319,6 +1434,14 @@
                 <div class="nav-item" data-sub="other" onclick="switchFormsSubTab('other')"><i class="fas fa-ellipsis-h"></i><span>أخرى</span></div>
             </div>
         </div>
+        <div class="bottom-nav-wrapper" id="nav-invoices">
+            <div class="bottom-nav">
+                <div class="nav-item active" data-sub="invoices" onclick="switchInvoicesTab('invoices')"><i class="fas fa-file-invoice"></i><span>الفواتير</span></div>
+                <div class="nav-item" data-sub="brokers" onclick="switchInvoicesTab('brokers')"><i class="fas fa-user-tie"></i><span>الوسطاء</span></div>
+                <div class="nav-item" data-sub="payments" onclick="switchInvoicesTab('payments')"><i class="fas fa-money-bill-wave"></i><span>الدفعات</span></div>
+                <div class="nav-item" data-sub="statement" onclick="switchInvoicesTab('statement')"><i class="fas fa-file-alt"></i><span>كشف حساب</span></div>
+            </div>
+        </div>
         <div class="bottom-nav-wrapper" id="nav-drive-sub">
             <div class="bottom-nav">
                 <div class="nav-item active" data-sub="bags" onclick="switchDriveSubTab('bags')"><i class="fas fa-briefcase"></i><span>حقائب</span></div>
@@ -1348,6 +1471,63 @@
             appId: "1:520809412261:web:0140457983a2496c26ff4c",
             measurementId: "G-Z6XMDK23EN"
         };
+        // ==================== App Version & GitHub Auto-Update ====================
+        const APP_VERSION = '1.0.0';
+        const GITHUB_RAW = 'https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main';
+
+        async function checkForUpdates() {
+            try {
+                const res = await fetch(GITHUB_RAW + '/version.json?t=' + Date.now(), { cache: 'no-store' });
+                if (!res.ok) return;
+                const { version, changelog } = await res.json();
+                if (version && version !== APP_VERSION) {
+                    showUpdateBanner(version, changelog || '');
+                }
+            } catch(e) { /* offline or repo not configured */ }
+        }
+
+        function showUpdateBanner(newVer, changelog) {
+            const existing = document.getElementById('update-banner');
+            if (existing) existing.remove();
+            const banner = document.createElement('div');
+            banner.id = 'update-banner';
+            banner.style.cssText = `position:fixed;top:0;left:0;right:0;z-index:99999;
+                background:linear-gradient(135deg,#0062cc,#1a8cff);
+                color:#fff;padding:10px 16px;display:flex;align-items:center;
+                gap:10px;font-family:Tajawal,sans-serif;font-size:0.8rem;
+                box-shadow:0 4px 20px rgba(0,98,204,0.4);`;
+            banner.innerHTML = `
+                <i class="fas fa-arrow-circle-up" style="font-size:1.1rem;flex-shrink:0;"></i>
+                <span style="flex:1;">يتوفر تحديث جديد <strong>v${newVer}</strong>${changelog ? ' — ' + changelog : ''}</span>
+                <button onclick="applyUpdate()" style="background:#fff;color:#0062cc;border:none;
+                    padding:6px 14px;border-radius:20px;font-weight:700;cursor:pointer;
+                    font-family:Tajawal,sans-serif;font-size:0.75rem;">تحديث الآن</button>
+                <button onclick="this.closest('#update-banner').remove()" style="background:rgba(255,255,255,0.2);
+                    color:#fff;border:none;padding:6px 10px;border-radius:20px;cursor:pointer;
+                    font-family:Tajawal,sans-serif;font-size:0.75rem;">لاحقاً</button>`;
+            document.body.prepend(banner);
+        }
+
+        async function applyUpdate() {
+            const banner = document.getElementById('update-banner');
+            if (banner) banner.innerHTML = `<i class="fas fa-spinner fa-spin"></i> <span>جاري تحميل التحديث...</span>`;
+            try {
+                const res = await fetch(GITHUB_RAW + '/accounting_system.html?t=' + Date.now(), { cache: 'no-store' });
+                if (!res.ok) throw new Error('fetch failed');
+                const html = await res.text();
+                // حفظ في localStorage كـ cache
+                localStorage.setItem('goo_app_html', html);
+                localStorage.setItem('goo_app_version', APP_VERSION);
+                // إعادة تحميل من الكاش
+                document.open();
+                document.write(html);
+                document.close();
+            } catch(e) {
+                if (banner) banner.innerHTML = `<span style="color:#ffcccc;">❌ فشل التحديث، تحقق من الاتصال</span>`;
+                setTimeout(() => banner?.remove(), 3000);
+            }
+        }
+
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         db.enablePersistence({ synchronizeTabs: true }).then(() => {
@@ -1386,7 +1566,8 @@
             CUSTOMERS: 'customers',
             INVOICES: 'invoices',
             ORDERS: 'orders',
-            ACTIVITIES: 'activities'
+            ACTIVITIES: 'activities',
+            BROKER_PAYMENTS: 'broker_payments'
         };
 
         // ==================== Firestore Helpers ====================
@@ -1477,12 +1658,13 @@
             customers: [],
             invoices: [],
             orders: [],
-            activities: []
+            activities: [],
+            brokerPayments: []
         };
         async function loadAllData() {
             try {
                 const [files, records, exams, reports, plans, wordwall, formsExams, formsSurveys, formsOther,
-                    driveBags, driveEnrich, driveRecords, driveOther, locutions, customers, invoices, orders, activities
+                    driveBags, driveEnrich, driveRecords, driveOther, locutions, customers, invoices, orders, activities, brokerPayments
                 ] = await Promise.all([
                     getCollectionSorted(COL.T_FILES), getCollectionSorted(COL.T_RECORDS),
                     getCollectionSorted(COL.T_EXAMS), getCollectionSorted(COL.T_REPORTS),
@@ -1492,7 +1674,8 @@
                     getCollectionSorted(COL.DRIVE_ENRICH), getCollectionSorted(COL.DRIVE_RECORDS),
                     getCollectionSorted(COL.DRIVE_OTHER), getCollectionSorted(COL.LOCUTIONS),
                     getCollectionSorted(COL.CUSTOMERS, 'createdAt'), getCollectionSorted(COL.INVOICES, 'createdAt'),
-                    getCollectionSorted(COL.ORDERS, 'createdAt'), getCollectionSorted(COL.ACTIVITIES, 'createdAt')
+                    getCollectionSorted(COL.ORDERS, 'createdAt'), getCollectionSorted(COL.ACTIVITIES, 'createdAt'),
+                    getCollectionSorted(COL.BROKER_PAYMENTS, 'createdAt')
                 ]);
                 appData.templates = { files, records, exams, reports, plans };
                 appData.wordwall = wordwall;
@@ -1508,6 +1691,7 @@
                 appData.invoices = invoices;
                 appData.orders = orders;
                 appData.activities = activities;
+                appData.brokerPayments = brokerPayments;
                 console.log('✅ All data loaded - Templates:', totalTemplateCount());
                 updateSyncStatus(true);
             } catch (e) { console.error('❌ Load error:', e);
@@ -1531,6 +1715,7 @@
         let currentFormsSubTab = 'exams';
         let currentDriveSubTab = 'bags';
         let currentAdminTab = 'users';
+        let currentInvoicesTab = 'invoices';
         let currentJsonType = '';
         let currentPreviewItem = null;
 
@@ -1542,7 +1727,8 @@
                 resourceTab: currentResourceTab,
                 formsSubTab: currentFormsSubTab,
                 driveSubTab: currentDriveSubTab,
-                adminTab: currentAdminTab
+                adminTab: currentAdminTab,
+                invoicesTab: currentInvoicesTab
             });
             if (navHistory.length > 50) navHistory.shift();
             updateBackButtonVisibility();
@@ -1571,6 +1757,7 @@
             currentFormsSubTab = prevState.formsSubTab;
             currentDriveSubTab = prevState.driveSubTab;
             currentAdminTab = prevState.adminTab;
+            currentInvoicesTab = prevState.invoicesTab || 'invoices';
             navigateTo(prevState.page);
             isRestoring = false;
             updateBackButtonVisibility();
@@ -1594,6 +1781,8 @@
             document.getElementById('nav-drive-sub').classList.add('active'); }
         function showAdminNav() { hideAllNavs();
             document.getElementById('nav-admin').classList.add('active'); }
+        function showInvoicesNav() { hideAllNavs();
+            document.getElementById('nav-invoices').classList.add('active'); }
 
         function updateActiveNavItems() {
             document.querySelectorAll('.bottom-nav-wrapper.active .nav-item').forEach(item => item.classList.remove(
@@ -1615,6 +1804,8 @@
                         .add('active');
                     else if (activeWrapper.id === 'nav-admin' && subAttr === currentAdminTab) item.classList.add(
                         'active');
+                    else if (activeWrapper.id === 'nav-invoices' && subAttr === currentInvoicesTab) item.classList.add(
+                        'active');
                 }
             });
         }
@@ -1634,10 +1825,12 @@
             const screen = document.querySelector('.screen');
             if (screen) screen.scrollTop = 0;
             updateBackButtonVisibility();
-            if (pageId === 'home') { showMainNav(); } else if (pageId === 'orders' || pageId === 'invoices') {
+            if (pageId === 'home') { showMainNav(); } else if (pageId === 'orders') {
                 showMainNav();
-                if (pageId === 'orders') renderOrders();
-                if (pageId === 'invoices') renderInvoices();
+                renderOrders();
+            } else if (pageId === 'invoices') {
+                showInvoicesNav();
+                switchInvoicesTab(currentInvoicesTab, true);
             } else if (pageId === 'templates') { showTemplatesNav();
                 switchTemplateTab(currentTemplateTab, true); } else if (pageId === 'resources') { showResourcesNav();
                 switchResourceTab(currentResourceTab, true); } else if (pageId === 'admin') { showAdminNav();
@@ -1995,16 +2188,112 @@
                     btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> رفع'; } }
         }
 
+        // ==================== Curriculum Data ====================
+        const CURRICULUM = {
+            ابتدائي: {
+                grades: ['الأول الابتدائي','الثاني الابتدائي','الثالث الابتدائي','الرابع الابتدائي','الخامس الابتدائي','السادس الابتدائي'],
+                subjects: {
+                    'الأول الابتدائي':  ['القرآن الكريم والدراسات الإسلامية','لغتي','الرياضيات','العلوم','اللغة الإنجليزية','المهارات الحياتية والأسرية','التربية الفنية','التربية البدنية'],
+                    'الثاني الابتدائي': ['القرآن الكريم والدراسات الإسلامية','لغتي','الرياضيات','العلوم','اللغة الإنجليزية','المهارات الحياتية والأسرية','التربية الفنية','التربية البدنية'],
+                    'الثالث الابتدائي': ['القرآن الكريم والدراسات الإسلامية','لغتي','الرياضيات','العلوم','الدراسات الاجتماعية','اللغة الإنجليزية','المهارات الحياتية والأسرية','التربية الفنية','التربية البدنية'],
+                    'الرابع الابتدائي': ['القرآن الكريم والدراسات الإسلامية','لغتي','الرياضيات','العلوم','الدراسات الاجتماعية','اللغة الإنجليزية','المهارات الرقمية','المهارات الحياتية والأسرية','التربية الفنية','التربية البدنية'],
+                    'الخامس الابتدائي': ['القرآن الكريم وتجويده','الدراسات الإسلامية','لغتي','الرياضيات','العلوم','الدراسات الاجتماعية','اللغة الإنجليزية','المهارات الرقمية','المهارات الحياتية والأسرية','التربية الفنية','التربية البدنية'],
+                    'السادس الابتدائي': ['القرآن الكريم وتجويده','الدراسات الإسلامية','لغتي','الرياضيات','العلوم','الدراسات الاجتماعية','اللغة الإنجليزية','المهارات الرقمية','المهارات الحياتية والأسرية','التربية الفنية','التربية البدنية'],
+                }
+            },
+            متوسط: {
+                grades: ['الأول المتوسط','الثاني المتوسط','الثالث المتوسط'],
+                subjects: {
+                    'الأول المتوسط':  ['القرآن الكريم وتجويده','الدراسات الإسلامية','لغتي الخالدة','الرياضيات','العلوم','الدراسات الاجتماعية','اللغة الإنجليزية','المهارات الرقمية','المهارات الحياتية والأسرية','التربية الفنية','التربية البدنية'],
+                    'الثاني المتوسط': ['القرآن الكريم وتجويده','الدراسات الإسلامية','لغتي الخالدة','الرياضيات','العلوم','الدراسات الاجتماعية','اللغة الإنجليزية','المهارات الرقمية','المهارات الحياتية والأسرية','التربية الفنية','التربية البدنية'],
+                    'الثالث المتوسط': ['القرآن الكريم وتجويده','الدراسات الإسلامية','لغتي الخالدة','الرياضيات','العلوم','الدراسات الاجتماعية','اللغة الإنجليزية','المهارات الرقمية','المهارات الحياتية والأسرية','التربية الفنية','التربية البدنية','التفكير الناقد'],
+                }
+            },
+            ثانوي: {
+                grades: ['الأول الثانوي','الثاني الثانوي - العام','الثاني الثانوي - علوم الحاسب','الثاني الثانوي - الصحة والحياة','الثاني الثانوي - إدارة الأعمال','الثاني الثانوي - الشرعي','الثالث الثانوي - العام','الثالث الثانوي - علوم الحاسب','الثالث الثانوي - الصحة والحياة','الثالث الثانوي - إدارة الأعمال','الثالث الثانوي - الشرعي'],
+                subjects: {
+                    'الأول الثانوي': ['الكفايات اللغوية','الرياضيات','الفيزياء','الأحياء','اللغة الإنجليزية','الدراسات الاجتماعية','التفكير الناقد','التربية المهنية','الكيمياء','علم البيئة','الفنون','اللياقة والثقافة الصحية','التقنية الرقمية'],
+                    'الثاني الثانوي - العام': ['رياضيات تخصصية','فيزياء','تقنية رقمية متقدمة','تاريخ','جغرافيا','كيمياء','رياضيات تطبيقية','ريادة أعمال','أحياء','المواطنة الرقمية','مشروع التخرج'],
+                    'الثاني الثانوي - علوم الحاسب': ['الهندسة','ذكاء اصطناعي','علم بيانات','رياضيات تخصصية متقدمة','فيزياء تخصصية','هندسة رقمية','روبوت','إنترنت أشياء','أمن سيبراني','لغات برمجة','مشروع التخرج'],
+                    'الثاني الثانوي - الصحة والحياة': ['أحياء طبية','وظائف أعضاء','كيمياء عضوية','وعي صحي','توازن حيوي','علوم صحية','إحصاء حيوي','فسيولوجيا رياضية','مشروع تخصصي'],
+                    'الثاني الثانوي - إدارة الأعمال': ['مبادئ الإدارة','محاسبة مالية','اقتصاد','قانون','اتصال تسويقي','ريادة أعمال','إدارة موارد بشرية','تمويل','لوجستيات','مشروع تخرج'],
+                    'الثاني الثانوي - الشرعي': ['قرآن وتفسير متخصص','مصطلح حديث','فقه وأصوله','نحو وصرف متقدم','بلاغة ونقد','حديث وعلوم استنباط','فرائض ومواريث','تاريخ تشريع','مشروع بحثي'],
+                }
+            }
+        };
+        // استخراج مواد صف معين
+        function getSubjectsForGrade(grade) {
+            for (const stage of Object.values(CURRICULUM)) {
+                if (stage.subjects[grade]) return stage.subjects[grade];
+            }
+            return [];
+        }
+        // استخراج صفوف مرحلة معينة
+        function getGradesForStage(stage) {
+            return CURRICULUM[stage]?.grades || [];
+        }
+        // تحديث قائمة الصفوف حسب المرحلة - Wordwall
+        function onWwStageChange() {
+            const stage = document.getElementById('ww-stage')?.value || '';
+            const gradeEl = document.getElementById('ww-grade');
+            const subjectEl = document.getElementById('ww-subject');
+            if (gradeEl) {
+                const grades = stage ? getGradesForStage(stage) : [];
+                gradeEl.innerHTML = '<option value="">كل الصفوف</option>' + grades.map(g => `<option value="${g}">${g}</option>`).join('');
+            }
+            if (subjectEl) subjectEl.innerHTML = '<option value="">كل المواد</option>';
+            renderWordwall();
+        }
+        // تحديث قائمة المواد حسب الصف - Wordwall
+        function onWwGradeChange() {
+            const grade = document.getElementById('ww-grade')?.value || '';
+            const subjectEl = document.getElementById('ww-subject');
+            if (subjectEl) {
+                const subjects = grade ? getSubjectsForGrade(grade) : [];
+                subjectEl.innerHTML = '<option value="">كل المواد</option>' + subjects.map(s => `<option value="${s}">${s}</option>`).join('');
+            }
+            renderWordwall();
+        }
+        // تحديث قائمة الصفوف حسب المرحلة - Forms
+        function onFormsStageChange() {
+            const stage = document.getElementById('forms-stage')?.value || '';
+            const gradeEl = document.getElementById('forms-grade');
+            const subjectEl = document.getElementById('forms-subject');
+            if (gradeEl) {
+                const grades = stage ? getGradesForStage(stage) : [];
+                gradeEl.innerHTML = '<option value="">كل الصفوف</option>' + grades.map(g => `<option value="${g}">${g}</option>`).join('');
+            }
+            if (subjectEl) subjectEl.innerHTML = '<option value="">كل المواد</option>';
+            renderFormsSubData();
+        }
+        // تحديث قائمة المواد حسب الصف - Forms
+        function onFormsGradeChange() {
+            const grade = document.getElementById('forms-grade')?.value || '';
+            const subjectEl = document.getElementById('forms-subject');
+            if (subjectEl) {
+                const subjects = grade ? getSubjectsForGrade(grade) : [];
+                subjectEl.innerHTML = '<option value="">كل المواد</option>' + subjects.map(s => `<option value="${s}">${s}</option>`).join('');
+            }
+            renderFormsSubData();
+        }
+
         // ==================== Resource Rendering (بدون تقييد بعدد 10) ====================
         function renderWordwall() {
             const semester = document.getElementById('ww-semester')?.value || '';
+            const stage = document.getElementById('ww-stage')?.value || '';
             const grade = document.getElementById('ww-grade')?.value || '';
             const subject = document.getElementById('ww-subject')?.value || '';
             let data = appData.wordwall || [];
             if (semester) data = data.filter(d => d.semester === semester);
+            if (stage) data = data.filter(d => {
+                const g = d.grade || '';
+                if (stage === 'ابتدائي') return g.includes('الابتدائي') || g.includes('ابتدائي');
+                if (stage === 'متوسط') return g.includes('المتوسط') || g.includes('متوسط');
+                if (stage === 'ثانوي') return g.includes('الثانوي') || g.includes('ثانوي');
+                return true;
+            });
             if (grade) data = data.filter(d => d.grade === grade);
             if (subject) data = data.filter(d => d.subject === subject);
-            // إزالة التقييد: عرض جميع العناصر المطابقة بدون slice(0,10)
             const container = document.getElementById('wordwall-container');
             if (!container) return;
             if (data.length === 0) { container.innerHTML =
@@ -2016,15 +2305,139 @@
                 '</span> <span class="tag tag-grade">' + (d.grade || '') + '</span> <span class="tag tag-subject">' + (d
                     .subject || '') + '</span></div></div><div class="r-arrow"><span style="font-size:0.6rem;color:var(--text-muted);">👁' +
                 (d.usageCount || 0) + '</span> <i class="fas fa-external-link-alt"></i></div></div>').join('');
-            const grades = [...new Set(appData.wordwall.map(d => d.grade).filter(Boolean))].sort();
-            const subjects = [...new Set(appData.wordwall.map(d => d.subject).filter(Boolean))].sort();
-            const wg = document.getElementById('ww-grade');
-            if (wg) wg.innerHTML = '<option value="">كل الصفوف</option>' + grades.map(g => '<option value="' + g + '">' +
-                g + '</option>').join('');
-            const ws = document.getElementById('ww-subject');
-            if (ws) ws.innerHTML = '<option value="">كل المواد</option>' + subjects.map(s => '<option value="' + s + '">' +
-                s + '</option>').join('');
         }
+        // ==================== Wordwall Validate & Clean ====================
+        async function validateAndCleanWordwall() {
+            const data = appData.wordwall || [];
+            if (data.length === 0) return alert('لا توجد بيانات Wordwall للتحقق منها.');
+
+            // عرض مودال التقدم
+            const overlay = document.createElement('div');
+            overlay.id = 'clean-overlay';
+            overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;';
+            overlay.innerHTML = `
+                <div style="background:#fff;border-radius:22px;padding:22px;width:100%;max-width:420px;text-align:center;">
+                    <div style="font-size:1.4rem;margin-bottom:8px;">🧹</div>
+                    <h3 style="color:#0a2540;margin-bottom:6px;font-size:0.95rem;">جاري فحص الروابط...</h3>
+                    <p id="clean-status" style="font-size:0.78rem;color:#4a6a8a;margin-bottom:12px;">يتم فحص ${data.length} رابط</p>
+                    <div style="background:#e2ecf7;border-radius:20px;height:10px;overflow:hidden;margin-bottom:12px;">
+                        <div id="clean-bar" style="background:linear-gradient(135deg,#0062cc,#1a8cff);height:100%;width:0%;transition:width 0.3s;border-radius:20px;"></div>
+                    </div>
+                    <div id="clean-log" style="font-size:0.68rem;color:#8aaac8;max-height:120px;overflow-y:auto;text-align:right;background:#f4f8fd;border-radius:12px;padding:8px;"></div>
+                </div>`;
+            document.body.appendChild(overlay);
+
+            const statusEl = document.getElementById('clean-status');
+            const barEl = document.getElementById('clean-bar');
+            const logEl = document.getElementById('clean-log');
+
+            const invalid = [];
+            const valid = [];
+
+            for (let i = 0; i < data.length; i++) {
+                const item = data[i];
+                const pct = Math.round(((i + 1) / data.length) * 100);
+                barEl.style.width = pct + '%';
+                statusEl.textContent = `فحص ${i + 1} من ${data.length}...`;
+
+                // فحص الرابط: يجب أن يكون URL صحيح وغير فارغ
+                const url = (item.url || '').trim();
+                let isValid = false;
+
+                if (!url || url === '#') {
+                    isValid = false;
+                } else {
+                    try {
+                        // فحص صيغة الرابط
+                        new URL(url);
+                        // فحص أن الرابط يحتوي على wordwall
+                        if (url.includes('wordwall.net/resource/')) {
+                            // استخراج الـ ID من الرابط
+                            const parts = url.split('/resource/');
+                            const resourceId = parts[1]?.split('/')[0]?.split('?')[0] || '';
+                            // الرابط صحيح فقط إذا كان الـ ID رقماً خالصاً
+                            isValid = /^\d+$/.test(resourceId);
+                        } else {
+                            // روابط من مصادر أخرى نقبلها
+                            isValid = true;
+                        }
+                    } catch(e) {
+                        isValid = false;
+                    }
+                }
+
+                if (isValid) {
+                    valid.push(item);
+                    logEl.innerHTML = `<span style="color:#00a87a;">✅ ${item.name || item.lesson || url}</span><br>` + logEl.innerHTML;
+                } else {
+                    invalid.push(item);
+                    logEl.innerHTML = `<span style="color:#e03c3c;">❌ ${item.name || item.lesson || url}</span><br>` + logEl.innerHTML;
+                }
+
+                await new Promise(r => setTimeout(r, 30));
+            }
+
+            // عرض النتيجة
+            barEl.style.width = '100%';
+            barEl.style.background = invalid.length > 0 ? 'linear-gradient(135deg,#e07000,#ff9a00)' : 'linear-gradient(135deg,#00a87a,#00c896)';
+            statusEl.innerHTML = `<strong>✅ صالح: ${valid.length}</strong> &nbsp;|&nbsp; <strong style="color:#e03c3c;">❌ تالف: ${invalid.length}</strong>`;
+
+            if (invalid.length === 0) {
+                setTimeout(() => {
+                    document.body.removeChild(overlay);
+                    alert('✅ جميع الروابط سليمة! لا يوجد شيء للحذف.');
+                }, 1200);
+                return;
+            }
+
+            // زر الحذف
+            const btnWrap = document.createElement('div');
+            btnWrap.style.cssText = 'display:flex;gap:8px;justify-content:center;margin-top:14px;';
+            btnWrap.innerHTML = `
+                <button onclick="confirmClean()" style="background:linear-gradient(135deg,#e03c3c,#ff6b6b);color:#fff;border:none;padding:9px 20px;border-radius:20px;font-weight:700;font-size:0.8rem;cursor:pointer;font-family:Tajawal,sans-serif;">
+                    <i class="fas fa-trash"></i> حذف ${invalid.length} رابط تالف
+                </button>
+                <button onclick="document.body.removeChild(document.getElementById('clean-overlay'))" style="background:#e2ecf7;color:#0a2540;border:none;padding:9px 16px;border-radius:20px;font-weight:700;font-size:0.8rem;cursor:pointer;font-family:Tajawal,sans-serif;">
+                    إلغاء
+                </button>`;
+            overlay.querySelector('div').appendChild(btnWrap);
+
+            window._cleanInvalidItems = invalid;
+        }
+
+        async function confirmClean() {
+            const invalid = window._cleanInvalidItems || [];
+            if (invalid.length === 0) return;
+            const overlay = document.getElementById('clean-overlay');
+            const btnWrap = overlay.querySelector('div > div:last-child');
+            if (btnWrap) btnWrap.remove();
+
+            const statusEl = document.getElementById('clean-status');
+            statusEl.textContent = 'جاري الحذف من السحابة...';
+
+            let deleted = 0;
+            for (const item of invalid) {
+                try {
+                    await deleteDocument(COL.WORDWALL, item.id);
+                    appData.wordwall = appData.wordwall.filter(w => w.id !== item.id);
+                    deleted++;
+                } catch(e) {
+                    console.error('Delete error:', e);
+                }
+            }
+
+            statusEl.innerHTML = `<strong style="color:#00a87a;">✅ تم حذف ${deleted} رابط تالف بنجاح</strong>`;
+            await addActivityCloud('تنظيف Wordwall: حذف ' + deleted + ' رابط تالف');
+            renderWordwall();
+            updateStats();
+
+            setTimeout(() => {
+                if (document.getElementById('clean-overlay')) {
+                    document.body.removeChild(document.getElementById('clean-overlay'));
+                }
+            }, 1800);
+        }
+
         async function handleWordwallClick(id, url) { await incrementUsage(COL.WORDWALL, id); const item = appData.wordwall
                 .find(d => d.id === id); if (item) item.usageCount = (item.usageCount || 0) + 1; if (url && url !== '#')
                 window.open(url, '_blank');
@@ -2032,7 +2445,22 @@
 
         function renderFormsSubData() {
             const map = { exams: appData.formsExams, surveys: appData.formsSurveys, other: appData.formsOther };
-            const data = map[currentFormsSubTab] || []; // عرض الكل بدون slice(0,10)
+            let data = map[currentFormsSubTab] || [];
+            // تطبيق فلاتر المرحلة والصف والمادة على الاختبارات
+            if (currentFormsSubTab === 'exams') {
+                const stage = document.getElementById('forms-stage')?.value || '';
+                const grade = document.getElementById('forms-grade')?.value || '';
+                const subject = document.getElementById('forms-subject')?.value || '';
+                if (stage) data = data.filter(d => {
+                    const g = d.grade || '';
+                    if (stage === 'ابتدائي') return g.includes('الابتدائي') || g.includes('ابتدائي');
+                    if (stage === 'متوسط') return g.includes('المتوسط') || g.includes('متوسط');
+                    if (stage === 'ثانوي') return g.includes('الثانوي') || g.includes('ثانوي');
+                    return true;
+                });
+                if (grade) data = data.filter(d => d.grade === grade);
+                if (subject) data = data.filter(d => d.subject === subject);
+            }
             const container = document.getElementById('forms-' + currentFormsSubTab + '-container');
             if (!container) return;
             if (data.length === 0) { container.innerHTML =
@@ -2144,8 +2572,10 @@
                 '\nاختر: جديد، قيد التصميم، مكتمل، تم التسليم', order.status); if (!newStatus) return;
             await updateDocument(COL.ORDERS, orderId, { status: newStatus });
             order.status = newStatus; if (newStatus === 'تم التسليم') { await addDocument(COL.INVOICES, { customer: order
-                        .customer, amount: order.amount, paid: 0, status: 'unpaid', broker: order.broker,
-                    designer: order.designer, orderId: orderId }); await addActivityCloud(
+                        .customer, amount: order.amount, designerShare: order.amount * 0.5, paid: 0,
+                    brokerPaid: 0, receiptReceived: false, brokerSettled: false, status: 'unpaid',
+                    broker: order.broker, designer: order.designer, description: order.description || 'خدمات تصميم',
+                    orderId: orderId }); await addActivityCloud(
                     'تم تسليم الطلب وتحويله لفاتورة: ' + order.description); }
             renderOrders();
             updateStats();
@@ -2160,45 +2590,388 @@
                 (c.name || '') + '</span><span style="font-size:0.6rem;">' + (c.type || 'زبون') +
                 '</span></div>').join('');
         }
+        // ==================== Invoices Sub-Tab Navigation ====================
+        function switchInvoicesTab(tab, skipPush) {
+            if (!skipPush) pushNavState();
+            currentInvoicesTab = tab;
+            document.querySelectorAll('#page-invoices .sub-section').forEach(s => s.classList.remove('active'));
+            const sec = document.getElementById('inv-' + tab + '-section');
+            if (sec) sec.classList.add('active');
+            updateActiveNavItems();
+            if (tab === 'invoices') renderInvoices();
+            else if (tab === 'brokers') renderBrokerAccounts();
+            else if (tab === 'payments') renderBrokerPayments();
+            else if (tab === 'statement') { loadStatementNames(); renderStatement(); }
+        }
+
+        // ==================== Invoices Rendering (Enhanced) ====================
         function renderInvoices() {
-            const container = document.getElementById('invoices-container'); if (!container) return; if (appData.invoices
-                .length === 0) { container.innerHTML =
-                '<div class="empty-state" style="margin:0;border:none;"><h3>لا توجد فواتير</h3><p>أنشئ فاتورة جديدة</p></div>'; return; }
-            container.innerHTML = appData.invoices.map(inv => {
-                const rem = (inv.amount || 0) - (inv.paid || 0);
-                const badge = inv.status === 'paid' ? '<span style="color:#00a87a;font-weight:700;">مدفوعة</span>' :
-                    '<span style="color:#e07000;font-weight:700;">متبقي ' + rem + ' ر.س</span>';
-                return '<div class="service-row"><span class="right"><span class="srv-icon si-orange"><i class="fas fa-file-invoice"></i></span>' +
-                    (inv.customer || '') + ' - ' + (inv.amount || 0) +
-                    ' ر.س</span><span style="display:flex;gap:6px;align-items:center;">' + badge +
-                    '<i class="fas fa-file-pdf" style="color:#e03c3c;cursor:pointer;" onclick="event.stopPropagation();exportPDF(\'' +
-                    inv.id + '\')"></i></span></div>';
+            const container = document.getElementById('invoices-container');
+            if (!container) return;
+            
+            const brokerFilter = document.getElementById('inv-broker-filter')?.value || '';
+            const statusFilter = document.getElementById('inv-status-filter')?.value || '';
+            
+            let data = [...(appData.invoices || [])];
+            if (brokerFilter) data = data.filter(i => i.broker === brokerFilter);
+            if (statusFilter === 'no_receipt') data = data.filter(i => !i.receiptReceived);
+            else if (statusFilter === 'has_receipt') data = data.filter(i => i.receiptReceived && !i.brokerSettled);
+            else if (statusFilter === 'settled') data = data.filter(i => i.brokerSettled);
+            
+            // Populate broker filter
+            const brokers = [...new Set(appData.invoices.map(i => i.broker).filter(Boolean))].sort();
+            const bf = document.getElementById('inv-broker-filter');
+            if (bf) bf.innerHTML = '<option value="">كل الوسطاء</option>' + brokers.map(b => `<option value="${b}"${b===brokerFilter?' selected':''}>${b}</option>`).join('');
+
+            if (data.length === 0) {
+                container.innerHTML = '<div class="empty-state" style="margin:0;border:none;"><div class="empty-icon"><i class="fas fa-file-invoice-dollar"></i></div><h3>لا توجد فواتير</h3><p>أنشئ فاتورة جديدة</p></div>';
+                updateInvoiceStats();
+                return;
+            }
+
+            container.innerHTML = data.map(inv => {
+                const designerShare = (inv.amount || 0) * 0.5;
+                const brokerPaid = inv.brokerPaid || 0;
+                const brokerOwed = designerShare - brokerPaid;
+                
+                let statusHtml = '';
+                if (inv.brokerSettled) {
+                    statusHtml = '<span style="color:#00a87a;font-size:0.65rem;font-weight:700;">✅ مسوية</span>';
+                } else if (inv.receiptReceived) {
+                    statusHtml = `<span style="color:#e07000;font-size:0.65rem;font-weight:700;">📋 إيصال✓ | متبقي ${brokerOwed.toLocaleString('ar-SA')} ر.س</span>`;
+                } else {
+                    statusHtml = '<span style="color:#8aaac8;font-size:0.65rem;">⏳ لم يُستلم الإيصال</span>';
+                }
+
+                const receiptBtn = !inv.receiptReceived
+                    ? `<button class="btn-outline-sm" onclick="event.stopPropagation();markReceiptReceived('${inv.id}')" title="تسجيل استلام الإيصال" style="font-size:0.6rem;padding:3px 7px;"><i class="fas fa-receipt"></i> إيصال</button>`
+                    : '';
+                
+                return `<div class="service-row" onclick="showInvoiceDetail('${inv.id}')">
+                    <span class="right" style="flex-direction:column;align-items:flex-start;gap:2px;">
+                        <span style="display:flex;align-items:center;gap:6px;">
+                            <span class="srv-icon ${inv.brokerSettled?'si-green':inv.receiptReceived?'si-orange':'si-blue'}">
+                                <i class="fas fa-file-invoice"></i>
+                            </span>
+                            <span style="font-weight:600;">${inv.customer || 'غير محدد'}</span>
+                            <span style="font-size:0.65rem;color:var(--text-muted);">| ${inv.broker || ''}</span>
+                        </span>
+                        <span style="padding-right:36px;font-size:0.67rem;color:var(--text-sec);">
+                            إجمالي: ${(inv.amount||0).toLocaleString('ar-SA')} ر.س — حصتي: ${designerShare.toLocaleString('ar-SA')} ر.س
+                        </span>
+                    </span>
+                    <span style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+                        ${statusHtml}
+                        <span style="display:flex;gap:4px;">
+                            ${receiptBtn}
+                            <i class="fas fa-file-pdf" style="color:#e03c3c;cursor:pointer;font-size:0.85rem;" onclick="event.stopPropagation();exportPDF('${inv.id}')" title="تصدير PDF"></i>
+                        </span>
+                    </span>
+                </div>`;
             }).join('');
             updateInvoiceStats();
         }
+
         function updateInvoiceStats() {
-            const totalSales = appData.invoices.length;
-            const paid = appData.invoices.filter(i => i.status === 'paid').reduce((s, i) => s + (i.paid || i.amount || 0),
-                0);
-            const debt = appData.invoices.filter(i => i.status !== 'paid').reduce((s, i) => s + ((i.amount || 0) - (i.paid ||
-                0)), 0);
-            const totalSalesEl = document.getElementById('total-sales');
-            const totalPaidEl = document.getElementById('total-paid');
-            const totalDebtEl = document.getElementById('total-debt');
-            if (totalSalesEl) totalSalesEl.textContent = totalSales;
-            if (totalPaidEl) totalPaidEl.textContent = paid.toLocaleString('ar-SA');
-            if (totalDebtEl) totalDebtEl.textContent = debt.toLocaleString('ar-SA');
+            const invoices = appData.invoices || [];
+            const totalCount = invoices.length;
+            const totalDesignerShare = invoices.reduce((s,i) => s + (i.amount||0)*0.5, 0);
+            const totalReceived = invoices.reduce((s,i) => s + (i.brokerPaid||0), 0);
+            const totalOwed = totalDesignerShare - totalReceived;
+            const el = id => document.getElementById(id);
+            if (el('total-sales')) el('total-sales').textContent = totalCount;
+            if (el('total-paid')) el('total-paid').textContent = totalReceived.toLocaleString('ar-SA');
+            if (el('total-debt')) el('total-debt').textContent = totalOwed.toLocaleString('ar-SA');
+        }
+
+        function showInvoiceDetail(invId) {
+            const inv = appData.invoices.find(i => i.id === invId);
+            if (!inv) return;
+            const designerShare = (inv.amount||0)*0.5;
+            const brokerPaid = inv.brokerPaid || 0;
+            const brokerOwed = designerShare - brokerPaid;
+            const receiptDate = inv.receiptDate || '—';
+            const desc = inv.description || 'خدمات تصميم';
+            alert(
+                `📄 تفاصيل الفاتورة\n` +
+                `━━━━━━━━━━━━━━━━━\n` +
+                `العميل: ${inv.customer||'—'}\n` +
+                `الوسيط: ${inv.broker||'—'}\n` +
+                `المصمم: ${inv.designer||'—'}\n` +
+                `الوصف: ${desc}\n` +
+                `━━━━━━━━━━━━━━━━━\n` +
+                `المبلغ الإجمالي: ${(inv.amount||0).toLocaleString('ar-SA')} ر.س\n` +
+                `حصة المصمم (50%): ${designerShare.toLocaleString('ar-SA')} ر.س\n` +
+                `تم استلام الإيصال: ${inv.receiptReceived ? '✅ نعم ('+receiptDate+')' : '❌ لا'}\n` +
+                `مستلم من الوسيط: ${brokerPaid.toLocaleString('ar-SA')} ر.س\n` +
+                `متبقي على الوسيط: ${brokerOwed.toLocaleString('ar-SA')} ر.س\n` +
+                `الحالة: ${inv.brokerSettled ? '✅ مسوية' : inv.receiptReceived ? '⏳ في ذمة الوسيط' : '⏳ لم يُستلم الإيصال'}`
+            );
+        }
+
+        async function markReceiptReceived(invId) {
+            const inv = appData.invoices.find(i => i.id === invId);
+            if (!inv) return;
+            const today = new Date().toLocaleDateString('ar-SA');
+            const note = prompt(`تأكيد استلام إيصال التحويل من العميل: ${inv.customer}\nالمبلغ: ${(inv.amount||0).toLocaleString('ar-SA')} ر.س\n\nتاريخ الإيصال (اضغط موافق للتأكيد):`, today);
+            if (note === null) return;
+            const updates = { receiptReceived: true, receiptDate: note || today };
+            await updateDocument(COL.INVOICES, invId, updates);
+            Object.assign(inv, updates);
+            renderInvoices();
+            await addActivityCloud(`تم استلام إيصال دفع العميل: ${inv.customer} — ${(inv.amount||0).toLocaleString('ar-SA')} ر.س`);
+            alert('✅ تم تسجيل استلام الإيصال. المبلغ أصبح في ذمة الوسيط.');
+        }
+
+        // ==================== Broker Accounts ====================
+        function renderBrokerAccounts() {
+            const container = document.getElementById('broker-accounts-container');
+            if (!container) return;
+            const invoices = appData.invoices || [];
+            const brokers = {};
+            invoices.forEach(inv => {
+                const b = inv.broker || 'غير محدد';
+                if (!brokers[b]) brokers[b] = { total: 0, paid: 0, count: 0, pendingReceipt: 0 };
+                const share = (inv.amount||0)*0.5;
+                brokers[b].total += share;
+                brokers[b].paid += (inv.brokerPaid||0);
+                brokers[b].count++;
+                if (!inv.receiptReceived) brokers[b].pendingReceipt++;
+            });
+            const names = Object.keys(brokers);
+            if (names.length === 0) {
+                container.innerHTML = '<div class="empty-state" style="margin:0 14px 10px;"><div class="empty-icon"><i class="fas fa-user-tie"></i></div><h3>لا توجد بيانات وسطاء</h3><p>ستظهر هنا بمجرد إضافة فواتير</p></div>';
+                return;
+            }
+            container.innerHTML = names.map(b => {
+                const info = brokers[b];
+                const owed = info.total - info.paid;
+                const pct = info.total > 0 ? Math.round((info.paid/info.total)*100) : 0;
+                return `<div class="service-card" style="margin:0 14px 10px;padding:14px;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                        <span style="font-weight:700;font-size:0.88rem;"><i class="fas fa-user-tie" style="color:var(--primary);margin-left:6px;"></i>${b}</span>
+                        <span style="font-size:0.65rem;color:var(--text-muted);">${info.count} فاتورة</span>
+                    </div>
+                    <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;">
+                        <div class="stat-item" style="flex:1;min-width:70px;"><div class="num" style="font-size:0.9rem;">${info.total.toLocaleString('ar-SA')}</div><div class="lbl">إجمالي حصتي</div></div>
+                        <div class="stat-item green" style="flex:1;min-width:70px;"><div class="num" style="font-size:0.9rem;color:#00a87a;">${info.paid.toLocaleString('ar-SA')}</div><div class="lbl">مستلم</div></div>
+                        <div class="stat-item orange" style="flex:1;min-width:70px;"><div class="num" style="font-size:0.9rem;color:#e07000;">${owed.toLocaleString('ar-SA')}</div><div class="lbl">متبقي</div></div>
+                    </div>
+                    <div style="background:#f4f8fd;border-radius:8px;height:8px;overflow:hidden;margin-bottom:8px;">
+                        <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,var(--primary),var(--accent));border-radius:8px;transition:width 0.5s;"></div>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;font-size:0.65rem;color:var(--text-muted);">
+                        <span>${pct}% تم الاستلام</span>
+                        ${info.pendingReceipt > 0 ? `<span style="color:#e07000;">⚠️ ${info.pendingReceipt} فاتورة بانتظار الإيصال</span>` : '<span style="color:#00a87a;">✅ جميع الإيصالات مستلمة</span>'}
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        // ==================== Broker Payments ====================
+        async function addBrokerPayment() {
+            const brokers = [...new Set(appData.invoices.map(i=>i.broker).filter(Boolean))];
+            if (brokers.length === 0) return alert('لا توجد وسطاء مسجلون. أضف فواتير أولاً.');
+            const broker = prompt('اسم الوسيط:\n' + brokers.map((b,i)=>`${i+1}. ${b}`).join('\n'));
+            if (!broker || !broker.trim()) return;
+            const amount = parseFloat(prompt(`المبلغ المحوّل من الوسيط "${broker.trim()}" (ر.س):`));
+            if (isNaN(amount) || amount <= 0) return alert('المبلغ غير صالح');
+            const date = prompt('تاريخ التحويل:', new Date().toLocaleDateString('ar-SA')) || new Date().toLocaleDateString('ar-SA');
+            const notes = prompt('ملاحظات (اختياري):') || '';
+            
+            const newPayment = await addDocument(COL.BROKER_PAYMENTS, {
+                broker: broker.trim(), amount, date, notes, allocated: 0, remaining: amount
+            });
+            if (!newPayment) return alert('❌ فشل الحفظ');
+            appData.brokerPayments.unshift(newPayment);
+            
+            // Auto-allocate to oldest invoices with receipts
+            await allocatePaymentToInvoices(newPayment);
+            renderBrokerPayments();
+            renderInvoices();
+            await addActivityCloud(`دفعة مستلمة من ${broker.trim()}: ${amount.toLocaleString('ar-SA')} ر.س`);
+        }
+
+        async function allocatePaymentToInvoices(payment) {
+            // Get invoices for this broker with receipts, not yet fully settled
+            let remaining = payment.amount;
+            const eligible = appData.invoices.filter(inv =>
+                inv.broker === payment.broker && inv.receiptReceived && !inv.brokerSettled
+            ).sort((a,b) => {
+                // Sort by oldest first (by receiptDate or createdAt)
+                return 0;
+            });
+            
+            for (const inv of eligible) {
+                if (remaining <= 0) break;
+                const designerShare = (inv.amount||0)*0.5;
+                const brokerPaid = inv.brokerPaid || 0;
+                const invOwed = designerShare - brokerPaid;
+                if (invOwed <= 0) { continue; }
+                const toApply = Math.min(remaining, invOwed);
+                const newBrokerPaid = brokerPaid + toApply;
+                const settled = newBrokerPaid >= designerShare - 0.01;
+                await updateDocument(COL.INVOICES, inv.id, {
+                    brokerPaid: newBrokerPaid,
+                    brokerSettled: settled
+                });
+                inv.brokerPaid = newBrokerPaid;
+                inv.brokerSettled = settled;
+                remaining -= toApply;
+            }
+            
+            // Update payment allocated amount
+            const allocated = payment.amount - remaining;
+            await updateDocument(COL.BROKER_PAYMENTS, payment.id, {
+                allocated, remaining
+            });
+            payment.allocated = allocated;
+            payment.remaining = remaining;
+            
+            if (remaining > 0) {
+                alert(`✅ تم توزيع ${(payment.amount - remaining).toLocaleString('ar-SA')} ر.س على الفواتير.\nمبلغ ${remaining.toLocaleString('ar-SA')} ر.س لا يوجد له فواتير مطابقة حالياً (ربما يغطي فواتير لم تُسجَّل إيصالاتها بعد).`);
+            } else {
+                alert(`✅ تم توزيع المبلغ كاملاً (${payment.amount.toLocaleString('ar-SA')} ر.س) على الفواتير.`);
+            }
+        }
+
+        function renderBrokerPayments() {
+            const container = document.getElementById('broker-payments-container');
+            if (!container) return;
+            const payments = appData.brokerPayments || [];
+            if (payments.length === 0) {
+                container.innerHTML = '<div class="empty-state" style="margin:0;border:none;"><div class="empty-icon"><i class="fas fa-money-bill-wave"></i></div><h3>لا توجد دفعات مسجّلة</h3><p>اضغط "دفعة جديدة" لتسجيل تحويل من وسيط</p></div>';
+                return;
+            }
+            container.innerHTML = payments.map(p => {
+                const remaining = p.remaining ?? p.amount;
+                const allocated = p.allocated || 0;
+                const pct = p.amount > 0 ? Math.round((allocated/p.amount)*100) : 0;
+                return `<div class="service-row">
+                    <span class="right" style="flex-direction:column;align-items:flex-start;gap:2px;">
+                        <span style="display:flex;align-items:center;gap:6px;">
+                            <span class="srv-icon si-green"><i class="fas fa-money-bill-wave"></i></span>
+                            <span style="font-weight:600;">${p.broker}</span>
+                            <span style="font-size:0.65rem;color:var(--text-muted);">${p.date||''}</span>
+                        </span>
+                        <span style="padding-right:36px;font-size:0.67rem;color:var(--text-sec);">
+                            ${p.amount.toLocaleString('ar-SA')} ر.س — موزّع: ${allocated.toLocaleString('ar-SA')} | متبقي: ${remaining.toLocaleString('ar-SA')}
+                        </span>
+                        ${p.notes ? `<span style="padding-right:36px;font-size:0.62rem;color:var(--text-muted);">${p.notes}</span>` : ''}
+                        <span style="padding-right:36px;width:120px;">
+                            <div style="background:#f4f8fd;border-radius:4px;height:4px;overflow:hidden;margin-top:3px;">
+                                <div style="height:100%;width:${pct}%;background:var(--accent);border-radius:4px;"></div>
+                            </div>
+                        </span>
+                    </span>
+                    <span style="font-size:0.7rem;color:${pct>=100?'#00a87a':'#e07000'};font-weight:700;">${pct}%</span>
+                </div>`;
+            }).join('');
+        }
+
+        // ==================== Account Statement ====================
+        function loadStatementNames() {
+            const type = document.getElementById('stmt-type')?.value || 'broker';
+            const sel = document.getElementById('stmt-name');
+            if (!sel) return;
+            let names = [];
+            if (type === 'broker') {
+                names = [...new Set(appData.invoices.map(i=>i.broker).filter(Boolean))].sort();
+            } else {
+                names = [...new Set(appData.invoices.map(i=>i.customer).filter(Boolean))].sort();
+            }
+            sel.innerHTML = '<option value="">اختر...</option>' + names.map(n=>`<option value="${n}">${n}</option>`).join('');
+            renderStatement();
+        }
+
+        function renderStatement() {
+            const container = document.getElementById('statement-container');
+            if (!container) return;
+            const type = document.getElementById('stmt-type')?.value || 'broker';
+            const name = document.getElementById('stmt-name')?.value || '';
+            if (!name) { container.innerHTML = '<div class="empty-state" style="margin:0 14px 10px;"><div class="empty-icon"><i class="fas fa-file-alt"></i></div><h3>اختر اسماً للعرض</h3></div>'; return; }
+            
+            const invoices = appData.invoices.filter(i => type==='broker' ? i.broker===name : i.customer===name);
+            if (invoices.length === 0) { container.innerHTML = '<div class="empty-state" style="margin:0 14px 10px;"><h3>لا توجد فواتير</h3></div>'; return; }
+            
+            let html = `<div style="margin:0 14px 10px;background:var(--surface);border-radius:var(--radius-md);border:1px solid var(--border);overflow:hidden;box-shadow:var(--shadow-sm);">
+                <div style="background:linear-gradient(135deg,var(--primary-dark),var(--primary));padding:14px 16px;color:#fff;">
+                    <div style="font-size:0.72rem;opacity:0.85;">كشف حساب ${type==='broker'?'الوسيط':'العميل'}</div>
+                    <div style="font-size:1rem;font-weight:800;margin-top:2px;">${name}</div>
+                </div>`;
+            
+            let totalAmount = 0, totalDesignerShare = 0, totalBrokerPaid = 0;
+            invoices.forEach(inv => {
+                totalAmount += inv.amount||0;
+                totalDesignerShare += (inv.amount||0)*0.5;
+                totalBrokerPaid += inv.brokerPaid||0;
+            });
+            const totalOwed = totalDesignerShare - totalBrokerPaid;
+            
+            html += `<div style="padding:10px 14px;display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--border);">
+                <div class="stat-item" style="flex:1;min-width:60px;"><div class="num" style="font-size:0.85rem;">${invoices.length}</div><div class="lbl">الفواتير</div></div>
+                <div class="stat-item" style="flex:1;min-width:60px;"><div class="num" style="font-size:0.85rem;">${totalAmount.toLocaleString('ar-SA')}</div><div class="lbl">الإجمالي</div></div>
+                ${type==='broker' ? `
+                <div class="stat-item green" style="flex:1;min-width:60px;"><div class="num" style="font-size:0.85rem;color:#00a87a;">${totalBrokerPaid.toLocaleString('ar-SA')}</div><div class="lbl">مستلم</div></div>
+                <div class="stat-item orange" style="flex:1;min-width:60px;"><div class="num" style="font-size:0.85rem;color:#e07000;">${totalOwed.toLocaleString('ar-SA')}</div><div class="lbl">متبقي</div></div>` : ''}
+            </div>`;
+            
+            html += `<div style="padding:8px 14px;">`;
+            invoices.forEach(inv => {
+                const share = (inv.amount||0)*0.5;
+                const paid = inv.brokerPaid||0;
+                const owed = share - paid;
+                let badge = '';
+                if (inv.brokerSettled) badge = '<span style="color:#00a87a;font-weight:700;font-size:0.6rem;">✅ مسوية</span>';
+                else if (inv.receiptReceived) badge = `<span style="color:#e07000;font-size:0.6rem;">متبقي ${owed.toLocaleString('ar-SA')}</span>`;
+                else badge = '<span style="color:#8aaac8;font-size:0.6rem;">⏳ بانتظار الإيصال</span>';
+                html += `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f0f5fc;font-size:0.75rem;">
+                    <span>
+                        <span style="font-weight:600;">${inv.customer||''}</span>
+                        ${type==='broker'?'':` | <span style="color:var(--text-muted);">${inv.broker||''}</span>`}
+                        <span style="display:block;font-size:0.62rem;color:var(--text-muted);">${inv.description||'خدمات تصميم'}</span>
+                    </span>
+                    <span style="text-align:left;flex-shrink:0;">
+                        <span style="display:block;font-weight:700;">${(inv.amount||0).toLocaleString('ar-SA')} ر.س</span>
+                        ${badge}
+                    </span>
+                </div>`;
+            });
+            html += '</div></div>';
+            
+            if (type === 'broker') {
+                const bPayments = (appData.brokerPayments||[]).filter(p=>p.broker===name);
+                if (bPayments.length > 0) {
+                    html += `<div style="margin:0 14px 10px;background:var(--surface);border-radius:var(--radius-md);border:1px solid var(--border);overflow:hidden;box-shadow:var(--shadow-sm);">
+                        <div style="padding:10px 14px;font-weight:700;font-size:0.8rem;border-bottom:1px solid var(--border);"><i class="fas fa-money-bill-wave" style="color:#00a87a;margin-left:6px;"></i>الدفعات المستلمة</div>`;
+                    bPayments.forEach(p => {
+                        html += `<div style="display:flex;justify-content:space-between;padding:9px 14px;border-bottom:1px solid #f0f5fc;font-size:0.75rem;">
+                            <span>${p.date||''} ${p.notes?'— '+p.notes:''}</span>
+                            <span style="font-weight:700;color:#00a87a;">${(p.amount||0).toLocaleString('ar-SA')} ر.س</span>
+                        </div>`;
+                    });
+                    html += '</div>';
+                }
+            }
+            
+            container.innerHTML = html;
         }
         function exportPDF(invId) {
             const inv = appData.invoices.find(i => i.id === invId); if (!inv) return;
+            const designerShare = (inv.amount||0)*0.5;
+            const brokerPaid = inv.brokerPaid||0;
             document.getElementById('pdf-invoice-number').textContent = '#INV-' + String(inv.id).slice(-4);
             document.getElementById('pdf-invoice-date').textContent = new Date(inv.createdAt?.toDate?.() || Date.now())
                 .toLocaleDateString('ar-SA');
             document.getElementById('pdf-customer-name').textContent = inv.customer || '';
-            document.getElementById('pdf-amount').textContent = inv.amount || 0;
-            document.getElementById('pdf-total').textContent = (inv.amount || 0) + ' ر.س';
-            document.getElementById('pdf-paid').textContent = (inv.paid || 0) + ' ر.س';
-            document.getElementById('pdf-debt').textContent = ((inv.amount || 0) - (inv.paid || 0)) + ' ر.س';
+            document.getElementById('pdf-broker-name').textContent = inv.broker || '';
+            document.getElementById('pdf-designer-name').textContent = inv.designer || '';
+            document.getElementById('pdf-amount').textContent = (inv.amount || 0).toLocaleString('ar-SA');
+            document.getElementById('pdf-designer-share').textContent = designerShare.toLocaleString('ar-SA');
+            document.getElementById('pdf-total').textContent = (inv.amount || 0).toLocaleString('ar-SA') + ' ر.س';
+            document.getElementById('pdf-paid').textContent = designerShare.toLocaleString('ar-SA') + ' ر.س';
+            document.getElementById('pdf-broker-received').textContent = brokerPaid.toLocaleString('ar-SA') + ' ر.س';
+            document.getElementById('pdf-debt').textContent = (designerShare - brokerPaid).toLocaleString('ar-SA') + ' ر.س';
             const el = document.getElementById('invoice-pdf-template');
             el.style.display = 'block';
             html2pdf().set({ margin: 10, filename: 'inv-' + inv.id + '.pdf' }).from(el).save().then(() => { el.style
@@ -2307,19 +3080,55 @@
                 description: desc, usageCount: 0 }); if (newItem) { appData.locutions.unshift(newItem);
                 renderLocutions(); await addActivityCloud('تمت إضافة ملف: ' + name.trim());
             updateStats(); } }
-        async function addNewInvoice() { const customer = prompt('اسم العميل:'); if (!customer || !customer.trim())
-            return;
-            const amount = parseFloat(prompt('المبلغ (ر.س):')); if (isNaN(amount) || amount <= 0) return alert(
-                'المبلغ غير صالح');
-            const newItem = await addDocument(COL.INVOICES, { customer: customer.trim(), amount, paid: 0,
-                status: 'unpaid' }); if (newItem) { appData.invoices.unshift(newItem);
-                renderInvoices(); await addActivityCloud('فاتورة جديدة: ' + customer.trim() + ' - ' + amount + ' ر.س');
-                updateStats(); } }
+        async function addNewInvoice() {
+            const customer = prompt('اسم العميل (المعلم/المدير/المشرف):');
+            if (!customer || !customer.trim()) return;
+            const broker = prompt('اسم الوسيط:');
+            if (!broker || !broker.trim()) return;
+            const designer = prompt('اسم المصمم:');
+            if (!designer || !designer.trim()) return;
+            const description = prompt('وصف العمل المطلوب:') || 'خدمات تصميم';
+            const amount = parseFloat(prompt('المبلغ الإجمالي (ر.س):'));
+            if (isNaN(amount) || amount <= 0) return alert('المبلغ غير صالح');
+            const designerShare = amount * 0.5;
+            const newItem = await addDocument(COL.INVOICES, {
+                customer: customer.trim(),
+                broker: broker.trim(),
+                designer: designer.trim(),
+                description: description.trim(),
+                amount,
+                designerShare,
+                brokerPaid: 0,
+                receiptReceived: false,
+                brokerSettled: false,
+                status: 'unpaid'
+            });
+            if (newItem) {
+                appData.invoices.unshift(newItem);
+                renderInvoices();
+                await addActivityCloud(`فاتورة جديدة: ${customer.trim()} — ${amount.toLocaleString('ar-SA')} ر.س — وسيط: ${broker.trim()}`);
+                updateStats();
+                alert(`✅ تم إنشاء الفاتورة\nالعميل: ${customer.trim()}\nالوسيط: ${broker.trim()}\nالإجمالي: ${amount.toLocaleString('ar-SA')} ر.س\nحصة المصمم (50%): ${designerShare.toLocaleString('ar-SA')} ر.س`);
+            }
+        }
 
         // ==================== JSON Upload Modal ====================
         function openJsonModal(type) { currentJsonType = type;
             document.getElementById('json-modal-type').textContent = '(' + type + ')';
-            document.getElementById('json-textarea').value = '';
+            // قالب JSON تلميحي حسب النوع
+            const hints = {
+                wordwall: JSON.stringify([
+                    { lesson: "اسم الدرس", grade: "الأول الابتدائي", subject: "الرياضيات", semester: "الأول", url: "https://wordwall.net/..." },
+                    { lesson: "درس آخر", grade: "الثالث المتوسط", subject: "العلوم", semester: "الثاني", url: "https://wordwall.net/..." }
+                ], null, 2),
+                forms: JSON.stringify([
+                    { name: "اسم الاختبار", grade: "الثاني الابتدائي", subject: "لغتي", semester: "الأول", examType: "قصير", url: "https://forms.gle/..." }
+                ], null, 2),
+                drive: JSON.stringify([
+                    { name: "اسم الحقيبة أو الملف", url: "https://drive.google.com/..." }
+                ], null, 2)
+            };
+            document.getElementById('json-textarea').value = hints[type] || '';
             const progress = document.getElementById('upload-progress'); if (progress) { progress.style.display = 'none';
                 progress.textContent = ''; }
             document.getElementById('json-modal').classList.add('active'); }
@@ -2550,6 +3359,211 @@
                         plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } } }); },
             500); }
 
+        // ==================== تنظيف وتحقق ====================
+
+        function showCleanStatus(html) {
+            const box = document.getElementById('clean-status-box');
+            if (!box) return;
+            box.style.display = 'block';
+            box.innerHTML = html;
+            box.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // فحص رابط واحد عبر no-cors (يكتشف 404 الحقيقي)
+        async function checkUrl(url) {
+            try {
+                // نستخدم fetch مع no-cors — إذا وصل الرد فالرابط موجود
+                // لكن Wordwall يمنع CORS لذا نعتمد على التحقق من شكل الـ URL فقط
+                const match = url.match(/wordwall\.net\/resource\/(\w+)/i);
+                if (!match) return false;
+                const id = match[1];
+                // ID صحيح = أرقام فقط أو slug حقيقي (لا يحتوي على - أو أحرف عشوائية)
+                return /^\d+$/.test(id);
+            } catch {
+                return false;
+            }
+        }
+
+        async function validateAndCleanWordwall() {
+            const total = appData.wordwall.length;
+            if (total === 0) return showCleanStatus('⚠️ لا توجد بيانات Wordwall للفحص.');
+
+            showCleanStatus(`<span style="color:var(--primary)"><i class="fas fa-spinner fa-spin"></i> جاري فحص ${total} رابط...</span>`);
+
+            const broken = [];
+            const valid = [];
+
+            for (const item of appData.wordwall) {
+                const url = item.url || '';
+                const isValid = await checkUrl(url);
+                if (isValid) {
+                    valid.push(item);
+                } else {
+                    broken.push(item);
+                }
+            }
+
+            if (broken.length === 0) {
+                return showCleanStatus(`✅ <strong>جميع الروابط سليمة!</strong> (${total} رابط تم فحصه)`);
+            }
+
+            const names = broken.map(b => `<li style="color:#e03c3c;">❌ ${b.name || b.id} — <span style="font-size:0.65rem;direction:ltr;">${b.url}</span></li>`).join('');
+            showCleanStatus(`
+                <strong>🔍 نتيجة الفحص:</strong><br>
+                ✅ سليم: ${valid.length} &nbsp;|&nbsp; ❌ معطوب: ${broken.length}<br><br>
+                <strong>الروابط المعطوبة:</strong>
+                <ul style="margin:6px 0 10px;padding-right:16px;">${names}</ul>
+                <button class="btn-primary" onclick="deletebrokenWordwall()" style="font-size:0.75rem;">
+                    <i class="fas fa-trash"></i> حذف ${broken.length} رابط معطوب من السحابة
+                </button>
+            `);
+            // حفظ القائمة مؤقتاً
+            window._brokenWordwall = broken;
+        }
+
+        async function deletebrokenWordwall() {
+            const broken = window._brokenWordwall || [];
+            if (!broken.length) return;
+            showCleanStatus(`<span style="color:var(--primary)"><i class="fas fa-spinner fa-spin"></i> جاري حذف ${broken.length} عنصر...</span>`);
+            let deleted = 0;
+            for (const item of broken) {
+                const ok = await deleteDocument(COL.WORDWALL, item.id);
+                if (ok) {
+                    appData.wordwall = appData.wordwall.filter(w => w.id !== item.id);
+                    deleted++;
+                }
+            }
+            window._brokenWordwall = [];
+            renderWordwall();
+            updateStats();
+            showCleanStatus(`✅ تم حذف <strong>${deleted}</strong> رابط معطوب بنجاح. المتبقي: ${appData.wordwall.length} رابط سليم.`);
+            await addActivityCloud(`تنظيف Wordwall: حذف ${deleted} رابط معطوب`);
+        }
+
+        async function removeDuplicates() {
+            showCleanStatus(`<i class="fas fa-spinner fa-spin" style="color:var(--primary)"></i> جاري فحص المكررات...`);
+            let totalDeleted = 0;
+
+            // Wordwall - تكرار حسب url
+            const seenUrls = new Set();
+            const wwDups = [];
+            for (const item of appData.wordwall) {
+                const key = (item.url || item.id || '').trim();
+                if (seenUrls.has(key)) {
+                    wwDups.push(item);
+                } else {
+                    seenUrls.add(key);
+                }
+            }
+            for (const dup of wwDups) {
+                await deleteDocument(COL.WORDWALL, dup.id);
+                appData.wordwall = appData.wordwall.filter(w => w.id !== dup.id);
+                totalDeleted++;
+            }
+
+            // Forms Exams - تكرار حسب url
+            const seenForms = new Set();
+            const formsDups = [];
+            for (const item of appData.formsExams) {
+                const key = (item.url || item.id || '').trim();
+                if (seenForms.has(key)) { formsDups.push(item); } else { seenForms.add(key); }
+            }
+            for (const dup of formsDups) {
+                await deleteDocument(COL.FORMS_EXAMS, dup.id);
+                appData.formsExams = appData.formsExams.filter(f => f.id !== dup.id);
+                totalDeleted++;
+            }
+
+            refreshAll();
+            updateStats();
+            if (totalDeleted === 0) {
+                showCleanStatus('✅ لا توجد عناصر مكررة — البيانات نظيفة!');
+            } else {
+                showCleanStatus(`✅ تم حذف <strong>${totalDeleted}</strong> عنصر مكرر بنجاح.`);
+                await addActivityCloud(`إزالة مكررات: حذف ${totalDeleted} عنصر`);
+            }
+        }
+
+        async function fixBrokenUrls() {
+            showCleanStatus(`<i class="fas fa-spinner fa-spin" style="color:var(--primary)"></i> جاري فحص الروابط...`);
+            let fixed = 0;
+            const toDelete = [];
+
+            for (const item of appData.wordwall) {
+                const url = (item.url || '').trim();
+                // رابط فارغ أو # → حذف
+                if (!url || url === '#') {
+                    toDelete.push(item);
+                    continue;
+                }
+                // رابط ناقص بدون https → إصلاح
+                if (url.startsWith('wordwall.net')) {
+                    const newUrl = 'https://' + url;
+                    await updateDocument(COL.WORDWALL, item.id, { url: newUrl });
+                    item.url = newUrl;
+                    fixed++;
+                    continue;
+                }
+                // ID نصي غير رقمي → حذف
+                const match = url.match(/wordwall\.net\/resource\/([^/\s]+)/i);
+                if (match && !/^\d+$/.test(match[1])) {
+                    toDelete.push(item);
+                }
+            }
+
+            for (const item of toDelete) {
+                await deleteDocument(COL.WORDWALL, item.id);
+                appData.wordwall = appData.wordwall.filter(w => w.id !== item.id);
+            }
+
+            renderWordwall();
+            updateStats();
+            const msg = [];
+            if (fixed > 0) msg.push(`🔧 أُصلح ${fixed} رابط ناقص`);
+            if (toDelete.length > 0) msg.push(`🗑️ حُذف ${toDelete.length} رابط فارغ أو غير صالح`);
+            if (msg.length === 0) msg.push('✅ جميع الروابط بصيغة صحيحة — لا حاجة لإصلاح');
+            showCleanStatus(msg.join('<br>'));
+            if (fixed + toDelete.length > 0) await addActivityCloud(`إصلاح روابط: ${fixed} إصلاح، ${toDelete.length} حذف`);
+        }
+
+        function showDataReport() {
+            const ww = appData.wordwall.length;
+            const wwNoUrl = appData.wordwall.filter(d => !d.url || d.url === '#').length;
+            const wwNonNumeric = appData.wordwall.filter(d => {
+                const m = (d.url||'').match(/wordwall\.net\/resource\/([^/\s]+)/i);
+                return m && !/^\d+$/.test(m[1]);
+            }).length;
+            const wwDups = (() => {
+                const seen = new Set(); let count = 0;
+                for (const d of appData.wordwall) {
+                    const k = (d.url||d.id||'').trim();
+                    if (seen.has(k)) count++; else seen.add(k);
+                }
+                return count;
+            })();
+            const fe = appData.formsExams.length;
+            const tmpl = Object.values(appData.templates).reduce((s,a) => s+a.length, 0);
+
+            const statusColor = (n) => n > 0 ? '#e03c3c' : '#00a87a';
+            const statusIcon = (n) => n > 0 ? '⚠️' : '✅';
+
+            showCleanStatus(`
+                <strong style="font-size:0.85rem;">📋 تقرير صحة البيانات</strong><br><br>
+                <div style="display:grid;gap:6px;">
+                    <div>🎮 Wordwall: <strong>${ww}</strong> عنصر</div>
+                    <div style="color:${statusColor(wwNoUrl)}">${statusIcon(wwNoUrl)} روابط فارغة: <strong>${wwNoUrl}</strong></div>
+                    <div style="color:${statusColor(wwNonNumeric)}">${statusIcon(wwNonNumeric)} روابط ID نصية (غير رقمية): <strong>${wwNonNumeric}</strong></div>
+                    <div style="color:${statusColor(wwDups)}">${statusIcon(wwDups)} مكررات: <strong>${wwDups}</strong></div>
+                    <hr style="border:none;border-top:1px solid var(--border);margin:4px 0;">
+                    <div>📝 اختبارات Forms: <strong>${fe}</strong></div>
+                    <div>📁 القوالب: <strong>${tmpl}</strong></div>
+                    <div style="color:${statusColor(wwNoUrl+wwNonNumeric+wwDups)};font-weight:700;margin-top:4px;">
+                        ${wwNoUrl+wwNonNumeric+wwDups === 0 ? '✅ البيانات نظيفة بالكامل' : '⚠️ يوجد ' + (wwNoUrl+wwNonNumeric+wwDups) + ' مشكلة — استخدم أدوات التنظيف أعلاه'}
+                    </div>
+                </div>
+            `);
+        }
+
         // ==================== Initialization ====================
         async function init() { 
             showMainNav(); 
@@ -2577,6 +3591,26 @@
             closeTemplatePreviewModal(); });
         document.getElementById('github-modal')?.addEventListener('click', function(e) { if (e.target === this) this
             .classList.remove('active'); });
+        // ==================== Service Worker Registration ====================
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+                .then(reg => {
+                    console.log('✅ SW registered');
+                    reg.addEventListener('updatefound', () => {
+                        const newWorker = reg.installing;
+                        newWorker.addEventListener('statechange', () => {
+                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                checkForUpdates();
+                            }
+                        });
+                    });
+                })
+                .catch(e => console.warn('SW error:', e));
+        }
+        // فحص التحديثات عند التحميل (بعد 3 ثوان لإتاحة التحميل الكامل)
+        setTimeout(checkForUpdates, 3000);
+        // فحص دوري كل 30 دقيقة
+        setInterval(checkForUpdates, 30 * 60 * 1000);
     </script>
 </body>
 </html>
