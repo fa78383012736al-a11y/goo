@@ -1,0 +1,17 @@
+[
+  {
+    "id": "mpy8rw6h2yc85",
+    "customer": "عدنان",
+    "broker": "عدنان",
+    "designer": "صخر",
+    "description": "خطة نشاط لاصفي",
+    "amount": 100,
+    "designerShare": 50,
+    "brokerPaid": 0,
+    "receiptReceived": false,
+    "brokerSettled": false,
+    "status": "unpaid",
+    "createdAt": "2026-06-03T15:49:16.841Z",
+    "usageCount": 0
+  }
+]
