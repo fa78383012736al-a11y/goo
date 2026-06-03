@@ -8,10 +8,11 @@
     "amount": 100,
     "designerShare": 50,
     "brokerPaid": 0,
-    "receiptReceived": false,
+    "receiptReceived": true,
     "brokerSettled": false,
     "status": "unpaid",
     "createdAt": "2026-06-03T15:49:16.841Z",
-    "usageCount": 0
+    "usageCount": 0,
+    "receiptDate": "٣‏/٦‏/٢٠٢٦"
   }
 ]
