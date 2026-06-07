@@ -17,10 +17,7 @@
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js">
     </script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js">
-    </script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js">
-    </script>
+    <!-- Firebase removed: data stored in localStorage + GitHub -->
     <style>
         :root {
             --primary: #0062cc;
@@ -152,6 +149,32 @@
             background: rgba(255, 255, 255, 0.28);
         }
         .back-button:active {
+            transform: scale(0.9);
+        }
+        .home-button {
+            background: rgba(255, 255, 255, 0.18);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            padding: 5px 12px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 0.78rem;
+            cursor: pointer;
+            z-index: 2;
+            transition: all 0.2s;
+            height: 34px;
+            flex-shrink: 0;
+            gap: 5px;
+            white-space: nowrap;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 600;
+        }
+        .home-button:hover {
+            background: rgba(255, 255, 255, 0.28);
+        }
+        .home-button:active {
             transform: scale(0.9);
         }
         .search-container {
@@ -1055,6 +1078,76 @@
             font-size: 0.6rem;
             color: var(--text-muted);
         }
+        /* ===== Bags Folder System ===== */
+        .bags-folders-grid {
+            padding: 0 14px 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .bag-folder-card {
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            border: 1.5px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+        .bag-folder-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 13px 14px;
+            cursor: pointer;
+            transition: background 0.15s;
+            user-select: none;
+        }
+        .bag-folder-header:active { background: #f0f5fc; }
+        .bag-folder-icon {
+            width: 36px; height: 36px;
+            border-radius: 11px;
+            background: linear-gradient(135deg, #fff5ea, #ffe0b2);
+            color: #e07000;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem; flex-shrink: 0;
+        }
+        .bag-folder-info { flex: 1; min-width: 0; }
+        .bag-folder-name { font-weight: 700; color: var(--text-main); font-size: 0.85rem; display: block; }
+        .bag-folder-count { font-size: 0.65rem; color: var(--text-sec); margin-top: 2px; }
+        .bag-folder-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+        .bag-folder-chevron { color: var(--text-muted); font-size: 0.75rem; transition: transform 0.25s ease; }
+        .bag-folder-chevron.open { transform: rotate(90deg); }
+        .bag-folder-files { display: none; border-top: 1px solid var(--border); background: var(--surface2); animation: fadeSlide 0.2s ease; }
+        .bag-folder-files.open { display: block; }
+        .bag-folder-files-inner { padding: 8px 10px 10px; }
+        .bag-file-item {
+            display: flex; align-items: center; gap: 9px;
+            padding: 9px 10px; border-radius: var(--radius-sm);
+            background: var(--surface); border: 1px solid var(--border);
+            margin-bottom: 6px; cursor: pointer; transition: all 0.15s;
+        }
+        .bag-file-item:last-child { margin-bottom: 0; }
+        .bag-file-item:active { box-shadow: var(--shadow-sm); transform: translateX(-2px); }
+        .bag-file-icon { width: 30px; height: 30px; border-radius: 9px; background: #e8f0ff; color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 0.72rem; flex-shrink: 0; }
+        .bag-file-name { flex: 1; font-size: 0.78rem; font-weight: 600; color: var(--text-main); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .bag-file-arrow { color: var(--text-muted); font-size: 0.65rem; }
+        .bag-add-btn {
+            display: flex; align-items: center; justify-content: center; gap: 5px;
+            margin: 8px 10px 2px; padding: 7px 12px; border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: #fff; font-size: 0.7rem; font-weight: 700; cursor: pointer;
+            border: none; font-family: 'Tajawal', sans-serif; transition: opacity 0.2s;
+            width: calc(100% - 20px);
+        }
+        .bag-add-btn:active { opacity: 0.85; }
+        .bag-new-folder-btn {
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+            margin: 0 14px 10px; padding: 10px; border-radius: var(--radius-sm);
+            background: var(--surface); border: 2px dashed var(--border);
+            color: var(--primary); font-size: 0.78rem; font-weight: 700;
+            cursor: pointer; font-family: 'Tajawal', sans-serif; transition: all 0.2s;
+        }
+        .bag-new-folder-btn:active { background: #f0f5fc; }
         .github-settings-bar {
             display: flex;
             gap: 6px;
@@ -1093,6 +1186,195 @@
             font-weight: 600;
             margin-right: 4px;
         }
+        /* ===== أعمالنا - TikTok Portfolio ===== */
+        .works-hero {
+            background: linear-gradient(135deg, #010101 0%, #2d2d2d 50%, #1a1a2e 100%);
+            margin: 0 14px 14px;
+            border-radius: var(--radius-md);
+            padding: 16px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 28px rgba(0,0,0,0.35);
+        }
+        .works-hero::before {
+            content: '';
+            position: absolute;
+            top: -30px; right: -30px;
+            width: 120px; height: 120px;
+            border-radius: 50%;
+            background: rgba(255,0,80,0.12);
+        }
+        .works-hero-icon {
+            width: 48px; height: 48px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #ff0050, #00f2ea);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.4rem; flex-shrink: 0;
+        }
+        .works-hero-info h3 { font-size: 1rem; font-weight: 800; margin-bottom: 3px; }
+        .works-hero-info p { font-size: 0.72rem; opacity: 0.75; }
+        .work-card {
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            margin: 0 14px 10px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+        .work-card:active { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+        .work-card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 13px 14px 10px;
+        }
+        .work-tiktok-icon {
+            width: 40px; height: 40px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #010101, #2d2d2d);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem; flex-shrink: 0;
+            color: #fff;
+            position: relative;
+        }
+        .work-tiktok-icon::after {
+            content: '';
+            position: absolute;
+            top: 3px; right: 3px;
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff0050, #00f2ea);
+        }
+        .work-info { flex: 1; min-width: 0; }
+        .work-name {
+            font-weight: 700;
+            color: var(--text-main);
+            font-size: 0.85rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .work-date { font-size: 0.65rem; color: var(--text-muted); margin-top: 2px; }
+        .work-url-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px 13px;
+            background: #fafbff;
+            border-top: 1px solid #f0f5fc;
+        }
+        .work-url-text {
+            flex: 1;
+            font-size: 0.68rem;
+            color: var(--text-sec);
+            direction: ltr;
+            text-align: left;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-family: monospace;
+        }
+        .btn-copy-url {
+            background: linear-gradient(135deg, #ff0050, #cc0040);
+            color: #fff;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.65rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s;
+            white-space: nowrap;
+            flex-shrink: 0;
+            font-family: 'Tajawal', sans-serif;
+        }
+        .btn-copy-url:active { transform: scale(0.95); opacity: 0.85; }
+        .btn-open-url {
+            background: #010101;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.65rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            text-decoration: none;
+            transition: all 0.2s;
+            white-space: nowrap;
+            flex-shrink: 0;
+            font-family: 'Tajawal', sans-serif;
+        }
+        .btn-open-url:active { transform: scale(0.95); opacity: 0.85; }
+        .works-search-input {
+            width: 100%;
+            padding: 10px 16px;
+            border-radius: 20px;
+            border: 2px solid var(--border);
+            background: var(--surface);
+            font-size: 0.82rem;
+            outline: none;
+            transition: border 0.2s;
+            font-family: 'Tajawal', sans-serif;
+        }
+        .works-search-input:focus { border-color: #ff0050; }
+        /* Modal for adding work */
+        .works-modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.55);
+            z-index: 1100;
+            display: none; align-items: center; justify-content: center;
+            padding: 16px;
+        }
+        .works-modal-overlay.active { display: flex; }
+        .works-modal-box {
+            background: #fff;
+            border-radius: var(--radius-md);
+            padding: 20px;
+            width: 100%; max-width: 480px;
+            max-height: 85vh; overflow-y: auto;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.22);
+        }
+        .works-modal-box h3 {
+            font-size: 1rem; font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 14px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .works-modal-box label {
+            display: block; font-size: 0.78rem; font-weight: 600;
+            color: var(--text-main); margin-bottom: 5px; margin-top: 12px;
+        }
+        .works-modal-box input[type="text"] {
+            width: 100%; padding: 10px 12px;
+            border-radius: var(--radius-sm);
+            border: 2px solid var(--border);
+            font-family: 'Tajawal', sans-serif;
+            font-size: 0.82rem; outline: none;
+            transition: border 0.2s; background: #fafbff;
+        }
+        .works-modal-box input[type="text"]:focus { border-color: #ff0050; }
+        .copy-toast {
+            position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%);
+            background: #010101; color: #fff;
+            padding: 8px 20px; border-radius: 20px;
+            font-size: 0.78rem; font-weight: 700;
+            z-index: 9999; display: none;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+            font-family: 'Tajawal', sans-serif;
+        }
+        .copy-toast.show { display: block; animation: toastIn 0.2s ease; }
+        @keyframes toastIn { from { opacity:0; transform: translateX(-50%) translateY(10px); } to { opacity:1; transform: translateX(-50%) translateY(0); } }
     </style>
 </head>
 <body>
@@ -1102,6 +1384,9 @@
             <div style="display:flex;align-items:center;gap:8px;">
                 <div class="back-button" id="global-back-btn" onclick="goBack()" title="الرجوع خطوة">
                     <i class="fas fa-arrow-right"></i>
+                </div>
+                <div class="home-button" id="global-home-btn" onclick="navigateTo('home')" title="الصفحة الرئيسية">
+                    <i class="fas fa-home"></i> رئيسي
                 </div>
                 <div class="greeting"><h2>أهلاً وسهلاً <span class="star">★</span></h2><p id="app-title">نظام GOO</p></div>
             </div>
@@ -1115,18 +1400,25 @@
                     <button class="search-icon-btn"><i class="fas fa-search"></i></button>
                     <div class="search-suggestions" id="search-suggestions"></div>
                 </div>
-                <div class="balance-card"><div class="balance-label"><i class="fas fa-circle" style="font-size:0.4rem;margin-left:3px;"></i> إجمالي الموارد</div><div class="balance-amount"><span>عنصر</span> <span id="total-resources">0</span></div><div class="balance-footer"><span class="account">سحابي - Firestore</span><button class="eye-btn"><i class="fas fa-check-circle"></i> نشط</button></div></div>
+                <div class="balance-card"><div class="balance-label"><i class="fas fa-circle" style="font-size:0.4rem;margin-left:3px;"></i> إجمالي الموارد</div><div class="balance-amount"><span>عنصر</span> <span id="total-resources">0</span></div><div class="balance-footer"><span class="account">محلي + GitHub</span><button class="eye-btn"><i class="fas fa-check-circle"></i> نشط</button></div></div>
                 <div class="quick-actions">
                     <div class="quick-btn" onclick="navigateTo('orders')"><div class="qb-icon qb-orange"><i class="fas fa-shopping-cart"></i></div><span>الطلبات</span></div>
                     <div class="quick-btn" onclick="navigateTo('templates')"><div class="qb-icon qb-blue"><i class="fas fa-file-code"></i></div><span>القوالب</span></div>
                     <div class="quick-btn" onclick="navigateTo('resources')"><div class="qb-icon qb-green"><i class="fas fa-link"></i></div><span>الموارد</span></div>
                     <div class="quick-btn" onclick="navigateTo('invoices')"><div class="qb-icon qb-purple"><i class="fas fa-file-invoice-dollar"></i></div><span>الفواتير</span></div>
+                    <div class="quick-btn" onclick="navigateTo('curriculum')"><div class="qb-icon" style="background:#fde8e8;color:#c43b1a;"><i class="fas fa-book-open"></i></div><span>المنهج</span></div>
+                    <div class="quick-btn" onclick="navigateTo('works')"><div class="qb-icon" style="background:#010101;color:#fff;"><i class="fab fa-tiktok"></i></div><span>أعمالنا</span></div>
                 </div>
                 <div class="section-title"><i class="fas fa-chart-bar"></i> ملخص</div>
                 <div class="report-stat"><div class="stat-row">
                         <div class="stat-item"><div class="num" id="stat-orders">0</div><div class="lbl">الطلبات</div></div>
                         <div class="stat-item green"><div class="num" id="stat-templates">0</div><div class="lbl">القوالب</div></div>
                         <div class="stat-item orange"><div class="num" id="stat-invoices">0</div><div class="lbl">الفواتير</div></div>
+                </div></div>
+                <div class="report-stat" style="margin-top:6px;"><div class="stat-row">
+                        <div class="stat-item" style="background:#e8f0ff;border-color:#b3cef5;"><div class="num" id="stat-wordwall" style="color:var(--primary);">0</div><div class="lbl">Wordwall</div></div>
+                        <div class="stat-item" style="background:#e6faf4;border-color:#b3f0d8;"><div class="num" id="stat-forms" style="color:#00a87a;">0</div><div class="lbl">Forms</div></div>
+                        <div class="stat-item" style="background:#fde8e8;border-color:#f5b3b3;"><div class="num" id="stat-curriculum" style="color:#c43b1a;">0</div><div class="lbl">المنهج</div></div>
                 </div></div>
                 <div class="section-title"><i class="fas fa-fire"></i> الأكثر استخداماً</div>
                 <div id="top-used-container"><div class="empty-state"><div class="empty-icon"><i class="fas fa-star"></i></div><h3>جاري التحميل...</h3><p>يتم تحميل البيانات من السحابة</p></div></div>
@@ -1144,8 +1436,13 @@
             <div id="page-templates" class="screen-page">
                 <div class="section-title" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
                     <span><i class="fas fa-file-code"></i>القوالب</span>
-                    <span class="plus-tag" onclick="openTemplateModal()"><i class="fas fa-plus"></i>رفع قالب HTML</span>
+                    <span style="display:flex;gap:6px;flex-wrap:wrap;">
+                        <span class="plus-tag" style="background:linear-gradient(135deg,#24292e,#444);" onclick="triggerDirectGithubUpload()"><i class="fas fa-cloud-upload-alt"></i>رفع لـ GitHub</span>
+                        <span class="plus-tag" onclick="openTemplateModal()"><i class="fas fa-plus"></i>رفع قالب HTML</span>
+                    </span>
                 </div>
+                <!-- hidden inputs for direct github upload -->
+                <input type="file" id="direct-github-file-input" accept=".html,.htm" style="display:none" onchange="handleDirectGithubUpload(event)">
                 <div class="github-settings-bar" id="cloud-settings-bar">
                     <input type="text" id="gh-token-inline" placeholder="Token" style="width:100px;">
                     <input type="text" id="gh-repo-inline" placeholder="repo" value="goo" style="width:80px;">
@@ -1208,7 +1505,12 @@
                 </div>
                 <div id="resources-drive-section" class="sub-section">
                     <div class="section-title" style="font-size:0.8rem;">Google Drive <span class="plus-tag" style="margin-right:auto;" onclick="openJsonModal('drive')"><i class="fas fa-upload"></i> رفع JSON</span></div>
-                    <div id="drive-bags-section" class="sub-section active"><div id="drive-bags-container"><div class="empty-state"><h3>جاري التحميل...</h3></div></div></div>
+                    <div id="drive-bags-section" class="sub-section active">
+                        <div id="drive-bags-folders-view">
+                            <!-- مجلدات الحقائب - يتم توليدها ديناميكياً -->
+                        </div>
+                        <div id="drive-bags-container" style="display:none;"></div>
+                    </div>
                     <div id="drive-enrich-section" class="sub-section"><div id="drive-enrich-container"><div class="empty-state"><h3>جاري التحميل...</h3></div></div></div>
                     <div id="drive-records-section" class="sub-section"><div id="drive-records-container"><div class="empty-state"><h3>جاري التحميل...</h3></div></div></div>
                     <div id="drive-other-section" class="sub-section"><div id="drive-other-container"><div class="empty-state"><h3>جاري التحميل...</h3></div></div></div>
@@ -1286,6 +1588,33 @@
                 <div id="invoice-pdf-template" style="display:none;padding:30px;font-family:'Tajawal',sans-serif;direction:rtl;background:#fff;color:#333;"><div style="display:flex;justify-content:space-between;border-bottom:2px solid #0062cc;padding-bottom:15px;margin-bottom:20px;"><div><h1 style="color:#0062cc;margin:0;font-size:22px;">نظام GOO</h1></div><div style="text-align:left;"><div id="pdf-invoice-number" style="font-weight:bold;">#INV-0000</div><div id="pdf-invoice-date" style="color:#666;">-</div></div></div><div style="margin-bottom:20px;"><p><strong>العميل:</strong> <span id="pdf-customer-name">-</span></p><p><strong>الوسيط:</strong> <span id="pdf-broker-name">-</span></p><p><strong>المصمم:</strong> <span id="pdf-designer-name">-</span></p></div><table style="width:100%;border-collapse:collapse;margin-bottom:20px;"><thead><tr style="background:#f4f8fd;"><th style="padding:10px;border:1px solid #e2ecf7;">الوصف</th><th style="padding:10px;border:1px solid #e2ecf7;">المبلغ الإجمالي</th><th style="padding:10px;border:1px solid #e2ecf7;">حصة المصمم (50%)</th></tr></thead><tbody><tr><td style="padding:10px;border:1px solid #e2ecf7;">خدمات تصميم</td><td style="padding:10px;border:1px solid #e2ecf7;text-align:left;"><span id="pdf-amount">0</span> ر.س</td><td style="padding:10px;border:1px solid #e2ecf7;text-align:left;"><span id="pdf-designer-share">0</span> ر.س</td></tr></tbody></table><div style="display:flex;justify-content:flex-end;"><div style="width:240px;"><div style="display:flex;justify-content:space-between;padding:6px 0;"><span>إجمالي الفاتورة:</span><span id="pdf-total">0</span></div><div style="display:flex;justify-content:space-between;padding:6px 0;"><span>حصة المصمم (50%):</span><span id="pdf-paid">0</span></div><div style="display:flex;justify-content:space-between;padding:6px 0;"><span>المستلم من الوسيط:</span><span id="pdf-broker-received">0</span></div><div style="display:flex;justify-content:space-between;padding:6px 0;font-weight:bold;color:#0062cc;"><span>المتبقي على الوسيط:</span><span id="pdf-debt">0</span></div></div></div></div>
             </div>
 
+            <div id="page-works" class="screen-page">
+                <!-- ===== صفحة أعمالنا - TikTok ===== -->
+                <div class="works-hero">
+                    <div class="works-hero-icon">🎬</div>
+                    <div class="works-hero-info">
+                        <h3>أعمالنا على TikTok</h3>
+                        <p>روابط فيديوهاتنا التعليمية — اضغط نسخ للحصول على الرابط</p>
+                    </div>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;margin:0 14px 8px;gap:8px;flex-wrap:wrap;">
+                    <div style="font-size:0.78rem;font-weight:700;color:var(--text-main);display:flex;align-items:center;gap:6px;">
+                        <i class="fab fa-tiktok" style="background:#010101;color:#fff;width:22px;height:22px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;font-size:0.65rem;"></i>
+                        قائمة الأعمال
+                        <span id="works-count-badge" style="background:#e8f0ff;color:var(--primary);font-size:0.6rem;padding:2px 8px;border-radius:10px;font-weight:600;">0</span>
+                    </div>
+                    <span class="plus-tag" style="background:linear-gradient(135deg,#ff0050,#cc0040);" onclick="openAddWorkModal()">
+                        <i class="fas fa-plus"></i> إضافة عمل
+                    </span>
+                </div>
+                <div style="margin:0 14px 10px;">
+                    <input type="text" class="works-search-input" id="works-search" placeholder="🔍 بحث في الأعمال..." oninput="renderWorks()">
+                </div>
+                <div id="works-container">
+                    <div class="empty-state"><div class="empty-icon"><i class="fab fa-tiktok"></i></div><h3>جاري التحميل...</h3></div>
+                </div>
+            </div>
+
             <div id="page-admin" class="screen-page">
                 <div class="profile-hero"><div class="avatar"><i class="fas fa-user-tie"></i></div><div class="profile-info-text"><h3>فيصل الصوفي</h3><div class="iban">قائد الفريق | مدير النظام</div></div></div>
                 <div id="admin-users-section" class="sub-section active"><div class="section-title"><i class="fas fa-users"></i>المستخدمين</div><div id="users-container" class="service-card"><div class="empty-state" style="margin:0;border:none;"><h3>لا يوجد مستخدمين</h3></div></div></div>
@@ -1327,6 +1656,101 @@
                     <div id="clean-status-box" style="display:none;margin:0 14px 10px;background:var(--surface);border-radius:var(--radius-md);border:1px solid var(--border);padding:12px 14px;font-size:0.78rem;line-height:1.8;"></div>
                 </div>
             </div>
+
+            <!-- ==================== صفحة المنهج ==================== -->
+            <div id="page-curriculum" class="screen-page">
+                <!-- بوربوينت -->
+                <div id="curriculum-ppt-section" class="sub-section active">
+                    <div class="section-title" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
+                        <span><i class="fas fa-file-powerpoint" style="background:#c43b1a;"></i>عروض بوربوينت</span>
+                        <span style="display:flex;gap:6px;flex-wrap:wrap;">
+                            <span class="plus-tag" style="background:linear-gradient(135deg,#6c757d,#868e96);" onclick="navigateTo('home')"><i class="fas fa-home"></i> الرئيسية</span>
+                            <span class="plus-tag" onclick="openCurriculumJsonModal('ppt')"><i class="fas fa-upload"></i> رفع JSON</span>
+                        </span>
+                    </div>
+                    <div style="display:flex;gap:6px;margin:0 14px 8px;flex-wrap:wrap;">
+                        <select onchange="renderCurriculumSection('ppt')" id="curr-ppt-semester" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;">
+                            <option value="">كل الفصول</option><option value="الأول">الفصل الأول</option><option value="الثاني">الفصل الثاني</option>
+                        </select>
+                        <select onchange="onCurrStageChange('ppt')" id="curr-ppt-stage" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;">
+                            <option value="">كل المراحل</option><option value="ابتدائي">ابتدائية</option><option value="متوسط">متوسطة</option><option value="ثانوي">ثانوية</option>
+                        </select>
+                        <select onchange="onCurrGradeChange('ppt')" id="curr-ppt-grade" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;"><option value="">كل الصفوف</option></select>
+                        <select onchange="onCurrSubjectChange('ppt')" id="curr-ppt-subject" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;"><option value="">كل المواد</option></select>
+                        <select onchange="renderCurriculumSection('ppt')" id="curr-ppt-unit" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;"><option value="">كل الوحدات</option></select>
+                        <select onchange="renderCurriculumSection('ppt')" id="curr-ppt-lesson" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;"><option value="">كل الدروس</option></select>
+                    </div>
+                    <div id="curr-ppt-container"><div class="empty-state"><h3>جاري التحميل...</h3></div></div>
+                </div>
+                <!-- أوراق عمل -->
+                <div id="curriculum-worksheets-section" class="sub-section">
+                    <div class="section-title" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
+                        <span><i class="fas fa-file-alt" style="background:#00a87a;"></i>أوراق عمل</span>
+                        <span style="display:flex;gap:6px;flex-wrap:wrap;">
+                            <span class="plus-tag" style="background:linear-gradient(135deg,#6c757d,#868e96);" onclick="navigateTo('home')"><i class="fas fa-home"></i> الرئيسية</span>
+                            <span class="plus-tag" onclick="openCurriculumJsonModal('worksheets')"><i class="fas fa-upload"></i> رفع JSON</span>
+                        </span>
+                    </div>
+                    <div style="display:flex;gap:6px;margin:0 14px 8px;flex-wrap:wrap;">
+                        <select onchange="renderCurriculumSection('worksheets')" id="curr-worksheets-semester" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;">
+                            <option value="">كل الفصول</option><option value="الأول">الفصل الأول</option><option value="الثاني">الفصل الثاني</option>
+                        </select>
+                        <select onchange="onCurrStageChange('worksheets')" id="curr-worksheets-stage" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;">
+                            <option value="">كل المراحل</option><option value="ابتدائي">ابتدائية</option><option value="متوسط">متوسطة</option><option value="ثانوي">ثانوية</option>
+                        </select>
+                        <select onchange="onCurrGradeChange('worksheets')" id="curr-worksheets-grade" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;"><option value="">كل الصفوف</option></select>
+                        <select onchange="onCurrSubjectChange('worksheets')" id="curr-worksheets-subject" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;"><option value="">كل المواد</option></select>
+                        <select onchange="renderCurriculumSection('worksheets')" id="curr-worksheets-unit" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;"><option value="">كل الوحدات</option></select>
+                        <select onchange="renderCurriculumSection('worksheets')" id="curr-worksheets-lesson" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;"><option value="">كل الدروس</option></select>
+                    </div>
+                    <div id="curr-worksheets-container"><div class="empty-state"><h3>جاري التحميل...</h3></div></div>
+                </div>
+                <!-- المواد -->
+                <div id="curriculum-materials-section" class="sub-section">
+                    <div class="section-title" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
+                        <span><i class="fas fa-book" style="background:#7c3aed;"></i>المواد</span>
+                        <span style="display:flex;gap:6px;flex-wrap:wrap;">
+                            <span class="plus-tag" style="background:linear-gradient(135deg,#6c757d,#868e96);" onclick="navigateTo('home')"><i class="fas fa-home"></i> الرئيسية</span>
+                            <span class="plus-tag" onclick="openCurriculumJsonModal('materials')"><i class="fas fa-upload"></i> رفع JSON</span>
+                        </span>
+                    </div>
+                    <div style="display:flex;gap:6px;margin:0 14px 8px;flex-wrap:wrap;">
+                        <select onchange="renderCurriculumSection('materials')" id="curr-materials-grade" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;"><option value="">كل الصفوف</option></select>
+                        <select onchange="renderCurriculumSection('materials')" id="curr-materials-semester" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;">
+                            <option value="">كل الفصول</option><option value="الأول">الفصل الأول</option><option value="الثاني">الفصل الثاني</option>
+                        </select>
+                        <select onchange="renderCurriculumSection('materials')" id="curr-materials-subject" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;"><option value="">كل المواد</option></select>
+                        <!-- حقول مخفية للتوافق مع الكود -->
+                        <select id="curr-materials-stage" style="display:none;"><option value=""></option></select>
+                        <select id="curr-materials-unit" style="display:none;"><option value=""></option></select>
+                        <select id="curr-materials-lesson" style="display:none;"><option value=""></option></select>
+                    </div>
+                    <div id="curr-materials-container"><div class="empty-state"><h3>جاري التحميل...</h3></div></div>
+                </div>
+                <!-- أخرى -->
+                <div id="curriculum-other-section" class="sub-section">
+                    <div class="section-title" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
+                        <span><i class="fas fa-ellipsis-h" style="background:#8aaac8;"></i>أخرى</span>
+                        <span style="display:flex;gap:6px;flex-wrap:wrap;">
+                            <span class="plus-tag" style="background:linear-gradient(135deg,#6c757d,#868e96);" onclick="navigateTo('home')"><i class="fas fa-home"></i> الرئيسية</span>
+                            <span class="plus-tag" onclick="openCurriculumJsonModal('other')"><i class="fas fa-upload"></i> رفع JSON</span>
+                        </span>
+                    </div>
+                    <div style="display:flex;gap:6px;margin:0 14px 8px;flex-wrap:wrap;">
+                        <select onchange="renderCurriculumSection('other')" id="curr-other-semester" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;">
+                            <option value="">كل الفصول</option><option value="الأول">الفصل الأول</option><option value="الثاني">الفصل الثاني</option>
+                        </select>
+                        <select onchange="onCurrStageChange('other')" id="curr-other-stage" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;">
+                            <option value="">كل المراحل</option><option value="ابتدائي">ابتدائية</option><option value="متوسط">متوسطة</option><option value="ثانوي">ثانوية</option>
+                        </select>
+                        <select onchange="onCurrGradeChange('other')" id="curr-other-grade" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;"><option value="">كل الصفوف</option></select>
+                        <select onchange="onCurrSubjectChange('other')" id="curr-other-subject" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;"><option value="">كل المواد</option></select>
+                        <select onchange="renderCurriculumSection('other')" id="curr-other-unit" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;"><option value="">كل الوحدات</option></select>
+                        <select onchange="renderCurriculumSection('other')" id="curr-other-lesson" style="padding:6px;border-radius:10px;border:1px solid var(--border);font-size:0.7rem;"><option value="">كل الدروس</option></select>
+                    </div>
+                    <div id="curr-other-container"><div class="empty-state"><h3>جاري التحميل...</h3></div></div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1335,12 +1759,25 @@
     <!-- ==================== JSON Upload Modal ==================== -->
     <div class="modal-overlay" id="json-modal">
         <div class="modal-box">
-            <h3>رفع بيانات JSON <span id="json-modal-type"></span></h3>
-            <textarea class="json-textarea" id="json-textarea" placeholder="الصق بيانات JSON هنا..." style="min-height:180px;"></textarea>
+            <h3><i class="fas fa-code" style="color:var(--primary);"></i> رفع بيانات JSON <span id="json-modal-type" style="color:var(--primary);font-size:0.85rem;"></span></h3>
+
+            <!-- JSON Reference Box -->
+            <div id="json-reference-box" style="display:none;margin-bottom:10px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
+                    <label style="font-size:0.75rem;font-weight:700;color:var(--text-sec);margin:0;"><i class="fas fa-info-circle" style="color:var(--primary);"></i> الصيغة المرجعية للـ JSON</label>
+                    <button id="copy-ref-btn" onclick="copyReferenceJson()" style="background:var(--primary);color:#fff;border:none;padding:4px 12px;border-radius:12px;cursor:pointer;font-size:0.7rem;font-family:'Tajawal',sans-serif;display:flex;align-items:center;gap:5px;">
+                        <i class="fas fa-copy"></i> نسخ
+                    </button>
+                </div>
+                <pre id="json-reference-content" style="background:#1e1e2e;color:#a8f7b5;border-radius:12px;padding:12px;font-size:0.72rem;direction:ltr;text-align:left;overflow-x:auto;margin:0;line-height:1.6;max-height:160px;overflow-y:auto;"></pre>
+            </div>
+
+            <label style="font-size:0.75rem;font-weight:700;color:var(--text-sec);"><i class="fas fa-paste" style="color:var(--primary);"></i> الصق بياناتك هنا</label>
+            <textarea class="json-textarea" id="json-textarea" placeholder="الصق بيانات JSON هنا..." style="min-height:180px;margin-top:4px;"></textarea>
             <div id="upload-progress" style="display:none; margin:10px 0; padding:8px; background:#f4f8fd; border-radius:10px; font-weight:bold; color:var(--primary); text-align:center;"></div>
             <div class="modal-actions">
-                <button class="btn-primary" onclick="submitJsonData()">رفع إلى السحابة</button>
-                <button onclick="closeJsonModal()" style="background:#ccc;border:none;padding:8px 16px;border-radius:20px;cursor:pointer;">إلغاء</button>
+                <button class="btn-primary" onclick="submitJsonData()"><i class="fas fa-cloud-upload-alt"></i> رفع إلى السحابة</button>
+                <button onclick="closeJsonModal()" style="background:#ccc;border:none;padding:8px 16px;border-radius:20px;cursor:pointer;font-family:'Tajawal',sans-serif;">إلغاء</button>
             </div>
         </div>
     </div>
@@ -1357,6 +1794,14 @@
                 كود HTML <span style="color:#e03c3c;">*</span>
                 <span style="font-weight:400;font-size:0.68rem;color:var(--text-muted);">(يدعم حتى 5000 سطر وأكثر - لن يتم اختصاره)</span>
             </label>
+            <!-- File upload trigger -->
+            <div style="margin-bottom:6px;">
+                <input type="file" id="template-file-upload" accept=".html,.htm" style="display:none" onchange="handleTemplateFileUpload(event)">
+                <button class="btn-outline-sm" onclick="document.getElementById('template-file-upload').click()" style="width:100%;justify-content:center;padding:8px;border-radius:12px;font-size:0.75rem;">
+                    <i class="fas fa-folder-open"></i>&nbsp; استعراض واختيار ملف HTML من جهازك
+                </button>
+                <div id="template-file-name" style="font-size:0.65rem;color:var(--text-muted);text-align:center;margin-top:3px;"></div>
+            </div>
             <textarea id="template-html-textarea" class="html-code-area" placeholder="<div>الصق كود HTML الكامل هنا...</div>" rows="25"></textarea>
             <div style="font-size:0.65rem;color:var(--text-muted);margin-top:4px;display:flex;justify-content:space-between;">
                 <span id="template-char-count">عدد الأحرف: 0</span>
@@ -1398,6 +1843,25 @@
         </div>
     </div>
 
+    <!-- ==================== Modal: إضافة عمل جديد ==================== -->
+    <div class="works-modal-overlay" id="add-work-modal" onclick="if(event.target===this)closeAddWorkModal()">
+        <div class="works-modal-box">
+            <h3><span style="background:linear-gradient(135deg,#ff0050,#00f2ea);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">🎬</span> إضافة عمل جديد</h3>
+            <label>اسم العمل *</label>
+            <input type="text" id="work-name-input" placeholder="مثال: درس الضرب - الصف الثالث" maxlength="120">
+            <label>رابط TikTok *</label>
+            <input type="text" id="work-url-input" placeholder="https://www.tiktok.com/@user/video/..." style="direction:ltr;text-align:left;font-family:monospace;font-size:0.75rem;">
+            <label>وصف (اختياري)</label>
+            <input type="text" id="work-desc-input" placeholder="وصف مختصر للعمل...">
+            <div class="modal-actions" style="margin-top:16px;">
+                <button class="btn-danger-sm" onclick="closeAddWorkModal()"><i class="fas fa-times"></i> إلغاء</button>
+                <button class="btn-primary" onclick="saveNewWork()" style="background:linear-gradient(135deg,#ff0050,#cc0040);"><i class="fas fa-save"></i> حفظ</button>
+            </div>
+        </div>
+    </div>
+    <!-- Toast نسخ الرابط -->
+    <div class="copy-toast" id="copy-toast">✅ تم نسخ الرابط!</div>
+
     <!-- ==================== Navigation Bars ==================== -->
     <div id="navigation-container">
         <div class="bottom-nav-wrapper active" id="nav-main">
@@ -1407,6 +1871,8 @@
                 <div class="nav-item" data-page="templates" onclick="navigateTo('templates')"><i class="fas fa-file-code"></i><span>القوالب</span></div>
                 <div class="nav-item" data-page="resources" onclick="navigateTo('resources')"><i class="fas fa-link"></i><span>الموارد</span></div>
                 <div class="nav-item" data-page="invoices" onclick="navigateTo('invoices')"><i class="fas fa-file-invoice-dollar"></i><span>الفواتير</span></div>
+                <div class="nav-item" data-page="curriculum" onclick="navigateTo('curriculum')"><i class="fas fa-book-open"></i><span>المنهج</span></div>
+                <div class="nav-item" data-page="works" onclick="navigateTo('works')"><i class="fab fa-tiktok"></i><span>أعمالنا</span></div>
                 <div class="nav-item" data-page="admin" onclick="navigateTo('admin')"><i class="fas fa-cog"></i><span>الإدارة</span></div>
             </div>
         </div>
@@ -1458,19 +1924,198 @@
                 <div class="nav-item" data-sub="settings" onclick="switchAdminTab('settings')"><i class="fas fa-cog"></i><span>إعدادات</span></div>
             </div>
         </div>
+        <div class="bottom-nav-wrapper" id="nav-curriculum">
+            <div class="bottom-nav">
+                <div class="nav-item active" data-sub="ppt" onclick="switchCurriculumTab('ppt')"><i class="fas fa-file-powerpoint"></i><span>بوربوينت</span></div>
+                <div class="nav-item" data-sub="worksheets" onclick="switchCurriculumTab('worksheets')"><i class="fas fa-file-alt"></i><span>أوراق عمل</span></div>
+                <div class="nav-item" data-sub="materials" onclick="switchCurriculumTab('materials')"><i class="fas fa-book"></i><span>المواد</span></div>
+                <div class="nav-item" data-sub="other" onclick="switchCurriculumTab('other')"><i class="fas fa-ellipsis-h"></i><span>أخرى</span></div>
+            </div>
+        </div>
     </div>
 
     <script>
-        // ==================== Firebase Configuration ====================
-        const firebaseConfig = {
-            apiKey: "AIzaSyC1TN2FUblcP_P1JNaRqAYhaVyLgn6f40Y",
-            authDomain: "my-wo-3140f.firebaseapp.com",
-            projectId: "my-wo-3140f",
-            storageBucket: "my-wo-3140f.firebasestorage.app",
-            messagingSenderId: "520809412261",
-            appId: "1:520809412261:web:0140457983a2496c26ff4c",
-            measurementId: "G-Z6XMDK23EN"
-        };
+        // ==================== GitHub-First Data Engine ====================
+        // كل البيانات تُحفظ في GitHub أولاً + localStorage كـ cache سريع
+
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+        }
+
+        // ---- Local Cache (localStorage) ----
+        function getLocalCollection(collectionName) {
+            try { const d = localStorage.getItem('col_' + collectionName); return d ? JSON.parse(d) : []; }
+            catch (e) { return []; }
+        }
+        function saveLocalCollection(collectionName, data) {
+            try { localStorage.setItem('col_' + collectionName, JSON.stringify(data)); return true; }
+            catch (e) { console.error('saveLocalCollection error:', e); return false; }
+        }
+
+        // ---- GitHub Settings ----
+        function getGHSettings() {
+            return {
+                token: localStorage.getItem('gh_token') || '',
+                repo:  localStorage.getItem('gh_repo')  || 'goo',
+                user:  localStorage.getItem('gh_user')  || 'fa78383012736al-a11y',
+                folder: localStorage.getItem('gh_folder') || 'database'
+            };
+        }
+
+        // SHA cache: avoids extra GET before every PUT
+        const _ghSha = {};
+
+        // ---- Push a full collection JSON to GitHub ----
+        let _syncTimer = null;
+        const _dirtyCollections = new Set();
+
+        function schedulePush(collectionName) {
+            _dirtyCollections.add(collectionName);
+            clearTimeout(_syncTimer);
+            _syncTimer = setTimeout(flushDirty, 1500); // batch writes within 1.5s
+        }
+
+        async function flushDirty() {
+            const cols = [..._dirtyCollections];
+            _dirtyCollections.clear();
+            for (const col of cols) {
+                await pushCollectionToGithub(col);
+            }
+        }
+
+        async function pushCollectionToGithub(collectionName) {
+            const s = getGHSettings();
+            if (!s.token) return;
+
+            // For template collections: only save locally-created items (not github-sourced)
+            const templateCols = ['t_files','t_records','t_exams','t_reports','t_plans'];
+            let data = getLocalCollection(collectionName);
+            if (templateCols.includes(collectionName)) {
+                data = data.filter(d => d.source !== 'github');
+            }
+
+            const path = `${s.folder}/${collectionName}.json`;
+            const apiUrl = `https://api.github.com/repos/${s.user}/${s.repo}/contents/${path}`;
+            const cacheKey = `${s.user}/${s.repo}/${path}`;
+
+            setSyncBadge('saving');
+            try {
+                // Get current SHA if not cached
+                if (!_ghSha[cacheKey]) {
+                    const r = await fetch(apiUrl, { headers: { Authorization: `token ${s.token}` } });
+                    if (r.status === 200) { const j = await r.json(); _ghSha[cacheKey] = j.sha; }
+                }
+
+                const body = {
+                    message: `sync ${collectionName} ${new Date().toISOString().slice(0,16)}`,
+                    content: btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2)))),
+                    branch: 'main'
+                };
+                if (_ghSha[cacheKey]) body.sha = _ghSha[cacheKey];
+
+                const res = await fetch(apiUrl, {
+                    method: 'PUT',
+                    headers: { Authorization: `token ${s.token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+
+                if (res.ok) {
+                    const j = await res.json();
+                    _ghSha[cacheKey] = j.content?.sha;
+                    setSyncBadge('ok');
+                } else {
+                    delete _ghSha[cacheKey]; // stale SHA – clear cache
+                    setSyncBadge('error');
+                    console.warn('GitHub push failed:', res.status, collectionName);
+                }
+            } catch(e) {
+                setSyncBadge('error');
+                console.warn('GitHub push error:', e.message, collectionName);
+            }
+        }
+
+        // ---- Load a collection from GitHub raw URL ----
+        async function loadCollectionFromGithub(collectionName, s) {
+            const path = `${s.folder}/${collectionName}.json`;
+            const rawUrl = `https://raw.githubusercontent.com/${s.user}/${s.repo}/main/${path}?t=${Date.now()}`;
+            try {
+                const res = await fetch(rawUrl, { cache: 'no-store' });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (Array.isArray(data)) { saveLocalCollection(collectionName, data); return data; }
+                }
+            } catch(e) { console.warn('GitHub load failed:', collectionName, e.message); }
+            return getLocalCollection(collectionName); // fallback to local cache
+        }
+
+        // ---- Sync Status Badge ----
+        function setSyncBadge(state) {
+            const badge = document.getElementById('sync-status');
+            if (!badge) return;
+            const states = {
+                ok:     { html: '<i class="fas fa-cloud"></i> GitHub ✓',        bg: '#e8f0ff', color: '#0062cc' },
+                saving: { html: '<i class="fas fa-spinner fa-spin"></i> حفظ...', bg: '#fff5ea', color: '#e07000' },
+                error:  { html: '<i class="fas fa-exclamation-triangle"></i> خطأ',bg: '#fff0f0', color: '#e03c3c' },
+                local:  { html: '<i class="fas fa-hdd"></i> محلي فقط',           bg: '#f4f8fd', color: '#8aaac8' }
+            };
+            const st = states[state] || states.local;
+            badge.innerHTML = st.html;
+            badge.style.background = st.bg;
+            badge.style.color = st.color;
+        }
+        function updateSyncStatus() {
+            const s = getGHSettings();
+            setSyncBadge(s.token ? 'ok' : 'local');
+        }
+
+        // ---- CRUD: save locally then push to GitHub ----
+        async function getCollectionSorted(collectionName, field = 'usageCount', limitCount = 2000) {
+            const data = getLocalCollection(collectionName);
+            return data.sort((a, b) => {
+                const av = a[field], bv = b[field];
+                if (typeof av === 'string' && typeof bv === 'string') return bv.localeCompare(av);
+                return (bv || 0) - (av || 0);
+            }).slice(0, limitCount);
+        }
+
+        async function addDocument(collectionName, data) {
+            try {
+                const collection = getLocalCollection(collectionName);
+                const newDoc = { id: generateId(), ...data, createdAt: new Date().toISOString(), usageCount: data.usageCount || 0 };
+                collection.unshift(newDoc);
+                saveLocalCollection(collectionName, collection);
+                schedulePush(collectionName);
+                return newDoc;
+            } catch (e) { console.error('addDocument error:', e); return null; }
+        }
+
+        async function updateDocument(collectionName, docId, updates) {
+            try {
+                const collection = getLocalCollection(collectionName);
+                const idx = collection.findIndex(d => d.id === docId);
+                if (idx >= 0) { collection[idx] = { ...collection[idx], ...updates }; saveLocalCollection(collectionName, collection); }
+                schedulePush(collectionName);
+                return true;
+            } catch (e) { console.error('updateDocument error:', e); return false; }
+        }
+
+        async function deleteDocument(collectionName, docId) {
+            try {
+                const collection = getLocalCollection(collectionName);
+                saveLocalCollection(collectionName, collection.filter(d => d.id !== docId));
+                schedulePush(collectionName);
+                return true;
+            } catch (e) { console.error('deleteDocument error:', e); return false; }
+        }
+
+        async function incrementUsage(collectionName, docId) {
+            try {
+                const collection = getLocalCollection(collectionName);
+                const idx = collection.findIndex(d => d.id === docId);
+                if (idx >= 0) { collection[idx].usageCount = (collection[idx].usageCount || 0) + 1; saveLocalCollection(collectionName, collection); }
+                schedulePush(collectionName);
+            } catch (e) { console.error('incrementUsage error:', e); }
+        }
         // ==================== App Version & GitHub Auto-Update ====================
         const APP_VERSION = '1.0.0';
         const GITHUB_RAW = 'https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main';
@@ -1528,25 +2173,6 @@
             }
         }
 
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        db.enablePersistence({ synchronizeTabs: true }).then(() => {
-            console.log('✅ Offline persistence enabled');
-            updateSyncStatus(true);
-        }).catch((err) => {
-            console.warn('Persistence error:', err);
-            updateSyncStatus(false);
-        });
-
-        function updateSyncStatus(online) {
-            const badge = document.getElementById('sync-status');
-            if (badge) {
-                badge.innerHTML = online ? '<i class="fas fa-cloud"></i> متصل' : '<i class="fas fa-wifi"></i> محلي';
-                badge.style.background = online ? '#e6faf4' : '#fff5ea';
-                badge.style.color = online ? '#00a87a' : '#e07000';
-            }
-        }
-
         // ==================== Collection Names ====================
         const COL = {
             T_FILES: 't_files',
@@ -1567,45 +2193,13 @@
             INVOICES: 'invoices',
             ORDERS: 'orders',
             ACTIVITIES: 'activities',
-            BROKER_PAYMENTS: 'broker_payments'
+            BROKER_PAYMENTS: 'broker_payments',
+            CURR_PPT: 'curr_ppt',
+            CURR_WORKSHEETS: 'curr_worksheets',
+            CURR_MATERIALS: 'curr_materials',
+            CURR_OTHER: 'curr_other',
+            WORKS: 'our_works'
         };
-
-        // ==================== Firestore Helpers ====================
-        async function getCollectionSorted(collectionName, field = 'usageCount', limitCount = 2000) {
-            try {
-                const snapshot = await db.collection(collectionName).orderBy(field, 'desc').limit(limitCount).get();
-                const data = [];
-                snapshot.forEach(doc => data.push({ id: doc.id, ...doc.data() }));
-                return data;
-            } catch (e) { console.error('getCollectionSorted error:', e); return []; }
-        }
-        async function addDocument(collectionName, data) {
-            try {
-                data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-                data.usageCount = data.usageCount || 0;
-                const docRef = await db.collection(collectionName).add(data);
-                return { id: docRef.id, ...data };
-            } catch (e) { console.error('addDocument error:', e); return null; }
-        }
-        async function updateDocument(collectionName, docId, updates) {
-            try { await db.collection(collectionName).doc(docId).update(updates); return true; } catch (e) { console.error(
-                    'updateDocument error:', e); return false; }
-        }
-        async function deleteDocument(collectionName, docId) {
-            try { await db.collection(collectionName).doc(docId).delete(); return true; } catch (e) { console.error(
-                    'deleteDocument error:', e); return false; }
-        }
-        async function incrementUsage(collectionName, docId) {
-            try {
-                const docRef = db.collection(collectionName).doc(docId);
-                await db.runTransaction(async (transaction) => {
-                    const doc = await transaction.get(docRef);
-                    if (!doc.exists) return;
-                    const current = doc.data().usageCount || 0;
-                    transaction.update(docRef, { usageCount: current + 1 });
-                });
-            } catch (e) { console.error('incrementUsage error:', e); }
-        }
 
         // ==================== GitHub Uploaded State Management ====================
         const GH_UPLOADED_KEY = 'gh_uploaded_templates';
@@ -1659,12 +2253,27 @@
             invoices: [],
             orders: [],
             activities: [],
-            brokerPayments: []
+            brokerPayments: [],
+            currPpt: [],
+            currWorksheets: [],
+            currMaterials: [],
+            currOther: [],
+            works: []
         };
         async function loadAllData() {
             try {
+                const s = getGHSettings();
+                setSyncBadge(s.token ? 'saving' : 'local');
+
+                if (s.token) {
+                    // جلب كل المجموعات من GitHub بالتوازي وتخزينها في الكاش المحلي
+                    const allCols = Object.values(COL);
+                    await Promise.all(allCols.map(col => loadCollectionFromGithub(col, s).catch(() => {})));
+                }
+
                 const [files, records, exams, reports, plans, wordwall, formsExams, formsSurveys, formsOther,
-                    driveBags, driveEnrich, driveRecords, driveOther, locutions, customers, invoices, orders, activities, brokerPayments
+                    driveBags, driveEnrich, driveRecords, driveOther, locutions, customers, invoices, orders, activities, brokerPayments,
+                    currPpt, currWorksheets, currMaterials, currOther, works
                 ] = await Promise.all([
                     getCollectionSorted(COL.T_FILES), getCollectionSorted(COL.T_RECORDS),
                     getCollectionSorted(COL.T_EXAMS), getCollectionSorted(COL.T_REPORTS),
@@ -1675,7 +2284,10 @@
                     getCollectionSorted(COL.DRIVE_OTHER), getCollectionSorted(COL.LOCUTIONS),
                     getCollectionSorted(COL.CUSTOMERS, 'createdAt'), getCollectionSorted(COL.INVOICES, 'createdAt'),
                     getCollectionSorted(COL.ORDERS, 'createdAt'), getCollectionSorted(COL.ACTIVITIES, 'createdAt'),
-                    getCollectionSorted(COL.BROKER_PAYMENTS, 'createdAt')
+                    getCollectionSorted(COL.BROKER_PAYMENTS, 'createdAt'),
+                    getCollectionSorted(COL.CURR_PPT), getCollectionSorted(COL.CURR_WORKSHEETS),
+                    getCollectionSorted(COL.CURR_MATERIALS), getCollectionSorted(COL.CURR_OTHER),
+                    getCollectionSorted(COL.WORKS, 'createdAt')
                 ]);
                 appData.templates = { files, records, exams, reports, plans };
                 appData.wordwall = wordwall;
@@ -1692,10 +2304,14 @@
                 appData.orders = orders;
                 appData.activities = activities;
                 appData.brokerPayments = brokerPayments;
+                appData.currPpt = currPpt;
+                appData.currWorksheets = currWorksheets;
+                appData.currMaterials = currMaterials;
+                appData.currOther = currOther;
+                appData.works = works;
                 console.log('✅ All data loaded - Templates:', totalTemplateCount());
-                updateSyncStatus(true);
-            } catch (e) { console.error('❌ Load error:', e);
-                updateSyncStatus(false); }
+                setSyncBadge(s.token ? 'ok' : 'local');
+            } catch (e) { console.error('❌ Load error:', e); setSyncBadge('error'); }
         }
         async function addActivityCloud(desc) {
             await addDocument(COL.ACTIVITIES, { desc, time: new Date().toLocaleString('ar-SA') });
@@ -1716,6 +2332,7 @@
         let currentDriveSubTab = 'bags';
         let currentAdminTab = 'users';
         let currentInvoicesTab = 'invoices';
+        let currentCurriculumTab = 'ppt';
         let currentJsonType = '';
         let currentPreviewItem = null;
 
@@ -1728,7 +2345,8 @@
                 formsSubTab: currentFormsSubTab,
                 driveSubTab: currentDriveSubTab,
                 adminTab: currentAdminTab,
-                invoicesTab: currentInvoicesTab
+                invoicesTab: currentInvoicesTab,
+                curriculumTab: currentCurriculumTab
             });
             if (navHistory.length > 50) navHistory.shift();
             updateBackButtonVisibility();
@@ -1758,13 +2376,17 @@
             currentDriveSubTab = prevState.driveSubTab;
             currentAdminTab = prevState.adminTab;
             currentInvoicesTab = prevState.invoicesTab || 'invoices';
+            currentCurriculumTab = prevState.curriculumTab || 'ppt';
             navigateTo(prevState.page);
             isRestoring = false;
             updateBackButtonVisibility();
         }
         function updateBackButtonVisibility() {
             const btn = document.getElementById('global-back-btn');
-            if (btn) btn.style.display = (navHistory.length > 0 || currentPage !== 'home') ? 'flex' : 'none';
+            const homeBtn = document.getElementById('global-home-btn');
+            const notHome = (navHistory.length > 0 || currentPage !== 'home');
+            if (btn) btn.style.display = notHome ? 'flex' : 'none';
+            if (homeBtn) homeBtn.style.display = notHome ? 'flex' : 'none';
         }
 
         function hideAllNavs() { document.querySelectorAll('.bottom-nav-wrapper').forEach(n => n.classList.remove(
@@ -1783,6 +2405,8 @@
             document.getElementById('nav-admin').classList.add('active'); }
         function showInvoicesNav() { hideAllNavs();
             document.getElementById('nav-invoices').classList.add('active'); }
+        function showCurriculumNav() { hideAllNavs();
+            document.getElementById('nav-curriculum').classList.add('active'); }
 
         function updateActiveNavItems() {
             document.querySelectorAll('.bottom-nav-wrapper.active .nav-item').forEach(item => item.classList.remove(
@@ -1806,6 +2430,7 @@
                         'active');
                     else if (activeWrapper.id === 'nav-invoices' && subAttr === currentInvoicesTab) item.classList.add(
                         'active');
+                    else if (activeWrapper.id === 'nav-curriculum' && subAttr === currentCurriculumTab) item.classList.add('active');
                 }
             });
         }
@@ -1834,7 +2459,7 @@
             } else if (pageId === 'templates') { showTemplatesNav();
                 switchTemplateTab(currentTemplateTab, true); } else if (pageId === 'resources') { showResourcesNav();
                 switchResourceTab(currentResourceTab, true); } else if (pageId === 'admin') { showAdminNav();
-                switchAdminTab(currentAdminTab, true); } else { showMainNav(); }
+                switchAdminTab(currentAdminTab, true); } else if (pageId === 'curriculum') { showCurriculumNav(); switchCurriculumTab(currentCurriculumTab, true); } else if (pageId === 'works') { showMainNav(); renderWorks(); } else { showMainNav(); }
             updateActiveNavItems();
             refreshAll();
         }
@@ -1906,6 +2531,383 @@
         function getTabLabel(t) { const m = { files: 'ملفات', records: 'سجلات', exams: 'اختبارات', reports: 'تقارير',
                 plans: 'خطط' }; return m[t] || t; }
 
+        // ==================== Curriculum Tab Functions ====================
+        const CURR_COL_MAP = { ppt: COL.CURR_PPT, worksheets: COL.CURR_WORKSHEETS, materials: COL.CURR_MATERIALS, other: COL.CURR_OTHER };
+        const CURR_DATA_MAP = { ppt: 'currPpt', worksheets: 'currWorksheets', materials: 'currMaterials', other: 'currOther' };
+        const CURR_ICON_MAP = { ppt: 'fa-file-powerpoint', worksheets: 'fa-file-alt', materials: 'fa-book', other: 'fa-ellipsis-h' };
+        const CURR_COLOR_MAP = { ppt: 'si-red', worksheets: 'si-green', materials: 'si-purple', other: '' };
+
+        function switchCurriculumTab(tab, silent = false) {
+            if (!silent && !isRestoring) pushNavState();
+            currentCurriculumTab = tab;
+            const page = document.getElementById('page-curriculum');
+            if (!page) return;
+            page.querySelectorAll('.sub-section').forEach(s => s.classList.remove('active'));
+            const target = document.getElementById('curriculum-' + tab + '-section');
+            if (target) target.classList.add('active');
+            updateActiveNavItems();
+            if (!silent && currentPage !== 'curriculum') { navigateTo('curriculum'); } else { renderCurriculumSection(tab); }
+        }
+
+        function onCurrStageChange(tab) {
+            const stage = document.getElementById('curr-' + tab + '-stage')?.value || '';
+            const gradeEl = document.getElementById('curr-' + tab + '-grade');
+            const subjectEl = document.getElementById('curr-' + tab + '-subject');
+            const unitEl = document.getElementById('curr-' + tab + '-unit');
+            const lessonEl = document.getElementById('curr-' + tab + '-lesson');
+            if (gradeEl) {
+                const grades = stage ? getGradesForStage(stage) : [];
+                gradeEl.innerHTML = '<option value="">كل الصفوف</option>' + grades.map(g => `<option value="${g}">${g}</option>`).join('');
+            }
+            if (subjectEl) subjectEl.innerHTML = '<option value="">كل المواد</option>';
+            if (unitEl) unitEl.innerHTML = '<option value="">كل الوحدات</option>';
+            if (lessonEl) lessonEl.innerHTML = '<option value="">كل الدروس</option>';
+            renderCurriculumSection(tab);
+        }
+
+        function onCurrGradeChange(tab) {
+            const grade = document.getElementById('curr-' + tab + '-grade')?.value || '';
+            const subjectEl = document.getElementById('curr-' + tab + '-subject');
+            const unitEl = document.getElementById('curr-' + tab + '-unit');
+            const lessonEl = document.getElementById('curr-' + tab + '-lesson');
+            if (subjectEl) {
+                const subjects = grade ? getSubjectsForGrade(grade) : [];
+                subjectEl.innerHTML = '<option value="">كل المواد</option>' + subjects.map(s => `<option value="${s}">${s}</option>`).join('');
+            }
+            if (unitEl) unitEl.innerHTML = '<option value="">كل الوحدات</option>';
+            if (lessonEl) lessonEl.innerHTML = '<option value="">كل الدروس</option>';
+            renderCurriculumSection(tab);
+        }
+
+        function onCurrSubjectChange(tab) {
+            const subject = document.getElementById('curr-' + tab + '-subject')?.value || '';
+            const data = appData[CURR_DATA_MAP[tab]] || [];
+            const unitEl = document.getElementById('curr-' + tab + '-unit');
+            const lessonEl = document.getElementById('curr-' + tab + '-lesson');
+            if (unitEl) {
+                const units = [...new Set(data.filter(d => !subject || d.subject === subject).map(d => d.unit).filter(Boolean))].sort();
+                unitEl.innerHTML = '<option value="">كل الوحدات</option>' + units.map(u => `<option value="${u}">${u}</option>`).join('');
+            }
+            if (lessonEl) lessonEl.innerHTML = '<option value="">كل الدروس</option>';
+            renderCurriculumSection(tab);
+        }
+
+        function renderCurriculumSection(tab) {
+            const dataKey = CURR_DATA_MAP[tab];
+            if (!dataKey) return;
+            let data = appData[dataKey] || [];
+
+            const semester = document.getElementById('curr-' + tab + '-semester')?.value || '';
+            const stage = document.getElementById('curr-' + tab + '-stage')?.value || '';
+            const grade = document.getElementById('curr-' + tab + '-grade')?.value || '';
+            const subject = document.getElementById('curr-' + tab + '-subject')?.value || '';
+            const unit = document.getElementById('curr-' + tab + '-unit')?.value || '';
+            const lesson = document.getElementById('curr-' + tab + '-lesson')?.value || '';
+
+            // --- واجهة المواد: تعبئة قوائم الصفوف والمواد ديناميكياً من البيانات ---
+            if (tab === 'materials') {
+                const gradeEl = document.getElementById('curr-materials-grade');
+                const subjectEl = document.getElementById('curr-materials-subject');
+                if (gradeEl) {
+                    const allGrades = [...new Set(data.map(d => d.grade).filter(Boolean))].sort();
+                    const curGrade = gradeEl.value;
+                    gradeEl.innerHTML = '<option value="">كل الصفوف</option>' + allGrades.map(g => `<option value="${g}">${g}</option>`).join('');
+                    if (curGrade) gradeEl.value = curGrade;
+                }
+                if (subjectEl) {
+                    const filteredForSub = grade ? data.filter(d => d.grade === grade) : data;
+                    const allSubjects = [...new Set(filteredForSub.map(d => d.subject).filter(Boolean))].sort();
+                    const curSub = subjectEl.value;
+                    subjectEl.innerHTML = '<option value="">كل المواد</option>' + allSubjects.map(s => `<option value="${s}">${s}</option>`).join('');
+                    if (curSub) subjectEl.value = curSub;
+                }
+            }
+
+            if (semester) data = data.filter(d => d.semester === semester);
+            if (stage) data = data.filter(d => d.stage === stage);
+            if (grade) data = data.filter(d => d.grade === grade);
+            if (subject) data = data.filter(d => d.subject === subject);
+            if (unit) data = data.filter(d => d.unit === unit);
+            if (lesson) data = data.filter(d => d.lesson === lesson);
+
+            // Update unit dropdown dynamically
+            const unitEl = document.getElementById('curr-' + tab + '-unit');
+            if (unitEl && !unit) {
+                const baseData = appData[dataKey] || [];
+                let filtered = baseData;
+                if (semester) filtered = filtered.filter(d => d.semester === semester);
+                if (stage) filtered = filtered.filter(d => d.stage === stage);
+                if (grade) filtered = filtered.filter(d => d.grade === grade);
+                if (subject) filtered = filtered.filter(d => d.subject === subject);
+                const units = [...new Set(filtered.map(d => d.unit).filter(Boolean))].sort();
+                const curVal = unitEl.value;
+                unitEl.innerHTML = '<option value="">كل الوحدات</option>' + units.map(u => `<option value="${u}">${u}</option>`).join('');
+                if (curVal) unitEl.value = curVal;
+            }
+
+            // Update lesson dropdown
+            const lessonEl = document.getElementById('curr-' + tab + '-lesson');
+            if (lessonEl && !lesson) {
+                const baseData = appData[dataKey] || [];
+                let filtered = baseData;
+                if (semester) filtered = filtered.filter(d => d.semester === semester);
+                if (stage) filtered = filtered.filter(d => d.stage === stage);
+                if (grade) filtered = filtered.filter(d => d.grade === grade);
+                if (subject) filtered = filtered.filter(d => d.subject === subject);
+                if (unit) filtered = filtered.filter(d => d.unit === unit);
+                const lessons = [...new Set(filtered.map(d => d.lesson).filter(Boolean))].sort();
+                const curVal = lessonEl.value;
+                lessonEl.innerHTML = '<option value="">كل الدروس</option>' + lessons.map(l => `<option value="${l}">${l}</option>`).join('');
+                if (curVal) lessonEl.value = curVal;
+            }
+
+            const container = document.getElementById('curr-' + tab + '-container');
+            if (!container) return;
+
+            const tabLabels = { ppt: 'بوربوينت', worksheets: 'أوراق عمل', materials: 'مواد', other: 'أخرى' };
+            if (data.length === 0) {
+                container.innerHTML = `<div class="empty-state"><div class="empty-icon"><i class="fas ${CURR_ICON_MAP[tab]}"></i></div><h3>لا توجد عناصر</h3><p>أضف عناصر عبر "رفع JSON"</p></div>`;
+                return;
+            }
+
+            // --- عرض واجهة المواد بشكل مبسط (صف + فصل + مادة) ---
+            if (tab === 'materials') {
+                container.innerHTML = '<div class="service-card">' + data.map(item => `
+                    <div class="service-row">
+                        <span class="right">
+                            <span class="srv-icon ${CURR_COLOR_MAP[tab] || 'si-purple'}"><i class="fas ${CURR_ICON_MAP[tab]}"></i></span>
+                            <span style="flex:1;min-width:0;">
+                                <span style="display:block;font-weight:600;">${item.subject || item.title || item.name || 'بدون عنوان'}</span>
+                                <span style="display:block;font-size:0.62rem;margin-top:2px;flex-wrap:wrap;display:flex;gap:3px;">
+                                    ${item.grade ? `<span class="tag tag-grade">${item.grade}</span>` : ''}
+                                    ${item.semester ? `<span class="tag tag-semester">ف${item.semester === 'الأول' ? '١' : '٢'}</span>` : ''}
+                                    ${item.subject ? `<span class="tag tag-subject">${item.subject}</span>` : ''}
+                                </span>
+                            </span>
+                        </span>
+                        <span class="actions-group">
+                            ${item.url ? `<a href="${item.url}" target="_blank" rel="noopener" class="btn-outline-sm" onclick="event.stopPropagation();" style="text-decoration:none;"><i class="fas fa-external-link-alt"></i> فتح</a>` : ''}
+                            <button class="btn-danger-sm" onclick="deleteCurriculumItem('${tab}','${item.id}')"><i class="fas fa-trash"></i></button>
+                        </span>
+                    </div>`).join('') + '</div>';
+                return;
+            }
+
+            const semesterColors = { 'الأول': 'tag-semester', 'الثاني': 'tag-semester' };
+            container.innerHTML = '<div class="service-card">' + data.map(item => `
+                <div class="service-row">
+                    <span class="right">
+                        <span class="srv-icon ${CURR_COLOR_MAP[tab] || 'si-blue'}"><i class="fas ${CURR_ICON_MAP[tab]}"></i></span>
+                        <span style="flex:1;min-width:0;">
+                            <span style="display:block;font-weight:600;">${item.title || item.name || 'بدون عنوان'}</span>
+                            <span style="display:block;font-size:0.62rem;margin-top:2px;flex-wrap:wrap;display:flex;gap:3px;">
+                                ${item.semester ? `<span class="tag tag-semester">ف${item.semester === 'الأول' ? '١' : '٢'}</span>` : ''}
+                                ${item.grade ? `<span class="tag tag-grade">${item.grade}</span>` : ''}
+                                ${item.subject ? `<span class="tag tag-subject">${item.subject}</span>` : ''}
+                                ${item.unit ? `<span class="tag" style="background:#f0f4ff;color:#4a6a8a;">و: ${item.unit}</span>` : ''}
+                                ${item.lesson ? `<span class="tag" style="background:#f9f0ff;color:#7c3aed;">د: ${item.lesson}</span>` : ''}
+                            </span>
+                        </span>
+                    </span>
+                    <span class="actions-group">
+                        ${item.url ? `<a href="${item.url}" target="_blank" rel="noopener" class="btn-outline-sm" onclick="event.stopPropagation();" style="text-decoration:none;"><i class="fas fa-external-link-alt"></i> فتح</a>` : ''}
+                        <button class="btn-danger-sm" onclick="deleteCurriculumItem('${tab}','${item.id}')"><i class="fas fa-trash"></i></button>
+                    </span>
+                </div>`).join('') + '</div>';
+        }
+
+        async function deleteCurriculumItem(tab, id) {
+            if (!confirm('هل أنت متأكد من الحذف؟')) return;
+            const dataKey = CURR_DATA_MAP[tab];
+            await deleteDocument(CURR_COL_MAP[tab], id);
+            appData[dataKey] = (appData[dataKey] || []).filter(d => d.id !== id);
+            renderCurriculumSection(tab);
+        }
+
+        let currentCurriculumJsonTab = '';
+        function openCurriculumJsonModal(tab) {
+            currentCurriculumJsonTab = tab;
+            const tabLabels = { ppt: 'بوربوينت', worksheets: 'أوراق عمل', materials: 'المواد', other: 'أخرى' };
+            document.getElementById('json-modal-type').textContent = '— ' + (tabLabels[tab] || tab);
+            document.getElementById('json-textarea').value = '';
+            document.getElementById('json-textarea').placeholder = 'الصق مصفوفة JSON هنا...';
+
+            const hintMap = {
+                materials: `[
+  {
+    "grade": "الرابع الابتدائي",
+    "semester": "الأول",
+    "subject": "الرياضيات",
+    "url": "https://..."
+  }
+]`,
+                ppt: `[
+  {
+    "title": "عنوان الدرس",
+    "semester": "الأول",
+    "stage": "ابتدائي",
+    "grade": "الرابع الابتدائي",
+    "subject": "الرياضيات",
+    "unit": "الوحدة الأولى",
+    "lesson": "الدرس الأول",
+    "url": "https://..."
+  }
+]`,
+                worksheets: `[
+  {
+    "title": "عنوان ورقة العمل",
+    "semester": "الأول",
+    "stage": "ابتدائي",
+    "grade": "الرابع الابتدائي",
+    "subject": "الرياضيات",
+    "unit": "الوحدة الأولى",
+    "lesson": "الدرس الأول",
+    "url": "https://..."
+  }
+]`,
+                other: `[
+  {
+    "title": "عنوان العنصر",
+    "semester": "الأول",
+    "stage": "ابتدائي",
+    "grade": "الرابع الابتدائي",
+    "subject": "الرياضيات",
+    "unit": "الوحدة الأولى",
+    "lesson": "الدرس الأول",
+    "url": "https://..."
+  }
+]`
+            };
+            const hint = hintMap[tab] || hintMap.ppt;
+            // Show reference box with the JSON hint
+            const refBox = document.getElementById('json-reference-box');
+            const refContent = document.getElementById('json-reference-content');
+            if (refBox && refContent) {
+                refContent.textContent = hint;
+                refBox.style.display = 'block';
+            }
+            window._currJsonMode = true;
+            window._currJsonReference = hint;
+            document.getElementById('json-modal').classList.add('active');
+        }
+
+        function copyReferenceJson() {
+            const ref = window._currJsonReference || document.getElementById('json-reference-content')?.textContent || '';
+            if (!ref) return;
+            navigator.clipboard.writeText(ref).then(() => {
+                const btn = document.getElementById('copy-ref-btn');
+                if (btn) {
+                    btn.innerHTML = '<i class="fas fa-check"></i> تم النسخ!';
+                    btn.style.background = '#00a87a';
+                    setTimeout(() => {
+                        btn.innerHTML = '<i class="fas fa-copy"></i> نسخ';
+                        btn.style.background = 'var(--primary)';
+                    }, 2000);
+                }
+            }).catch(() => {
+                // Fallback for older browsers
+                const ta = document.createElement('textarea');
+                ta.value = ref;
+                ta.style.position = 'fixed';
+                ta.style.opacity = '0';
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+                const btn = document.getElementById('copy-ref-btn');
+                if (btn) {
+                    btn.innerHTML = '<i class="fas fa-check"></i> تم النسخ!';
+                    btn.style.background = '#00a87a';
+                    setTimeout(() => { btn.innerHTML = '<i class="fas fa-copy"></i> نسخ'; btn.style.background = 'var(--primary)'; }, 2000);
+                }
+            });
+        }
+
+        async function submitCurriculumJson(tab, rawJson) {
+            let items;
+            try { items = JSON.parse(rawJson); } catch(e) { alert('❌ JSON غير صالح: ' + e.message); return; }
+            if (!Array.isArray(items)) items = [items];
+            const progEl = document.getElementById('upload-progress');
+            progEl.style.display = 'block';
+            progEl.textContent = '⏳ جاري الرفع...';
+            let added = 0;
+            const dataKey = CURR_DATA_MAP[tab];
+            for (const item of items) {
+                const newDoc = await addDocument(CURR_COL_MAP[tab], { ...item, usageCount: 0 });
+                if (newDoc) { appData[dataKey].unshift(newDoc); added++; }
+            }
+            progEl.textContent = `✅ تم إضافة ${added} عنصر بنجاح`;
+            renderCurriculumSection(tab);
+            setTimeout(() => { closeJsonModal(); progEl.style.display = 'none'; }, 1500);
+            await addActivityCloud(`إضافة ${added} عنصر في المنهج - ${tab}`);
+        }
+
+        // ==================== HTML File Upload Handler ====================
+        function handleTemplateFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('template-html-textarea').value = e.target.result;
+                const nameInput = document.getElementById('template-name-input');
+                if (!nameInput.value) {
+                    nameInput.value = file.name.replace(/\.(html|htm)$/i, '').replace(/-/g, ' ');
+                }
+                document.getElementById('template-file-name').textContent = '📄 ' + file.name + ' (' + (file.size / 1024).toFixed(1) + ' KB)';
+                updateTemplateCharCount();
+            };
+            reader.readAsText(file, 'UTF-8');
+            event.target.value = '';
+        }
+
+        // ==================== Direct GitHub Upload (without saving locally) ====================
+        function triggerDirectGithubUpload() {
+            const token = localStorage.getItem('gh_token') || '';
+            if (!token) return alert('⚠️ يرجى ضبط إعدادات GitHub (Token) أولاً في شريط الإعدادات أعلاه');
+            document.getElementById('direct-github-file-input').click();
+        }
+
+        async function handleDirectGithubUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            event.target.value = '';
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const htmlContent = e.target.result;
+                const fileName = file.name.replace(/\.(html|htm)$/i, '');
+                const folder = getGithubFolderForTab(currentTemplateTab);
+                const settings = await loadGithubSettingsFromFirestore();
+                if (!settings.token) return alert('⚠️ يرجى إدخال GitHub Token أولاً');
+
+                const slug = fileName.replace(/\s+/g, '-').toLowerCase();
+                const statusMsg = document.createElement('div');
+                statusMsg.id = 'direct-upload-toast';
+                statusMsg.style.cssText = 'position:fixed;bottom:90px;right:16px;background:#24292e;color:#fff;padding:10px 16px;border-radius:14px;font-size:0.78rem;z-index:9999;display:flex;align-items:center;gap:8px;box-shadow:0 4px 16px rgba(0,0,0,0.3);';
+                statusMsg.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري رفع ' + file.name + ' إلى GitHub...';
+                document.body.appendChild(statusMsg);
+
+                try {
+                    const url = `https://api.github.com/repos/${settings.user}/${settings.repo}/contents/${folder}/${slug}.html`;
+                    const getRes = await fetch(url, { headers: { 'Authorization': `token ${settings.token}` } });
+                    const existing = getRes.status === 200 ? await getRes.json() : null;
+                    const body = { message: `Upload ${slug}.html`, content: btoa(unescape(encodeURIComponent(htmlContent))), branch: 'main' };
+                    if (existing && existing.sha) body.sha = existing.sha;
+                    const res = await fetch(url, { method: 'PUT', headers: { 'Authorization': `token ${settings.token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+                    if (!res.ok) { const err = await res.json(); throw new Error(err.message || 'فشل الرفع'); }
+
+                    statusMsg.innerHTML = '<i class="fas fa-check-circle" style="color:#00c896;"></i> تم رفع <strong>' + file.name + '</strong> بنجاح ✓';
+                    await addActivityCloud('رفع مباشر لـ GitHub: ' + fileName);
+                    // Refresh GitHub files to show the new one
+                    await fetchGithubFiles();
+                } catch (err) {
+                    statusMsg.innerHTML = '<i class="fas fa-times-circle" style="color:#e03c3c;"></i> فشل الرفع: ' + err.message;
+                } finally {
+                    setTimeout(() => statusMsg.remove(), 4000);
+                }
+            };
+            reader.readAsText(file, 'UTF-8');
+        }
+
         // ==================== Template Modal Functions ====================
         function openTemplateModal(editId = null) {
             const modal = document.getElementById('template-modal');
@@ -1936,6 +2938,7 @@
                 editIdInput.value = '';
                 saveBtn.innerHTML = '<i class="fas fa-save"></i> حفظ القالب';
                 previewBtn.style.display = 'none';
+                const fn = document.getElementById('template-file-name'); if (fn) fn.textContent = '';
             }
             updateTemplateCharCount();
             modal.classList.add('active');
@@ -1945,6 +2948,8 @@
         function closeTemplateModal() {
             document.getElementById('template-modal').classList.remove('active');
             document.getElementById('template-modal-status').textContent = '';
+            const fn = document.getElementById('template-file-name'); if (fn) fn.textContent = '';
+            const fu = document.getElementById('template-file-upload'); if (fu) fu.value = '';
             currentPreviewItem = null;
         }
 
@@ -2151,7 +3156,7 @@
         async function uploadTemplateToGithub(tab, itemId) {
             const item = appData.templates[tab].find(d => d.id === itemId);
             if (!item) return alert('القالب غير موجود');
-            // جلب الإعدادات من Firestore بدلاً من localStorage
+            // جلب الإعدادات من localStorage
             const settings = await loadGithubSettingsFromFirestore();
             const token = settings.token || '';
             const repo = settings.repo || 'goo';
@@ -2483,10 +3488,16 @@
             window.open(url, '_blank');
             renderFormsSubData(); }
 
+        // ==================== Bags Folder System ====================
+        let _openBagFolders = new Set(); // اسماء الحقائب المفتوحة
+
         function renderDriveSubData() {
-            const map = { bags: appData.driveBags, enrich: appData.driveEnrich, records: appData.driveRecords,
-                other: appData.driveOther };
-            const data = map[currentDriveSubTab] || []; // عرض الكل بدون slice(0,10)
+            if (currentDriveSubTab === 'bags') {
+                renderBagsFolders();
+                return;
+            }
+            const map = { enrich: appData.driveEnrich, records: appData.driveRecords, other: appData.driveOther };
+            const data = map[currentDriveSubTab] || [];
             const container = document.getElementById('drive-' + currentDriveSubTab + '-container');
             if (!container) return;
             if (data.length === 0) { container.innerHTML =
@@ -2497,6 +3508,122 @@
                 (d.name || d.title || 'ملف') +
                 '</div></div><div class="r-arrow"><i class="fas fa-external-link-alt"></i></div></div>').join('');
         }
+
+        function renderBagsFolders() {
+            const foldersView = document.getElementById('drive-bags-folders-view');
+            if (!foldersView) return;
+            const data = appData.driveBags || [];
+
+            // تجميع الملفات حسب اسم الحقيبة (bagName أو bag)
+            const bagsMap = {};
+            for (const item of data) {
+                const bagName = item.bagName || item.bag || item.category || 'بدون حقيبة';
+                if (!bagsMap[bagName]) bagsMap[bagName] = [];
+                bagsMap[bagName].push(item);
+            }
+
+            const bagNames = Object.keys(bagsMap).sort();
+
+            if (bagNames.length === 0) {
+                foldersView.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon"><i class="fas fa-folder-open"></i></div>
+                        <h3>لا توجد حقائب</h3>
+                        <p>ارفع بيانات JSON لإنشاء حقائب</p>
+                    </div>`;
+                // زر إنشاء حقيبة جديدة
+                foldersView.innerHTML += `<button class="bag-new-folder-btn" onclick="createNewBag()"><i class="fas fa-folder-plus"></i> إنشاء حقيبة جديدة</button>`;
+                return;
+            }
+
+            let html = `<div class="bags-folders-grid">`;
+            for (const bagName of bagNames) {
+                const items = bagsMap[bagName];
+                const isOpen = _openBagFolders.has(bagName);
+                const escapedName = bagName.replace(/'/g, "\\'");
+                html += `
+                <div class="bag-folder-card" id="bag-folder-${btoa(encodeURIComponent(bagName)).replace(/=/g,'')}">
+                    <div class="bag-folder-header" onclick="toggleBagFolder('${escapedName}')">
+                        <div class="bag-folder-icon"><i class="fas fa-folder${isOpen ? '-open' : ''}"></i></div>
+                        <div class="bag-folder-info">
+                            <span class="bag-folder-name">${bagName}</span>
+                            <span class="bag-folder-count">${items.length} ملف</span>
+                        </div>
+                        <div class="bag-folder-actions">
+                            <span class="plus-tag" style="font-size:0.6rem;padding:3px 8px;" onclick="event.stopPropagation();openBagJsonModal('${escapedName}')">
+                                <i class="fas fa-plus"></i> إضافة
+                            </span>
+                            <i class="fas fa-chevron-left bag-folder-chevron${isOpen ? ' open' : ''}"></i>
+                        </div>
+                    </div>
+                    <div class="bag-folder-files${isOpen ? ' open' : ''}">
+                        <div class="bag-folder-files-inner">
+                            ${items.map(d => `
+                            <div class="bag-file-item" onclick="handleBagFileClick('${d.id}','${(d.url||'').replace(/'/g,"\\'")}')">
+                                <div class="bag-file-icon"><i class="fas fa-file-alt"></i></div>
+                                <span class="bag-file-name">${d.name || d.title || 'ملف'}</span>
+                                <span style="font-size:0.55rem;color:var(--text-muted);">👁${d.usageCount||0}</span>
+                                <i class="fas fa-external-link-alt bag-file-arrow"></i>
+                            </div>`).join('')}
+                            <button class="bag-add-btn" onclick="openBagJsonModal('${escapedName}')">
+                                <i class="fas fa-cloud-upload-alt"></i> إضافة ملفات لهذه الحقيبة
+                            </button>
+                        </div>
+                    </div>
+                </div>`;
+            }
+            html += `</div>`;
+            html += `<button class="bag-new-folder-btn" onclick="createNewBag()"><i class="fas fa-folder-plus"></i> إنشاء حقيبة جديدة</button>`;
+            foldersView.innerHTML = html;
+        }
+
+        function toggleBagFolder(bagName) {
+            if (_openBagFolders.has(bagName)) {
+                _openBagFolders.delete(bagName);
+            } else {
+                _openBagFolders.add(bagName);
+            }
+            renderBagsFolders();
+        }
+
+        async function handleBagFileClick(id, url) {
+            await incrementUsage(COL.DRIVE_BAGS, id);
+            const item = appData.driveBags.find(d => d.id === id);
+            if (item) item.usageCount = (item.usageCount || 0) + 1;
+            if (url && url !== '#') window.open(url, '_blank');
+            renderBagsFolders();
+        }
+
+        function createNewBag() {
+            const name = prompt('اسم الحقيبة الجديدة:');
+            if (!name || !name.trim()) return;
+            openBagJsonModal(name.trim());
+        }
+
+        // فتح مودال JSON لحقيبة معينة
+        function openBagJsonModal(bagName) {
+            window._bagJsonMode = true;
+            window._currentBagName = bagName;
+            document.getElementById('json-modal-type').textContent = '— حقيبة: ' + bagName;
+            document.getElementById('json-textarea').value = '';
+            const hint = `[
+  {
+    "bagName": "${bagName}",
+    "name": "اسم الملف",
+    "url": "https://drive.google.com/..."
+  }
+]`;
+            const refBox = document.getElementById('json-reference-box');
+            const refContent = document.getElementById('json-reference-content');
+            if (refBox && refContent) {
+                refContent.textContent = hint;
+                refBox.style.display = 'block';
+                window._currJsonReference = hint;
+            }
+            window._currJsonMode = false;
+            document.getElementById('json-modal').classList.add('active');
+        }
+
         async function handleDriveClick(subTab, id, url) { const map = { bags: COL.DRIVE_BAGS, enrich: COL.DRIVE_ENRICH,
                 records: COL.DRIVE_RECORDS, other: COL.DRIVE_OTHER }; await incrementUsage(map[subTab], id); if (url && url !==
                 '#') window.open(url, '_blank');
@@ -2961,8 +4088,7 @@
             const designerShare = (inv.amount||0)*0.5;
             const brokerPaid = inv.brokerPaid||0;
             document.getElementById('pdf-invoice-number').textContent = '#INV-' + String(inv.id).slice(-4);
-            document.getElementById('pdf-invoice-date').textContent = new Date(inv.createdAt?.toDate?.() || Date.now())
-                .toLocaleDateString('ar-SA');
+            document.getElementById('pdf-invoice-date').textContent = new Date(inv.createdAt || Date.now()).toLocaleDateString('ar-SA');
             document.getElementById('pdf-customer-name').textContent = inv.customer || '';
             document.getElementById('pdf-broker-name').textContent = inv.broker || '';
             document.getElementById('pdf-designer-name').textContent = inv.designer || '';
@@ -2983,6 +4109,8 @@
             const totalResources = appData.wordwall.length + appData.formsExams.length + appData.formsSurveys.length + appData
                 .formsOther.length + appData.driveBags.length + appData.driveEnrich.length + appData.driveRecords.length +
                 appData.driveOther.length + appData.locutions.length;
+            const totalCurriculum = (appData.currPpt||[]).length + (appData.currWorksheets||[]).length + (appData.currMaterials||[]).length + (appData.currOther||[]).length;
+            const totalWorks = (appData.works||[]).length;
             const statOrders = document.getElementById('stat-orders');
             const statTemplates = document.getElementById('stat-templates');
             const statInvoices = document.getElementById('stat-invoices');
@@ -2990,7 +4118,18 @@
             if (statOrders) statOrders.textContent = appData.orders.length;
             if (statTemplates) statTemplates.textContent = totalTemplates;
             if (statInvoices) statInvoices.textContent = appData.invoices.length;
-            if (totalResourcesEl) totalResourcesEl.textContent = (totalTemplates + totalResources).toLocaleString('ar-SA');
+            if (totalResourcesEl) totalResourcesEl.textContent = (totalTemplates + totalResources + totalCurriculum + totalWorks).toLocaleString('ar-SA');
+
+            // تحديث الإحصاءات التفصيلية إن وُجدت
+            const statWw = document.getElementById('stat-wordwall');
+            const statForms = document.getElementById('stat-forms');
+            const statCurr = document.getElementById('stat-curriculum');
+            const statWorks = document.getElementById('works-count-badge');
+            if (statWw) statWw.textContent = appData.wordwall.length;
+            if (statForms) statForms.textContent = appData.formsExams.length + appData.formsSurveys.length + appData.formsOther.length;
+            if (statCurr) statCurr.textContent = totalCurriculum;
+            if (statWorks) statWorks.textContent = totalWorks;
+
             updateTopUsed();
         }
         function updateTopUsed() {
@@ -3025,51 +4164,97 @@
             if (currentResourceTab === 'locutions') renderLocutions();
             renderOrders();
             renderInvoices();
+            if (currentPage === 'curriculum') renderCurriculumSection(currentCurriculumTab);
             updateStats();
         }
 
         // ==================== Search ====================
         function handleGlobalSearch() {
             const query = (document.getElementById('global-search')?.value || '').toLowerCase().trim();
-            const container = document.getElementById('search-suggestions'); if (!container) return; if (query.length < 1) {
-                container.classList.remove('active'); return; }
+            const container = document.getElementById('search-suggestions');
+            if (!container) return;
+            if (query.length < 1) { container.classList.remove('active'); return; }
+
             const results = [];
-            for (const tab of ['files', 'records', 'exams', 'reports', 'plans']) { appData.templates[tab].forEach(item => { if (
-                        (item.name || '').toLowerCase().includes(query) || (item.keywords || '').toLowerCase().includes(
-                            query)) results.push({ ...item, type: 'قالب-' + getTabLabel(tab), cat: 'templates',
-                        tab: tab }); }); }
-            appData.orders.forEach(o => { if ((o.description || '').toLowerCase().includes(query) || (o.broker || '')
-                    .toLowerCase().includes(query) || (o.customer || '').toLowerCase().includes(query)) results.push({ ...o,
-                    type: 'طلب', cat: 'orders' }); });
-            appData.wordwall.forEach(d => { if ((d.lesson || '').toLowerCase().includes(query) || (d.subject || '')
-                    .toLowerCase().includes(query) || (d.grade || '').toLowerCase().includes(query)) results.push({ ...d,
-                    type: 'Wordwall', cat: 'wordwall' }); });
-            [...appData.formsExams, ...appData.formsSurveys, ...appData.formsOther].forEach(d => { if ((d.name || d.title ||
-                    '').toLowerCase().includes(query)) results.push({ ...d, type: 'Forms', cat: 'forms' }); });
-            [...appData.driveBags, ...appData.driveEnrich, ...appData.driveRecords, ...appData.driveOther].forEach(d => { if ((
-                    d.name || d.title || '').toLowerCase().includes(query)) results.push({ ...d, type: 'Drive',
-                cat: 'drive' }); });
-            appData.locutions.forEach(d => { if ((d.name || '').toLowerCase().includes(query) || (d.type || '')
-                    .toLowerCase().includes(query)) results.push({ ...d, type: 'Locutions', cat: 'locutions' }); });
-            const unique = results.filter((r, i, arr) => arr.findIndex(x => x.id === r.id && x.cat === r.cat) === i).slice(0,
-                10);
-            container.innerHTML = unique.length === 0 ?
-                '<div style="padding:12px;text-align:center;color:var(--text-muted);">لا توجد نتائج</div>' : unique.map(r =>
-                    '<div class="suggestion-item" onclick="navigateToSearchResult(\'' + r.cat + '\',\'' + r.id + '\',\'' + (
-                        r.tab || '') + '\')"><span class="sug-type">' + r.type + '</span>' + (r.name || r.lesson || r
-                        .title || r.description || 'عنصر') + '</div>').join('');
+
+            // القوالب
+            for (const tab of ['files', 'records', 'exams', 'reports', 'plans']) {
+                appData.templates[tab].forEach(item => {
+                    if ((item.name || '').toLowerCase().includes(query) || (item.keywords || '').toLowerCase().includes(query))
+                        results.push({ ...item, _display: item.name || 'قالب', type: 'قالب-' + getTabLabel(tab), cat: 'templates', tab });
+                });
+            }
+
+            // الطلبات
+            appData.orders.forEach(o => {
+                if ((o.description || '').toLowerCase().includes(query) || (o.broker || '').toLowerCase().includes(query) || (o.customer || '').toLowerCase().includes(query))
+                    results.push({ ...o, _display: o.description || o.customer || 'طلب', type: 'طلب', cat: 'orders' });
+            });
+
+            // Wordwall — بحث في الدرس والمادة والصف والفصل
+            appData.wordwall.forEach(d => {
+                if ((d.lesson || '').toLowerCase().includes(query) || (d.subject || '').toLowerCase().includes(query) ||
+                    (d.grade || '').toLowerCase().includes(query) || (d.semester || '').toLowerCase().includes(query))
+                    results.push({ ...d, _display: (d.lesson || '') + (d.subject ? ' — ' + d.subject : '') + (d.grade ? ' | ' + d.grade : ''), type: 'Wordwall', cat: 'wordwall' });
+            });
+
+            // Forms — بحث في الاسم والمادة والصف
+            [...appData.formsExams, ...appData.formsSurveys, ...appData.formsOther].forEach(d => {
+                if ((d.name || d.title || '').toLowerCase().includes(query) || (d.subject || '').toLowerCase().includes(query) || (d.grade || '').toLowerCase().includes(query))
+                    results.push({ ...d, _display: d.name || d.title || 'نموذج', type: 'Forms', cat: 'forms' });
+            });
+
+            // Drive
+            [...appData.driveBags, ...appData.driveEnrich, ...appData.driveRecords, ...appData.driveOther].forEach(d => {
+                if ((d.name || d.title || '').toLowerCase().includes(query))
+                    results.push({ ...d, _display: d.name || d.title || 'ملف', type: 'Drive', cat: 'drive' });
+            });
+
+            // Locutions
+            appData.locutions.forEach(d => {
+                if ((d.name || '').toLowerCase().includes(query) || (d.type || '').toLowerCase().includes(query))
+                    results.push({ ...d, _display: d.name || 'ملف', type: 'Locutions', cat: 'locutions' });
+            });
+
+            // المنهج — بحث في اسم الدرس والمادة والوحدة والصف
+            [...(appData.currPpt||[]), ...(appData.currWorksheets||[]), ...(appData.currMaterials||[]), ...(appData.currOther||[])].forEach(d => {
+                if ((d.lesson || '').toLowerCase().includes(query) || (d.subject || '').toLowerCase().includes(query) ||
+                    (d.unit || '').toLowerCase().includes(query) || (d.grade || '').toLowerCase().includes(query))
+                    results.push({ ...d, _display: (d.lesson || d.subject || 'درس') + (d.grade ? ' | ' + d.grade : ''), type: 'منهج', cat: 'curriculum' });
+            });
+
+            // الفواتير — بحث في العميل والوسيط والمصمم
+            appData.invoices.forEach(inv => {
+                if ((inv.customer || '').toLowerCase().includes(query) || (inv.broker || '').toLowerCase().includes(query) || (inv.designer || '').toLowerCase().includes(query))
+                    results.push({ ...inv, _display: (inv.customer || '') + (inv.broker ? ' — ' + inv.broker : ''), type: 'فاتورة', cat: 'invoices' });
+            });
+
+            const unique = results.filter((r, i, arr) => arr.findIndex(x => x.id === r.id && x.cat === r.cat) === i).slice(0, 12);
+
+            if (unique.length === 0) {
+                container.innerHTML = '<div style="padding:12px;text-align:center;color:var(--text-muted);font-size:0.8rem;">🔍 لا توجد نتائج لـ «' + query + '»</div>';
+            } else {
+                const countBadge = `<div style="padding:6px 14px 2px;font-size:0.65rem;color:var(--text-muted);">وُجد <strong style="color:var(--primary);">${unique.length}</strong> نتيجة</div>`;
+                container.innerHTML = countBadge + unique.map(r => {
+                    const display = (r._display || '').replace(new RegExp(query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi'), match => `<strong style="color:var(--primary);">${match}</strong>`);
+                    return `<div class="suggestion-item" onclick="navigateToSearchResult('${r.cat}','${r.id}','${r.tab || ''}')"><span class="sug-type">${r.type}</span><span>${display}</span></div>`;
+                }).join('');
+            }
             container.classList.add('active');
         }
-        async function navigateToSearchResult(cat, id, tab) { document.getElementById('search-suggestions').classList.remove(
-                'active');
-            const searchInput = document.getElementById('global-search'); if (searchInput) searchInput.value = ''; if (cat ===
-                'orders') { navigateTo('orders'); } else if (cat === 'templates') { currentTemplateTab = tab || 'files';
-                navigateTo('templates'); } else if (cat === 'wordwall') { currentResourceTab = 'wordwall';
-                navigateTo('resources'); await incrementUsage(COL.WORDWALL, id); } else if (cat === 'forms') {
-                currentResourceTab = 'forms';
-                navigateTo('resources'); } else if (cat === 'drive') { currentResourceTab = 'drive';
-                navigateTo('resources'); } else if (cat === 'locutions') { currentResourceTab = 'locutions';
-                navigateTo('resources'); await incrementUsage(COL.LOCUTIONS, id); } }
+
+        async function navigateToSearchResult(cat, id, tab) {
+            document.getElementById('search-suggestions').classList.remove('active');
+            const searchInput = document.getElementById('global-search'); if (searchInput) searchInput.value = '';
+            if (cat === 'orders') { navigateTo('orders'); }
+            else if (cat === 'templates') { currentTemplateTab = tab || 'files'; navigateTo('templates'); }
+            else if (cat === 'wordwall') { currentResourceTab = 'wordwall'; navigateTo('resources'); await incrementUsage(COL.WORDWALL, id); }
+            else if (cat === 'forms') { currentResourceTab = 'forms'; navigateTo('resources'); }
+            else if (cat === 'drive') { currentResourceTab = 'drive'; navigateTo('resources'); }
+            else if (cat === 'locutions') { currentResourceTab = 'locutions'; navigateTo('resources'); await incrementUsage(COL.LOCUTIONS, id); }
+            else if (cat === 'curriculum') { navigateTo('curriculum'); }
+            else if (cat === 'invoices') { navigateTo('invoices'); }
+        }
 
         // ==================== CRUD: Locutions & Invoices ====================
         async function addLocution() { const name = prompt('اسم الملف/العرض:'); if (!name || !name.trim()) return;
@@ -3115,7 +4300,6 @@
         // ==================== JSON Upload Modal ====================
         function openJsonModal(type) { currentJsonType = type;
             document.getElementById('json-modal-type').textContent = '(' + type + ')';
-            // قالب JSON تلميحي حسب النوع
             const hints = {
                 wordwall: JSON.stringify([
                     { lesson: "اسم الدرس", grade: "الأول الابتدائي", subject: "الرياضيات", semester: "الأول", url: "https://wordwall.net/..." },
@@ -3128,60 +4312,85 @@
                     { name: "اسم الحقيبة أو الملف", url: "https://drive.google.com/..." }
                 ], null, 2)
             };
-            document.getElementById('json-textarea').value = hints[type] || '';
-            const progress = document.getElementById('upload-progress'); if (progress) { progress.style.display = 'none';
-                progress.textContent = ''; }
+            const refHint = hints[type] || '';
+            document.getElementById('json-textarea').value = refHint;
+            document.getElementById('json-textarea').placeholder = 'الصق بيانات JSON هنا...';
+            // Show reference box
+            const refBox = document.getElementById('json-reference-box');
+            const refContent = document.getElementById('json-reference-content');
+            if (refBox && refContent && refHint) {
+                refContent.textContent = refHint;
+                window._currJsonReference = refHint;
+                refBox.style.display = 'block';
+            } else if (refBox) { refBox.style.display = 'none'; }
+            const progress = document.getElementById('upload-progress'); if (progress) { progress.style.display = 'none'; progress.textContent = ''; }
+            window._currJsonMode = false;
             document.getElementById('json-modal').classList.add('active'); }
-        function closeJsonModal() { document.getElementById('json-modal').classList.remove('active'); }
-        async function submitJsonData() { const raw = document.getElementById('json-textarea').value.trim(); if (!raw) return alert(
-                'الرجاء لصق بيانات JSON'); try { const data = JSON.parse(raw); const arr = Array.isArray(data) ? data : [
-                data
-            ]; if (arr.length === 0) return alert('لا توجد بيانات للرفع'); const progressDiv = document.getElementById(
-                'upload-progress'); if (progressDiv) { progressDiv.style.display = 'block';
-                progressDiv.textContent = 'جارٍ التحضير...'; } let added = 0,
-                skipped = 0; const BATCH_SIZE = 400; let collectionName, localArray; if (currentJsonType === 'wordwall') {
-                collectionName = COL.WORDWALL;
-                localArray = appData.wordwall; } else if (currentJsonType === 'forms') { collectionName = COL
-                    .FORMS_EXAMS;
-                localArray = appData.formsExams; } else if (currentJsonType === 'drive') { collectionName = COL
-                    .DRIVE_BAGS;
-                localArray = appData.driveBags; } else return alert('نوع JSON غير معروف'); const newItems = arr.filter(
-                item => !localArray.some(existing => existing.url === item.url));
-            skipped = arr.length - newItems.length; for (let i = 0; i < newItems.length; i += BATCH_SIZE) { const chunk =
-                    newItems.slice(i, i + BATCH_SIZE); const batch = db.batch();
-                chunk.forEach(item => { const docRef = db.collection(collectionName).doc();
-                    batch.set(docRef, { ...item, usageCount: 0,
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp() });
-                    localArray.unshift({ id: docRef.id, ...item, usageCount: 0 });
-                    added++; }); await batch.commit(); if (progressDiv) progressDiv.textContent = 'تم رفع ' + Math.min(
-                        i + BATCH_SIZE, newItems.length) + ' من ' + newItems.length; await new Promise(resolve =>
-                    setTimeout(resolve, 30)); } if (progressDiv) { progressDiv.innerHTML =
-                    '✅ تم بنجاح! أضيف: ' + added + ' | تخطي: ' + skipped;
-                setTimeout(() => { progressDiv.style.display = 'none';
-                    progressDiv.textContent = ''; }, 2500); } await addActivityCloud('رفع JSON: أضيف ' + added +
-                    ' | تخطي المكرر: ' + skipped); if (currentJsonType === 'wordwall') renderWordwall(); else if (
-                    currentJsonType === 'forms') renderFormsSubData(); else if (currentJsonType === 'drive')
-                renderDriveSubData(); } catch (e) { alert('❌ خطأ في صيغة JSON: ' + e.message); } }
+        function closeJsonModal() {
+            document.getElementById('json-modal').classList.remove('active');
+            window._currJsonMode = false;
+            window._currJsonReference = '';
+            const refBox = document.getElementById('json-reference-box');
+            if (refBox) refBox.style.display = 'none';
+        }
+        async function submitJsonData() {
+            const raw = document.getElementById('json-textarea').value.trim();
+            if (!raw) return alert('الرجاء لصق بيانات JSON');
+            // Handle curriculum JSON submission
+            if (window._currJsonMode && currentCurriculumJsonTab) {
+                await submitCurriculumJson(currentCurriculumJsonTab, raw);
+                window._currJsonMode = false;
+                currentCurriculumJsonTab = '';
+                return;
+            }
+            // Handle bag JSON submission
+            if (window._bagJsonMode && window._currentBagName) {
+                await submitBagJson(window._currentBagName, raw);
+                window._bagJsonMode = false;
+                return;
+            }
+            try { const data = JSON.parse(raw); const arr = Array.isArray(data) ? data : [data]; if (arr.length === 0) return alert('لا توجد بيانات للرفع'); const progressDiv = document.getElementById('upload-progress'); if (progressDiv) { progressDiv.style.display = 'block'; progressDiv.textContent = 'جارٍ التحضير...'; } let added = 0, skipped = 0; let collectionName, localArray; if (currentJsonType === 'wordwall') { collectionName = COL.WORDWALL; localArray = appData.wordwall; } else if (currentJsonType === 'forms') { collectionName = COL.FORMS_EXAMS; localArray = appData.formsExams; } else if (currentJsonType === 'drive') { collectionName = COL.DRIVE_BAGS; localArray = appData.driveBags; } else return alert('نوع JSON غير معروف');
+            const newItems = arr.filter(item => !localArray.some(existing => existing.url === item.url));
+            skipped = arr.length - newItems.length;
+            for (let i = 0; i < newItems.length; i++) {
+                const item = newItems[i];
+                const newDoc = await addDocument(collectionName, { ...item, usageCount: 0 });
+                if (newDoc) { localArray.unshift(newDoc); added++; }
+                if (progressDiv && i % 20 === 0) progressDiv.textContent = 'تم رفع ' + (i+1) + ' من ' + newItems.length;
+                if (i % 50 === 0) await new Promise(r => setTimeout(r, 10));
+            }
+            if (progressDiv) { progressDiv.innerHTML = '✅ تم بنجاح! أضيف: ' + added + ' | تخطي: ' + skipped;
+                setTimeout(() => { progressDiv.style.display = 'none'; progressDiv.textContent = ''; }, 2500); }
+            await addActivityCloud('رفع JSON: أضيف ' + added + ' | تخطي المكرر: ' + skipped);
+            if (currentJsonType === 'wordwall') renderWordwall(); else if (currentJsonType === 'forms') renderFormsSubData(); else if (currentJsonType === 'drive') renderDriveSubData();
+            } catch (e) { alert('❌ خطأ في صيغة JSON: ' + e.message); } }
+
+        async function submitBagJson(bagName, rawJson) {
+            let items;
+            try { items = JSON.parse(rawJson); } catch(e) { alert('❌ JSON غير صالح: ' + e.message); return; }
+            if (!Array.isArray(items)) items = [items];
+            const progEl = document.getElementById('upload-progress');
+            progEl.style.display = 'block';
+            progEl.textContent = '⏳ جاري الرفع...';
+            let added = 0;
+            for (const item of items) {
+                // تأكد أن اسم الحقيبة محفوظ في كل عنصر
+                const newDoc = await addDocument(COL.DRIVE_BAGS, { ...item, bagName: item.bagName || bagName, usageCount: 0 });
+                if (newDoc) { appData.driveBags.unshift(newDoc); added++; }
+            }
+            progEl.textContent = `✅ تم إضافة ${added} ملف لحقيبة "${bagName}"`;
+            // افتح الحقيبة تلقائياً بعد الإضافة
+            _openBagFolders.add(bagName);
+            renderBagsFolders();
+            updateStats();
+            setTimeout(() => { closeJsonModal(); progEl.style.display = 'none'; }, 1500);
+            await addActivityCloud(`إضافة ${added} ملف لحقيبة: ${bagName}`);
+        }
 
         // ==================== GitHub Integration ====================
-        // جلب إعدادات GitHub من Firestore
+        // جلب إعدادات GitHub من localStorage
         async function loadGithubSettingsFromFirestore() {
-            try {
-                const docRef = db.collection('settings').doc('github_config');
-                const docSnap = await docRef.get();
-                if (docSnap.exists) {
-                    const data = docSnap.data();
-                    return {
-                        token: data.gh_token || '',
-                        repo: data.gh_repo || 'goo',
-                        user: data.gh_user || 'fa78383012736al-a11y',
-                        folder: data.gh_folder || 'database'
-                    };
-                }
-            } catch (e) {
-                console.error('Error loading GitHub settings from Firestore:', e);
-            }
-            return { token: '', repo: 'goo', user: 'fa78383012736al-a11y', folder: 'database' };
+            return getGHSettings();
         }
         
         // جلب ملفات GitHub من المستودع (نسخة مطورة وسريعة)
@@ -3263,16 +4472,20 @@
             document.getElementById('gh-token-inline').value = token;
             document.getElementById('gh-repo-inline').value = repo;
             document.getElementById('gh-folder-inline').value = folder; }
-        function saveCloudInlineSettings() { const token = document.getElementById('gh-token-inline').value.trim();
+        function saveCloudInlineSettings() {
+            const token = document.getElementById('gh-token-inline').value.trim();
             const repo = document.getElementById('gh-repo-inline').value.trim() || 'goo';
-            const folder = document.getElementById('gh-folder-inline').value.trim() || 'database'; if (!token) { document
-                .getElementById('cloud-inline-status').textContent = 'يجب إدخال Token'; return; }
+            const folder = document.getElementById('gh-folder-inline').value.trim() || 'database';
+            if (!token) { document.getElementById('cloud-inline-status').textContent = 'يجب إدخال Token'; return; }
             localStorage.setItem('gh_token', token);
             localStorage.setItem('gh_repo', repo);
             localStorage.setItem('gh_user', 'fa78383012736al-a11y');
             localStorage.setItem('gh_folder', folder);
-            document.getElementById('cloud-inline-status').textContent = '✅ تم الحفظ';
-            setTimeout(() => { document.getElementById('cloud-inline-status').textContent = ''; }, 2000); }
+            document.getElementById('cloud-inline-status').textContent = '✅ تم الحفظ — جاري مزامنة البيانات...';
+            updateSyncStatus();
+            // re-sync from GitHub with new settings
+            loadAllData().then(() => { refreshAll(); document.getElementById('cloud-inline-status').textContent = '✅ تمت المزامنة'; setTimeout(() => { document.getElementById('cloud-inline-status').textContent = ''; }, 2500); });
+        }
         function openGithubSettings() { document.getElementById('github-password').value = '';
             document.getElementById('github-modal').classList.add('active'); }
         function verifyGithubAccess() { const pw = document.getElementById('github-password').value; if (pw !==
@@ -3319,10 +4532,10 @@
                 r.readAsText(f); };
             input.click(); }
         async function clearAllData() { if (!confirm(
-                    '⚠️ تحذير: سيتم مسح جميع البيانات من السحابة نهائياً. هل أنت متأكد؟')) return; if (!confirm(
-                    'تأكيد نهائي: لا يمكن التراجع عن هذا الإجراء.')) return; const allCollections = Object.values(COL); for (
-                const col of allCollections) { const snapshot = await db.collection(col).get(); const batch = db.batch();
-                snapshot.forEach(doc => batch.delete(doc.ref)); await batch.commit(); }
+                    '⚠️ تحذير: سيتم مسح جميع البيانات المحلية نهائياً. هل أنت متأكد؟')) return; if (!confirm(
+                    'تأكيد نهائي: لا يمكن التراجع عن هذا الإجراء.')) return;
+            const allCollections = Object.values(COL);
+            for (const col of allCollections) { localStorage.removeItem('col_' + col); }
             appData.templates = { files: [], records: [], exams: [], reports: [], plans: [] };
             appData.wordwall = [];
             appData.formsExams = [];
@@ -3337,27 +4550,65 @@
             appData.invoices = [];
             appData.orders = [];
             appData.activities = [];
-            // إزالة جميع حالات رفع GitHub من التخزين المحلي
             localStorage.removeItem(GH_UPLOADED_KEY);
             refreshAll(); await addActivityCloud('تم مسح جميع البيانات');
-            alert('✅ تم مسح جميع البيانات من السحابة.'); }
-        async function syncNow() { document.getElementById('sync-status').innerHTML =
-                '<span class="loading-spinner"></span> جاري المزامنة...'; await loadAllData();
+            alert('✅ تم مسح جميع البيانات المحلية.'); }
+        async function syncNow() {
+            setSyncBadge('saving');
+            await loadAllData();
             refreshAll();
-            updateSyncStatus(true); await addActivityCloud('تمت المزامنة مع السحابة'); }
+            updateSyncStatus();
+            await addActivityCloud('تم مزامنة البيانات مع GitHub');
+        }
 
         let chartInst = null;
-        function initChart() { setTimeout(() => { const ctx = document.getElementById('revenueChart'); if (!ctx) return; if (
-                    chartInst) chartInst.destroy(); const monthly = Array(6).fill(0);
-                appData.invoices.forEach(inv => { if (inv.status === 'paid') { const date = inv.createdAt?.toDate?.() ||
-                            new Date();
-                        monthly[date.getMonth() % 6] += (inv.paid || inv.amount || 0); } });
-                chartInst = new Chart(ctx, { type: 'bar', data: { labels: ['1', '2', '3', '4', '5', '6'],
-                        datasets: [{ label: 'الإيرادات (ر.س)', data: monthly,
-                            backgroundColor: 'rgba(0,98,204,0.5)', borderColor: '#0062cc',
-                            borderWidth: 2, borderRadius: 6 }] }, options: { responsive: true,
-                        plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } } }); },
-            500); }
+        function initChart() { setTimeout(() => {
+            const ctx = document.getElementById('revenueChart');
+            if (!ctx) return;
+            if (chartInst) chartInst.destroy();
+
+            // بناء labels لآخر 6 أشهر
+            const arabicMonths = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+            const now = new Date();
+            const monthlyData = {};
+            const labels = [];
+            for (let i = 5; i >= 0; i--) {
+                const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+                const key = d.getFullYear() + '-' + d.getMonth();
+                monthlyData[key] = { total: 0, received: 0 };
+                labels.push(arabicMonths[d.getMonth()]);
+            }
+
+            // حساب البيانات الفعلية من الفواتير
+            appData.invoices.forEach(inv => {
+                const date = inv.createdAt ? new Date(inv.createdAt) : null;
+                if (!date) return;
+                const key = date.getFullYear() + '-' + date.getMonth();
+                if (monthlyData[key] !== undefined) {
+                    monthlyData[key].total += (inv.amount || 0);
+                    monthlyData[key].received += (inv.brokerPaid || 0);
+                }
+            });
+
+            const totalData = Object.values(monthlyData).map(m => m.total);
+            const receivedData = Object.values(monthlyData).map(m => m.received);
+
+            chartInst = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels,
+                    datasets: [
+                        { label: 'إجمالي الفواتير (ر.س)', data: totalData, backgroundColor: 'rgba(0,98,204,0.5)', borderColor: '#0062cc', borderWidth: 2, borderRadius: 6 },
+                        { label: 'المستلم (ر.س)', data: receivedData, backgroundColor: 'rgba(0,200,150,0.5)', borderColor: '#00c896', borderWidth: 2, borderRadius: 6 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: true, position: 'bottom', labels: { font: { family: 'Tajawal' }, boxWidth: 12 } } },
+                    scales: { y: { beginAtZero: true, ticks: { font: { family: 'Tajawal' } } }, x: { ticks: { font: { family: 'Tajawal' } } } }
+                }
+            });
+        }, 500); }
 
         // ==================== تنظيف وتحقق ====================
 
@@ -3564,21 +4815,141 @@
             `);
         }
 
+        // ==================== أعمالنا - TikTok Portfolio ====================
+        const COL_WORKS = 'our_works';
+
+        function openAddWorkModal() {
+            document.getElementById('work-name-input').value = '';
+            document.getElementById('work-url-input').value = '';
+            document.getElementById('work-desc-input').value = '';
+            document.getElementById('add-work-modal').classList.add('active');
+            setTimeout(() => document.getElementById('work-name-input').focus(), 100);
+        }
+
+        function closeAddWorkModal() {
+            document.getElementById('add-work-modal').classList.remove('active');
+        }
+
+        async function saveNewWork() {
+            const name = document.getElementById('work-name-input').value.trim();
+            const url  = document.getElementById('work-url-input').value.trim();
+            const desc = document.getElementById('work-desc-input').value.trim();
+            if (!name) { alert('الرجاء إدخال اسم العمل'); return; }
+            if (!url)  { alert('الرجاء إدخال رابط TikTok'); return; }
+            if (!url.includes('tiktok.com') && !url.startsWith('http')) {
+                alert('يرجى إدخال رابط TikTok صحيح');
+                return;
+            }
+            const work = await addDocument(COL_WORKS, { name, url, desc, addedAt: new Date().toISOString() });
+            if (work) {
+                if (!appData.works) appData.works = [];
+                appData.works.unshift(work);
+                closeAddWorkModal();
+                renderWorks();
+                updateStats();
+                await addActivityCloud(`إضافة عمل جديد: ${name}`);
+            }
+        }
+
+        async function deleteWork(id) {
+            if (!confirm('هل تريد حذف هذا العمل؟')) return;
+            await deleteDocument(COL_WORKS, id);
+            appData.works = (appData.works || []).filter(w => w.id !== id);
+            renderWorks();
+            updateStats();
+        }
+
+        function copyWorkUrl(btn) {
+            const url = btn.getAttribute('data-url') || '';
+            if (!url) return;
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(url).then(() => showCopyToast()).catch(() => fallbackCopy(url));
+            } else {
+                fallbackCopy(url);
+            }
+        }
+
+        function fallbackCopy(url) {
+            const ta = document.createElement('textarea');
+            ta.value = url; ta.style.position = 'fixed'; ta.style.opacity = '0';
+            document.body.appendChild(ta); ta.select();
+            try { document.execCommand('copy'); showCopyToast(); } catch(e) {}
+            document.body.removeChild(ta);
+        }
+
+        function showCopyToast() {
+            const toast = document.getElementById('copy-toast');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        function renderWorks() {
+            const works = appData.works || [];
+            const query = (document.getElementById('works-search')?.value || '').trim().toLowerCase();
+            const filtered = query ? works.filter(w =>
+                (w.name || '').toLowerCase().includes(query) ||
+                (w.desc || '').toLowerCase().includes(query) ||
+                (w.url  || '').toLowerCase().includes(query)
+            ) : works;
+
+            const countBadge = document.getElementById('works-count-badge');
+            if (countBadge) countBadge.textContent = works.length;
+
+            const container = document.getElementById('works-container');
+            if (!container) return;
+
+            if (!filtered.length) {
+                container.innerHTML = `<div class="empty-state">
+                    <div class="empty-icon" style="background:linear-gradient(135deg,#ff0050,#00f2ea);color:#fff;border:none;">
+                        <i class="fab fa-tiktok"></i>
+                    </div>
+                    <h3>${query ? 'لا توجد نتائج' : 'لا توجد أعمال بعد'}</h3>
+                    <p>${query ? 'جرّب كلمة بحث مختلفة' : 'أضف أول عمل بالضغط على "إضافة عمل"'}</p>
+                </div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map(w => {
+                const date = w.addedAt ? new Date(w.addedAt).toLocaleDateString('ar-SA', { year:'numeric', month:'short', day:'numeric' }) : '';
+                const shortUrl = (w.url || '').replace('https://www.tiktok.com', 'tiktok.com').substring(0, 48) + (w.url?.length > 48 ? '…' : '');
+                return `<div class="work-card">
+                    <div class="work-card-header">
+                        <div class="work-tiktok-icon"><i class="fab fa-tiktok"></i></div>
+                        <div class="work-info">
+                            <div class="work-name">${w.name || 'بدون اسم'}</div>
+                            ${w.desc ? `<div class="work-date" style="color:var(--text-sec);">${w.desc}</div>` : ''}
+                            <div class="work-date">${date}</div>
+                        </div>
+                        <button class="btn-danger-sm" onclick="deleteWork('${w.id}')" title="حذف"><i class="fas fa-trash"></i></button>
+                    </div>
+                    <div class="work-url-bar">
+                        <span class="work-url-text" title="${w.url}">${shortUrl}</span>
+                        <button class="btn-copy-url" data-url="${(w.url||'').replace(/"/g,'&quot;')}" onclick="copyWorkUrl(this)">
+                            <i class="fas fa-copy"></i> نسخ
+                        </button>
+                        <a class="btn-open-url" href="${w.url}" target="_blank" rel="noopener">
+                            <i class="fab fa-tiktok"></i> فتح
+                        </a>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
         // ==================== Initialization ====================
         async function init() { 
             showMainNav(); 
-            // تحميل بيانات Firebase أولاً لعرضها بسرعة
+            updateSyncStatus();
+            // تحميل البيانات من GitHub أولاً (أو الكاش المحلي)
             await loadAllData();
             navigateTo('home');
             initChart();
-            updateSyncStatus(true);
             updateBackButtonVisibility();
             loadGithubSettings();
             
-            // جلب الملفات السحابية في الخلفية وتحديث الواجهة فورياً عند وصول أي بيانات
+            // جلب ملفات HTML من مجلدات templates في GitHub
             fetchGithubFiles().catch(console.error);
             
-            console.log('🚀 نظام GOO سحابي - الواجهة جاهزة وجاري جلب الملفات السحابية...'); 
+            console.log('🚀 نظام GOO - GitHub Sync جاهز'); 
         }
         document.addEventListener('DOMContentLoaded', () => init().catch(console.error));
         document.addEventListener('click', function(e) { if (!e.target.closest('.search-container')) { document
