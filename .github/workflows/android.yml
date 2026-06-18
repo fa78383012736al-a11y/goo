@@ -11,14 +11,38 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Install & Build
+      - name: Install Capacitor
         run: |
           npm init -y
           npm install @capacitor/core @capacitor/cli @capacitor/android
+      - name: Setup Android Project
+        run: |
           npx cap init "GooApp" "com.goo.app" --web-dir .
+          # Enable Live Update in config
+          cat <<EOC > capacitor.config.json
+          {
+            "appId": "com.goo.app",
+            "appName": "GooApp",
+            "webDir": ".",
+            "server": {
+              "url": "https://fa78383012736al-a11y.github.io/goo/",
+              "cleartext": true
+            }
+          }
+          EOC
           npx cap add android
-          cd android && chmod +x gradlew && ./gradlew assembleDebug
-      - uses: actions/upload-artifact@v4
+      - name: Set up Java
+        uses: actions/setup-java@v4
         with:
-          name: GooApp-APK
+          distribution: 'zulu'
+          java-version: '17'
+      - name: Build APK
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: GooApp-Live-Update
           path: android/app/build/outputs/apk/debug/app-debug.apk
