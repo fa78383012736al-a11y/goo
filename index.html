@@ -2117,7 +2117,7 @@
             } catch (e) { console.error('incrementUsage error:', e); }
         }
         // ==================== App Version & GitHub Auto-Update ====================
-        const APP_VERSION = '1.1.0';
+        const APP_VERSION = '1.1.1';
         const GITHUB_RAW = 'https://raw.githubusercontent.com/fa78383012736al-a11y/goo/main';
 
         async function checkForUpdates() {
@@ -2126,7 +2126,8 @@
                 if (!res.ok) return;
                 const data = await res.json();
                 if (data.version && data.version !== APP_VERSION) {
-                    showUpdateBanner(data.version, data.changelog || '');
+                    console.log('🔄 New version detected, updating automatically...');
+                    applyUpdate();
                 }
             } catch(e) { console.log('Update check failed'); }
         }
@@ -2161,7 +2162,14 @@
                 for (let registration of registrations) {
                     await registration.update();
                 }
+                // إرسال رسالة لتفعيل الـ SW الجديد فوراً
+                if (navigator.serviceWorker.controller) {
+                    navigator.serviceWorker.controller.postMessage('skipWaiting');
+                }
             }
+            setTimeout(() => {
+                window.location.reload(true);
+            }, 1000);
             
             // مسح كاش localStorage القديم إن وجد لضمان التحميل من SW الجديد
             localStorage.removeItem('goo_app_html');
@@ -4965,6 +4973,9 @@
             navigator.serviceWorker.register('sw.js')
                 .then(reg => {
                     console.log('✅ SW registered');
+                    // فحص التحديثات فور التسجيل
+                    checkForUpdates();
+                    
                     reg.addEventListener('updatefound', () => {
                         const newWorker = reg.installing;
                         newWorker.addEventListener('statechange', () => {

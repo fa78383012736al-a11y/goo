@@ -1,7 +1,7 @@
 // ==================== GOO Service Worker ====================
-// الإصدار: 1.1.0 - يدعم التحديث التلقائي الفوري
+// الإصدار: 1.1.1 - يدعم التحديث التلقائي الصامت
 
-const CACHE_NAME = 'goo-app-v1.1.0';
+const CACHE_NAME = 'goo-app-v1.1.1';
 const CACHE_URLS = [
     './index.html',
     './manifest.json',
