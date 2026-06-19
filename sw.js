@@ -1,108 +1,83 @@
 // ==================== GOO Service Worker ====================
-// يتحكم في التخزين المؤقت والعمل بدون إنترنت
+// الإصدار: 1.1.0 - يدعم التحديث التلقائي الفوري
 
-const CACHE_NAME = 'goo-app-v1';
+const CACHE_NAME = 'goo-app-v1.1.0';
 const CACHE_URLS = [
-    './accounting_system.html',
+    './index.html',
     './manifest.json',
+    './version.json',
     'https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap',
     'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css',
     'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js',
-    'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js'
 ];
 
 // ==================== Install ====================
 self.addEventListener('install', event => {
-    console.log('[SW] Installing...');
+    self.skipWaiting(); // إجبار الـ SW الجديد على التفعيل فوراً
     event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then(cache => cache.addAll(CACHE_URLS))
-            .then(() => self.skipWaiting())
+        caches.open(CACHE_NAME).then(cache => {
+            return cache.addAll(CACHE_URLS);
+        })
     );
 });
 
 // ==================== Activate ====================
 self.addEventListener('activate', event => {
-    console.log('[SW] Activating...');
     event.waitUntil(
-        caches.keys().then(keys =>
-            Promise.all(
-                keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))
-            )
-        ).then(() => self.clients.claim())
+        Promise.all([
+            self.clients.claim(), // التحكم في جميع الصفحات فوراً
+            caches.keys().then(keys => {
+                return Promise.all(
+                    keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
+                );
+            })
+        ])
     );
 });
 
 // ==================== Fetch Strategy ====================
-// الاستراتيجية: Network First للـ HTML الرئيسي → Cache Fallback
-// Cache First لباقي الموارد الثابتة
 self.addEventListener('fetch', event => {
     const url = new URL(event.request.url);
 
-    // GitHub Raw requests: دائماً من الشبكة (لا تخزين)
-    if (url.hostname === 'raw.githubusercontent.com') {
+    // استثناء طلبات GitHub API و Raw لضمان الحصول على أحدث البيانات
+    if (url.hostname.includes('githubusercontent.com') || url.hostname.includes('api.github.com')) {
         event.respondWith(fetch(event.request));
         return;
     }
 
-    // Firebase requests: دائماً من الشبكة
-    if (url.hostname.includes('firestore.googleapis.com') ||
-        url.hostname.includes('firebase') ||
-        url.hostname.includes('gstatic.com')) {
-        event.respondWith(fetch(event.request).catch(() => caches.match(event.request)));
-        return;
-    }
-
-    // الملف الرئيسي: Network First ثم Cache
-    if (url.pathname.endsWith('accounting_system.html') || url.pathname === '/' || url.pathname === '') {
+    // استراتيجية Network First للملفات الأساسية لضمان التحديث
+    if (url.pathname.endsWith('index.html') || url.pathname === '/' || url.pathname.endsWith('version.json')) {
         event.respondWith(
-            fetch(event.request, { cache: 'no-cache' })
-                .then(res => {
-                    // تحديث الكاش بالنسخة الجديدة
-                    const clone = res.clone();
-                    caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
-                    return res;
+            fetch(event.request)
+                .then(response => {
+                    const clonedResponse = response.clone();
+                    caches.open(CACHE_NAME).then(cache => cache.put(event.request, clonedResponse));
+                    return response;
                 })
-                .catch(() => caches.match('./accounting_system.html'))
+                .catch(() => caches.match(event.request))
         );
         return;
     }
 
-    // version.json: دائماً Network لاكتشاف التحديثات
-    if (url.pathname.endsWith('version.json')) {
-        event.respondWith(
-            fetch(event.request, { cache: 'no-store' })
-                .catch(() => new Response('{"version":"offline"}', { headers: { 'Content-Type': 'application/json' } }))
-        );
-        return;
-    }
-
-    // باقي الموارد: Cache First ثم Network
+    // استراتيجية Cache First للباقي
     event.respondWith(
-        caches.match(event.request)
-            .then(cached => {
-                if (cached) return cached;
-                return fetch(event.request).then(res => {
-                    if (res && res.status === 200) {
-                        const clone = res.clone();
-                        caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
-                    }
-                    return res;
-                });
-            })
-            .catch(() => new Response('Offline', { status: 503 }))
+        caches.match(event.request).then(cachedResponse => {
+            if (cachedResponse) return cachedResponse;
+            return fetch(event.request).then(networkResponse => {
+                if (networkResponse.ok) {
+                    const clonedResponse = networkResponse.clone();
+                    caches.open(CACHE_NAME).then(cache => cache.put(event.request, clonedResponse));
+                }
+                return networkResponse;
+            });
+        })
     );
 });
 
 // ==================== Message Handler ====================
-// استقبال رسائل من الصفحة (مثل طلب تحديث فوري)
 self.addEventListener('message', event => {
     if (event.data === 'skipWaiting') {
         self.skipWaiting();
-    }
-    if (event.data === 'clearCache') {
-        caches.delete(CACHE_NAME).then(() => {
-            event.ports[0]?.postMessage('cleared');
-        });
     }
 });

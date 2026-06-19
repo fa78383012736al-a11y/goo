@@ -2,7 +2,7 @@
   "name": "نظام GOO • إدارة المحتوى التعليمي",
   "short_name": "GOO",
   "description": "نظام إدارة المحتوى التعليمي",
-  "start_url": "./accounting_system.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#0062cc",

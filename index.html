@@ -2117,60 +2117,58 @@
             } catch (e) { console.error('incrementUsage error:', e); }
         }
         // ==================== App Version & GitHub Auto-Update ====================
-        const APP_VERSION = '1.0.0';
-        const GITHUB_RAW = 'https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main';
+        const APP_VERSION = '1.1.0';
+        const GITHUB_RAW = 'https://raw.githubusercontent.com/fa78383012736al-a11y/goo/main';
 
         async function checkForUpdates() {
             try {
                 const res = await fetch(GITHUB_RAW + '/version.json?t=' + Date.now(), { cache: 'no-store' });
                 if (!res.ok) return;
-                const { version, changelog } = await res.json();
-                if (version && version !== APP_VERSION) {
-                    showUpdateBanner(version, changelog || '');
+                const data = await res.json();
+                if (data.version && data.version !== APP_VERSION) {
+                    showUpdateBanner(data.version, data.changelog || '');
                 }
-            } catch(e) { /* offline or repo not configured */ }
+            } catch(e) { console.log('Update check failed'); }
         }
 
         function showUpdateBanner(newVer, changelog) {
-            const existing = document.getElementById('update-banner');
-            if (existing) existing.remove();
+            if (document.getElementById('update-banner')) return;
             const banner = document.createElement('div');
             banner.id = 'update-banner';
-            banner.style.cssText = `position:fixed;top:0;left:0;right:0;z-index:99999;
-                background:linear-gradient(135deg,#0062cc,#1a8cff);
-                color:#fff;padding:10px 16px;display:flex;align-items:center;
-                gap:10px;font-family:Tajawal,sans-serif;font-size:0.8rem;
-                box-shadow:0 4px 20px rgba(0,98,204,0.4);`;
+            banner.style.cssText = `position:fixed;bottom:20px;left:20px;right:20px;z-index:99999;
+                background:var(--surface);color:var(--text-main);padding:15px;border-radius:15px;
+                display:flex;align-items:center;gap:12px;box-shadow:0 10px 30px rgba(0,0,0,0.2);
+                border:1px solid var(--primary);animation:slideUp 0.5s ease;`;
             banner.innerHTML = `
-                <i class="fas fa-arrow-circle-up" style="font-size:1.1rem;flex-shrink:0;"></i>
-                <span style="flex:1;">يتوفر تحديث جديد <strong>v${newVer}</strong>${changelog ? ' — ' + changelog : ''}</span>
-                <button onclick="applyUpdate()" style="background:#fff;color:#0062cc;border:none;
-                    padding:6px 14px;border-radius:20px;font-weight:700;cursor:pointer;
-                    font-family:Tajawal,sans-serif;font-size:0.75rem;">تحديث الآن</button>
-                <button onclick="this.closest('#update-banner').remove()" style="background:rgba(255,255,255,0.2);
-                    color:#fff;border:none;padding:6px 10px;border-radius:20px;cursor:pointer;
-                    font-family:Tajawal,sans-serif;font-size:0.75rem;">لاحقاً</button>`;
-            document.body.prepend(banner);
+                <div style="background:var(--primary);color:#fff;width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;">
+                    <i class="fas fa-sync-alt fa-spin"></i>
+                </div>
+                <div style="flex:1">
+                    <div style="font-weight:700;font-size:0.9rem;">تحديث جديد متوفر v${newVer}</div>
+                    <div style="font-size:0.75rem;color:var(--text-sec);">${changelog || 'تحسينات وإصلاحات عامة'}</div>
+                </div>
+                <button onclick="applyUpdate()" style="background:var(--primary);color:#fff;border:none;padding:8px 15px;border-radius:10px;font-weight:700;cursor:pointer;font-family:Tajawal;">تحديث</button>
+            `;
+            document.body.appendChild(banner);
         }
 
         async function applyUpdate() {
-            const banner = document.getElementById('update-banner');
-            if (banner) banner.innerHTML = `<i class="fas fa-spinner fa-spin"></i> <span>جاري تحميل التحديث...</span>`;
-            try {
-                const res = await fetch(GITHUB_RAW + '/accounting_system.html?t=' + Date.now(), { cache: 'no-store' });
-                if (!res.ok) throw new Error('fetch failed');
-                const html = await res.text();
-                // حفظ في localStorage كـ cache
-                localStorage.setItem('goo_app_html', html);
-                localStorage.setItem('goo_app_version', APP_VERSION);
-                // إعادة تحميل من الكاش
-                document.open();
-                document.write(html);
-                document.close();
-            } catch(e) {
-                if (banner) banner.innerHTML = `<span style="color:#ffcccc;">❌ فشل التحديث، تحقق من الاتصال</span>`;
-                setTimeout(() => banner?.remove(), 3000);
+            const btn = document.querySelector('#update-banner button');
+            if (btn) btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            
+            if ('serviceWorker' in navigator) {
+                const registrations = await navigator.serviceWorker.getRegistrations();
+                for (let registration of registrations) {
+                    await registration.update();
+                }
             }
+            
+            // مسح كاش localStorage القديم إن وجد لضمان التحميل من SW الجديد
+            localStorage.removeItem('goo_app_html');
+            
+            setTimeout(() => {
+                window.location.reload(true);
+            }, 1000);
         }
 
         // ==================== Collection Names ====================
