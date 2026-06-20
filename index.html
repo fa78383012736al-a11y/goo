@@ -9,7 +9,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0062cc">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <meta name="theme-color" content="#2a6496">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="GOO">
@@ -20,26 +22,26 @@
     <!-- Firebase removed: data stored in localStorage + GitHub -->
     <style>
         :root {
-            --primary: #0062cc;
-            --primary-light: #1a8cff;
-            --primary-dark: #004a9e;
-            --accent: #00c896;
-            --bg: #dde6f0;
+            --primary: #2a6496;
+            --primary-light: #4a90b8;
+            --primary-dark: #114868;
+            --accent: #c9965a;
+            --bg: #edf2f7;
             --surface: #ffffff;
-            --surface2: #f4f8fd;
-            --border: #e2ecf7;
-            --text-main: #0a2540;
-            --text-sec: #4a6a8a;
-            --text-muted: #8aaac8;
-            --shadow-sm: 0 2px 12px rgba(0, 98, 204, 0.07);
-            --shadow-md: 0 6px 24px rgba(0, 98, 204, 0.12);
+            --surface2: #f8fafc;
+            --border: #dde8f0;
+            --text-main: #1a3a52;
+            --text-sec: #5a8aaa;
+            --text-muted: #9bbdd0;
+            --shadow-sm: 0 2px 12px rgba(42, 100, 150, 0.07);
+            --shadow-md: 0 6px 24px rgba(42, 100, 150, 0.12);
             --radius-sm: 14px;
             --radius-md: 22px;
             --radius-lg: 32px;
             --danger: #e03c3c;
-            --success: #00a87a;
-            --warning: #e07000;
-            --nav-height: 70px;
+            --success: #0a7f61;
+            --warning: #b8862a;
+            --nav-height: 60px;
             --safe-bottom: env(safe-area-inset-bottom, 10px);
         }
         * {
@@ -75,7 +77,7 @@
         }
         .app-header {
             background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 60%, var(--primary-light) 100%);
-            padding: 12px 16px 14px;
+            padding: 8px 14px 10px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -187,14 +189,14 @@
             border-radius: 28px;
             border: 2px solid var(--border);
             background: var(--surface);
-            font-size: 0.9rem;
+            font-size: 16px;
             box-shadow: var(--shadow-sm);
             transition: all 0.3s;
             outline: none;
         }
         .search-input:focus {
             border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(0, 98, 204, 0.1);
+            box-shadow: 0 0 0 4px rgba(42, 100, 150, 0.1);
         }
         .search-icon-btn {
             position: absolute;
@@ -241,7 +243,7 @@
             transition: background 0.15s;
         }
         .suggestion-item:hover {
-            background: #f4f8fd;
+            background: #f8fafc;
         }
         .suggestion-item .sug-type {
             font-size: 0.65rem;
@@ -252,14 +254,14 @@
             font-weight: 600;
         }
         .balance-card {
-            background: linear-gradient(135deg, #00b37a 0%, #00c896 50%, #00d9a8 100%);
-            margin: 10px 14px 0;
+            background: linear-gradient(135deg, #2a6496 0%, #3a7db0 50%, #4a90b8 100%);
+            margin: 7px 14px 0;
             border-radius: var(--radius-md);
-            padding: 14px 16px;
+            padding: 10px 14px;
             color: #fff;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 8px 24px rgba(0, 200, 150, 0.35);
+            box-shadow: 0 8px 24px rgba(10, 127, 97, 0.35);
         }
         .balance-card::before {
             content: '';
@@ -276,7 +278,7 @@
             opacity: 0.85;
         }
         .balance-amount {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             font-weight: 800;
             direction: ltr;
             text-align: right;
@@ -291,8 +293,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 10px;
-            padding-top: 8px;
+            margin-top: 6px;
+            padding-top: 5px;
             border-top: 1px solid rgba(255, 255, 255, 0.25);
             font-size: 0.73rem;
         }
@@ -311,7 +313,7 @@
         .quick-actions {
             display: flex;
             gap: 7px;
-            margin: 10px 14px 0;
+            margin: 7px 14px 0;
             flex-wrap: wrap;
         }
         .quick-btn {
@@ -319,11 +321,11 @@
             min-width: 65px;
             background: var(--surface);
             border-radius: var(--radius-sm);
-            padding: 10px 5px;
+            padding: 7px 4px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 5px;
+            gap: 3px;
             box-shadow: var(--shadow-sm);
             cursor: pointer;
             transition: all 0.2s;
@@ -334,20 +336,20 @@
             box-shadow: var(--shadow-md);
         }
         .quick-btn .qb-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 10px;
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.8rem;
+            font-size: 0.72rem;
         }
         .quick-btn span {
-            font-size: 0.62rem;
+            font-size: 0.58rem;
             font-weight: 600;
             color: var(--text-main);
             text-align: center;
-            line-height: 1.3;
+            line-height: 1.2;
         }
         .qb-blue {
             background: #e8f0ff;
@@ -355,21 +357,21 @@
         }
         .qb-green {
             background: #e6faf4;
-            color: #00a87a;
+            color: #0a7f61;
         }
         .qb-orange {
             background: #fff5ea;
-            color: #e07000;
+            color: #b8862a;
         }
         .qb-purple {
             background: #f2eaff;
             color: #7c3aed;
         }
         .section-title {
-            font-size: 0.88rem;
+            font-size: 0.82rem;
             font-weight: 700;
             color: var(--text-main);
-            margin: 14px 14px 6px;
+            margin: 10px 14px 4px;
             display: flex;
             align-items: center;
             gap: 7px;
@@ -395,7 +397,7 @@
         .service-card {
             background: var(--surface);
             border-radius: var(--radius-md);
-            margin: 0 14px 10px;
+            margin: 0 14px 7px;
             box-shadow: var(--shadow-sm);
             border: 1px solid var(--border);
             overflow: hidden;
@@ -404,7 +406,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 11px 14px;
+            padding: 8px 12px;
             border-bottom: 1px solid #f0f5fc;
             cursor: pointer;
             transition: background 0.15s;
@@ -435,9 +437,9 @@
             flex-wrap: wrap;
         }
         .srv-icon {
-            width: 30px;
-            height: 30px;
-            border-radius: 9px;
+            width: 26px;
+            height: 26px;
+            border-radius: 7px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -450,11 +452,11 @@
         }
         .si-green {
             background: #e6faf4;
-            color: #00a87a;
+            color: #0a7f61;
         }
         .si-orange {
             background: #fff5ea;
-            color: #e07000;
+            color: #b8862a;
         }
         .si-purple {
             background: #f2eaff;
@@ -484,20 +486,20 @@
             background: var(--surface);
             border-radius: var(--radius-md);
             margin: 0 14px 10px;
-            padding: 28px 16px;
+            padding: 18px 14px;
             text-align: center;
             border: 2px dashed #d0dff0;
         }
         .empty-icon {
-            width: 48px;
-            height: 48px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             background: var(--surface2);
-            margin: 0 auto 10px;
+            margin: 0 auto 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
+            font-size: 1rem;
             color: var(--text-muted);
             border: 2px solid var(--border);
         }
@@ -512,23 +514,23 @@
             color: var(--text-sec);
         }
         .report-stat {
-            margin: 0 14px 10px;
+            margin: 0 14px 7px;
             background: var(--surface);
             border-radius: var(--radius-md);
-            padding: 12px;
+            padding: 7px;
             box-shadow: var(--shadow-sm);
             border: 1px solid var(--border);
         }
         .stat-row {
             display: flex;
-            gap: 7px;
+            gap: 5px;
             flex-wrap: wrap;
         }
         .stat-item {
             flex: 1 1 28%;
             min-width: 60px;
             text-align: center;
-            padding: 8px;
+            padding: 6px;
             background: var(--surface2);
             border-radius: var(--radius-sm);
             border: 1px solid var(--border);
@@ -542,15 +544,15 @@
             border-color: #ffd9b3;
         }
         .stat-item .num {
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             font-weight: 800;
             color: var(--primary);
         }
         .stat-item.green .num {
-            color: #00a87a;
+            color: #0a7f61;
         }
         .stat-item.orange .num {
-            color: #e07000;
+            color: #b8862a;
         }
         .stat-item .lbl {
             font-size: 0.65rem;
@@ -560,13 +562,13 @@
         }
         .profile-hero {
             background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
-            margin: 0 14px 12px;
+            margin: 0 14px 8px;
             border-radius: var(--radius-md);
-            padding: 16px;
+            padding: 9px 12px;
             color: #fff;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             position: relative;
             overflow: hidden;
             box-shadow: var(--shadow-md);
@@ -597,7 +599,7 @@
         .menu-card {
             background: var(--surface);
             border-radius: var(--radius-md);
-            margin: 0 14px 10px;
+            margin: 0 14px 7px;
             box-shadow: var(--shadow-sm);
             border: 1px solid var(--border);
             overflow: hidden;
@@ -606,7 +608,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 11px 14px;
+            padding: 8px 12px;
             border-bottom: 1px solid #f0f5fc;
             cursor: pointer;
             transition: background 0.15s;
@@ -618,9 +620,9 @@
             background: #f0f5fc;
         }
         .menu-icon {
-            width: 30px;
-            height: 30px;
-            border-radius: 9px;
+            width: 26px;
+            height: 26px;
+            border-radius: 7px;
             background: var(--surface2);
             border: 1px solid var(--border);
             display: flex;
@@ -675,7 +677,7 @@
             display: inline-flex;
             align-items: center;
             gap: 4px;
-            box-shadow: 0 4px 12px rgba(0, 98, 204, 0.3);
+            box-shadow: 0 4px 12px rgba(42, 100, 150, 0.3);
             cursor: pointer;
             transition: transform 0.1s;
             white-space: nowrap;
@@ -704,7 +706,7 @@
             display: flex;
             justify-content: space-around;
             align-items: center;
-            padding: 5px 4px;
+            padding: 3px 4px;
             box-shadow: var(--shadow-md);
             border: 1px solid var(--border);
             max-width: 500px;
@@ -717,7 +719,7 @@
             align-items: center;
             justify-content: center;
             gap: 2px;
-            padding: 6px 4px;
+            padding: 5px 4px;
             cursor: pointer;
             border-radius: 16px;
             transition: all 0.2s ease;
@@ -737,7 +739,7 @@
         .nav-item.active {
             background: linear-gradient(135deg, var(--primary), var(--primary-light));
             color: #fff;
-            box-shadow: 0 4px 12px rgba(0, 98, 204, 0.35);
+            box-shadow: 0 4px 12px rgba(42, 100, 150, 0.35);
         }
         .nav-item.active i {
             transform: scale(1.1);
@@ -779,23 +781,23 @@
             background: var(--surface);
             border-radius: var(--radius-md);
             margin: 0 14px 10px;
-            padding: 12px;
+            padding: 8px;
             box-shadow: var(--shadow-sm);
             border: 1px solid var(--border);
         }
         .chart-container canvas {
-            max-height: 180px;
+            max-height: 150px;
         }
         .resource-link-card {
             background: var(--surface);
             border-radius: var(--radius-md);
             margin: 0 14px 8px;
-            padding: 14px;
+            padding: 10px;
             box-shadow: var(--shadow-sm);
             border: 1px solid var(--border);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             cursor: pointer;
             transition: all 0.2s;
         }
@@ -804,9 +806,9 @@
             transform: translateY(-1px);
         }
         .r-icon {
-            width: 38px;
-            height: 38px;
-            border-radius: 11px;
+            width: 32px;
+            height: 32px;
+            border-radius: 9px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -815,15 +817,15 @@
         }
         .ri-wordwall {
             background: #e8f0ff;
-            color: #0062cc;
+            color: #2a6496;
         }
         .ri-forms {
             background: #e6faf4;
-            color: #00a87a;
+            color: #0a7f61;
         }
         .ri-drive {
             background: #fff5ea;
-            color: #e07000;
+            color: #b8862a;
         }
         .ri-locutions {
             background: #f2eaff;
@@ -856,19 +858,219 @@
         }
         .tag-semester {
             background: #e8f0ff;
-            color: #0062cc;
+            color: #2a6496;
         }
         .tag-grade {
             background: #e6faf4;
-            color: #00a87a;
+            color: #0a7f61;
         }
         .tag-subject {
             background: #fff5ea;
-            color: #e07000;
+            color: #b8862a;
         }
         .tag-exam {
             background: #f2eaff;
             color: #7c3aed;
+        }
+        /* ==================== بطاقات الملفات المضغوطة (صف واحد أفقي) ==================== */
+        .file-row-compact {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            border-bottom: 1px solid #f0f5fc;
+            transition: background 0.15s;
+        }
+        .file-row-compact:last-child {
+            border-bottom: none;
+        }
+        .file-row-compact:active {
+            background: #f0f5fc;
+        }
+        .file-icon-compact {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.72rem;
+            flex-shrink: 0;
+        }
+        .file-info-compact {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 2px;
+            overflow: hidden;
+        }
+        .file-title-compact {
+            font-weight: 600;
+            font-size: 0.78rem;
+            color: var(--text-main);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .file-tags-compact {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            overflow-x: auto;
+            white-space: nowrap;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+        .file-tags-compact::-webkit-scrollbar {
+            display: none;
+        }
+        .file-tags-compact .tag {
+            flex-shrink: 0;
+            margin: 0;
+        }
+        .file-actions-compact {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+        .file-row-compact .file-action-btn {
+            width: 30px;
+            height: 30px;
+            min-height: 30px;
+            min-width: 30px;
+            padding: 0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.72rem;
+            flex-shrink: 0;
+            box-shadow: 0 2px 0 rgba(0,0,0,0.06) !important;
+        }
+        .file-row-compact .file-action-btn:active {
+            box-shadow: 0 1px 0 rgba(0,0,0,0.04) !important;
+        }
+        @media (max-width: 380px) {
+            .file-row-compact {
+                flex-direction: row !important;
+                align-items: center !important;
+            }
+        }
+        /* ==================== Splash Screen ==================== */
+        .app-splash {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 60%, var(--primary-light) 100%);
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+        .app-splash.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .app-splash-badge {
+            width: 76px;
+            height: 76px;
+            border-radius: 24px;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            backdrop-filter: blur(6px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #ffd04e;
+            margin-bottom: 6px;
+        }
+        .app-splash-title {
+            color: #fff;
+            font-weight: 800;
+            font-size: 1.3rem;
+        }
+        .app-splash-sub {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+        }
+        .app-splash-spinner {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            animation: app-splash-spin 0.8s linear infinite;
+        }
+        @keyframes app-splash-spin {
+            to { transform: rotate(360deg); }
+        }
+        /* ==================== شاشة قفل PIN ==================== */
+        .app-lock-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9998;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 60%, var(--primary-light) 100%);
+            padding: 20px;
+        }
+        .app-lock-overlay.active {
+            display: flex;
+        }
+        .app-lock-box {
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            padding: 26px 22px;
+            width: 100%;
+            max-width: 320px;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+        }
+        .app-lock-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #e8f0ff;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            margin: 0 auto 12px;
+        }
+        .app-lock-box h3 {
+            font-size: 1rem;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+        .app-lock-input {
+            width: 100%;
+            margin-top: 14px;
+            padding: 12px;
+            border-radius: 14px;
+            border: 2px solid var(--border);
+            text-align: center;
+            font-size: 1.3rem;
+            letter-spacing: 6px;
+            outline: none;
+        }
+        .app-lock-input:focus {
+            border-color: var(--primary);
+        }
+        .app-lock-error {
+            color: var(--danger);
+            font-size: 0.72rem;
+            min-height: 16px;
+            margin-top: 8px;
         }
         .json-textarea {
             width: 100%;
@@ -979,7 +1181,7 @@
             border-radius: var(--radius-sm);
             border: 2px solid var(--border);
             font-family: 'Tajawal', sans-serif;
-            font-size: 0.8rem;
+            font-size: 16px;
             outline: none;
             transition: border 0.2s;
             background: #fafbff;
@@ -1011,7 +1213,7 @@
             display: inline-block;
             width: 20px;
             height: 20px;
-            border: 3px solid #e2ecf7;
+            border: 3px solid #dde8f0;
             border-top-color: var(--primary);
             border-radius: 50%;
             animation: spin 0.6s linear infinite;
@@ -1027,7 +1229,7 @@
             padding: 2px 8px;
             border-radius: 10px;
             background: #e6faf4;
-            color: #00a87a;
+            color: #0a7f61;
             display: inline-flex;
             align-items: center;
             gap: 4px;
@@ -1062,7 +1264,7 @@
         }
         .github-uploaded-check {
             background: #e6faf4;
-            color: #00a87a;
+            color: #0a7f61;
             border: none;
             padding: 4px 10px;
             border-radius: 12px;
@@ -1097,19 +1299,19 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 13px 14px;
+            padding: 9px 12px;
             cursor: pointer;
             transition: background 0.15s;
             user-select: none;
         }
         .bag-folder-header:active { background: #f0f5fc; }
         .bag-folder-icon {
-            width: 36px; height: 36px;
-            border-radius: 11px;
+            width: 30px; height: 30px;
+            border-radius: 9px;
             background: linear-gradient(135deg, #fff5ea, #ffe0b2);
-            color: #e07000;
+            color: #b8862a;
             display: flex; align-items: center; justify-content: center;
-            font-size: 1rem; flex-shrink: 0;
+            font-size: 0.85rem; flex-shrink: 0;
         }
         .bag-folder-info { flex: 1; min-width: 0; }
         .bag-folder-name { font-weight: 700; color: var(--text-main); font-size: 0.85rem; display: block; }
@@ -1119,10 +1321,10 @@
         .bag-folder-chevron.open { transform: rotate(90deg); }
         .bag-folder-files { display: none; border-top: 1px solid var(--border); background: var(--surface2); animation: fadeSlide 0.2s ease; }
         .bag-folder-files.open { display: block; }
-        .bag-folder-files-inner { padding: 8px 10px 10px; }
+        .bag-folder-files-inner { padding: 6px 8px 8px; }
         .bag-file-item {
             display: flex; align-items: center; gap: 9px;
-            padding: 9px 10px; border-radius: var(--radius-sm);
+            padding: 6px 8px; border-radius: var(--radius-sm);
             background: var(--surface); border: 1px solid var(--border);
             margin-bottom: 6px; cursor: pointer; transition: all 0.15s;
         }
@@ -1142,7 +1344,7 @@
         .bag-add-btn:active { opacity: 0.85; }
         .bag-new-folder-btn {
             display: flex; align-items: center; justify-content: center; gap: 6px;
-            margin: 0 14px 10px; padding: 10px; border-radius: var(--radius-sm);
+            margin: 0 14px 7px; padding: 8px; border-radius: var(--radius-sm);
             background: var(--surface); border: 2px dashed var(--border);
             color: var(--primary); font-size: 0.78rem; font-weight: 700;
             cursor: pointer; font-family: 'Tajawal', sans-serif; transition: all 0.2s;
@@ -1162,12 +1364,149 @@
             font-size: 0.7rem;
             width: 120px;
         }
-        .template-preview-iframe {
+        /* ===== نافذة معاينة HTML الموسعة ===== */
+        #template-preview-modal {
+            padding: 0 !important;
+            align-items: stretch !important;
+            background: rgba(0,0,0,0.9);
+        }
+        .preview-fullscreen-box {
             width: 100%;
-            height: 400px;
-            border: 2px solid var(--border);
-            border-radius: var(--radius-sm);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            background: #1a1a2e;
+            overflow: hidden;
+        }
+        .preview-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            background: #0f0f1a;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            flex-shrink: 0;
+            flex-wrap: wrap;
+        }
+        .preview-toolbar-title {
+            color: #fff;
+            font-size: 0.82rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .preview-toolbar-title i { color: #c9965a; flex-shrink: 0; }
+        .preview-scale-controls {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 20px;
+            padding: 4px 10px;
+            flex-shrink: 0;
+        }
+        .preview-scale-controls span {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.72rem;
+            min-width: 38px;
+            text-align: center;
+        }
+        .preview-scale-btn {
+            background: rgba(255,255,255,0.12);
+            border: none;
+            color: #fff;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            font-family: 'Tajawal', sans-serif;
+        }
+        .preview-scale-btn:active { background: rgba(255,255,255,0.25); }
+        .preview-device-btns { display: flex; gap: 4px; flex-shrink: 0; }
+        .preview-device-btn {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: rgba(255,255,255,0.6);
+            padding: 5px 9px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.68rem;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s;
+            white-space: nowrap;
+            font-family: 'Tajawal', sans-serif;
+        }
+        .preview-device-btn.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+        .preview-action-btns { display: flex; gap: 6px; flex-shrink: 0; }
+        .preview-btn-newtab {
+            background: rgba(10,127,97,0.15);
+            border: 1px solid rgba(10,127,97,0.35);
+            color: #c9965a;
+            padding: 6px 11px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-family: 'Tajawal', sans-serif;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .preview-btn-close {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #fff;
+            padding: 6px 13px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-family: 'Tajawal', sans-serif;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .preview-btn-close:active { background: rgba(255,255,255,0.2); }
+        .preview-viewport-wrapper {
+            flex: 1;
+            overflow: auto;
+            background: #23233a;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 16px;
+            -webkit-overflow-scrolling: touch;
+        }
+        .preview-iframe-scaler {
+            transition: transform 0.25s ease;
+            transform-origin: top center;
             background: #fff;
+            box-shadow: 0 8px 48px rgba(0,0,0,0.6), 0 2px 8px rgba(0,0,0,0.3);
+            border-radius: 4px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .template-preview-iframe {
+            border: none;
+            background: #fff;
+            display: block;
         }
         .info-badge {
             font-size: 0.6rem;
@@ -1189,13 +1528,13 @@
         /* ===== أعمالنا - TikTok Portfolio ===== */
         .works-hero {
             background: linear-gradient(135deg, #010101 0%, #2d2d2d 50%, #1a1a2e 100%);
-            margin: 0 14px 14px;
+            margin: 0 14px 8px;
             border-radius: var(--radius-md);
-            padding: 16px;
+            padding: 9px 12px;
             color: #fff;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             position: relative;
             overflow: hidden;
             box-shadow: 0 8px 28px rgba(0,0,0,0.35);
@@ -1209,18 +1548,18 @@
             background: rgba(255,0,80,0.12);
         }
         .works-hero-icon {
-            width: 48px; height: 48px;
-            border-radius: 14px;
+            width: 38px; height: 38px;
+            border-radius: 11px;
             background: linear-gradient(135deg, #ff0050, #00f2ea);
             display: flex; align-items: center; justify-content: center;
-            font-size: 1.4rem; flex-shrink: 0;
+            font-size: 1.1rem; flex-shrink: 0;
         }
-        .works-hero-info h3 { font-size: 1rem; font-weight: 800; margin-bottom: 3px; }
+        .works-hero-info h3 { font-size: 0.88rem; font-weight: 800; margin-bottom: 2px; }
         .works-hero-info p { font-size: 0.72rem; opacity: 0.75; }
         .work-card {
             background: var(--surface);
             border-radius: var(--radius-md);
-            margin: 0 14px 10px;
+            margin: 0 14px 7px;
             box-shadow: var(--shadow-sm);
             border: 1px solid var(--border);
             overflow: hidden;
@@ -1231,14 +1570,14 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 13px 14px 10px;
+            padding: 9px 12px 7px;
         }
         .work-tiktok-icon {
-            width: 40px; height: 40px;
-            border-radius: 12px;
+            width: 34px; height: 34px;
+            border-radius: 10px;
             background: linear-gradient(135deg, #010101, #2d2d2d);
             display: flex; align-items: center; justify-content: center;
-            font-size: 1rem; flex-shrink: 0;
+            font-size: 0.85rem; flex-shrink: 0;
             color: #fff;
             position: relative;
         }
@@ -1322,7 +1661,7 @@
             border-radius: 20px;
             border: 2px solid var(--border);
             background: var(--surface);
-            font-size: 0.82rem;
+            font-size: 16px;
             outline: none;
             transition: border 0.2s;
             font-family: 'Tajawal', sans-serif;
@@ -1360,7 +1699,7 @@
             border-radius: var(--radius-sm);
             border: 2px solid var(--border);
             font-family: 'Tajawal', sans-serif;
-            font-size: 0.82rem; outline: none;
+            font-size: 16px; outline: none;
             transition: border 0.2s; background: #fafbff;
         }
         .works-modal-box input[type="text"]:focus { border-color: #ff0050; }
@@ -1375,9 +1714,417 @@
         }
         .copy-toast.show { display: block; animation: toastIn 0.2s ease; }
         @keyframes toastIn { from { opacity:0; transform: translateX(-50%) translateY(10px); } to { opacity:1; transform: translateX(-50%) translateY(0); } }
+
+        /* ===== تحسينات الاستجابة للجوال ===== */
+
+        /* ضمان الحد الأدنى لحجم عناصر اللمس (48px) */
+        .nav-item {
+            min-height: 48px;
+            padding: 8px 4px;
+        }
+        .back-button,
+        .home-button {
+            min-height: 44px;
+            min-width: 44px;
+        }
+        .quick-btn {
+            min-height: 72px;
+            padding: 12px 5px;
+        }
+        .service-row {
+            min-height: 52px;
+            padding: 13px 14px;
+        }
+        .menu-item {
+            min-height: 52px;
+            padding: 13px 14px;
+        }
+        .bag-folder-header {
+            min-height: 56px;
+            padding: 14px;
+        }
+
+        /* تحسين حجم الخط للشاشات الصغيرة */
+        @media (max-width: 360px) {
+            .greeting h2 { font-size: 0.75rem; }
+            .greeting p { font-size: 0.88rem; }
+            .header-badge { font-size: 0.7rem; padding: 5px 9px; }
+            .quick-btn span { font-size: 0.58rem; }
+            .section-title { font-size: 0.82rem; }
+            .service-row .right { font-size: 0.78rem; }
+            .nav-item { font-size: 0.55rem; }
+            .balance-amount { font-size: 1.3rem; }
+        }
+
+        /* شاشات متوسطة (360px - 414px) - معظم الهواتف */
+        @media (min-width: 361px) and (max-width: 414px) {
+            .quick-btn span { font-size: 0.64rem; }
+            .nav-item { font-size: 0.62rem; }
+        }
+
+        /* شاشات أكبر (414px+) - iPhone Plus / Pro Max / Android XL */
+        @media (min-width: 415px) and (max-width: 600px) {
+            .quick-btn { padding: 14px 6px; }
+            .quick-btn .qb-icon { width: 36px; height: 36px; font-size: 0.9rem; }
+            .quick-btn span { font-size: 0.68rem; }
+            .balance-amount { font-size: 1.7rem; }
+            .nav-item { font-size: 0.65rem; }
+            .nav-item i { font-size: 1rem; }
+        }
+
+        /* تابلت (600px+) */
+        @media (min-width: 600px) {
+            .app-header { padding: 14px 20px 16px; }
+            .search-container { margin: 12px 18px; }
+            .balance-card { margin: 12px 18px 0; padding: 18px 20px; }
+            .balance-amount { font-size: 1.9rem; }
+            .quick-actions { margin: 12px 18px 0; gap: 10px; }
+            .quick-btn { padding: 14px 8px; }
+            .quick-btn .qb-icon { width: 38px; height: 38px; font-size: 0.9rem; }
+            .quick-btn span { font-size: 0.7rem; }
+            .section-title { margin: 16px 18px 8px; font-size: 0.95rem; }
+            .service-card { margin: 0 18px 12px; }
+            .service-row .right { font-size: 0.88rem; }
+            .bottom-nav { max-width: 560px; }
+            .nav-item { font-size: 0.68rem; }
+            .nav-item i { font-size: 1.05rem; }
+            .chart-container { margin: 0 18px 12px; padding: 16px; }
+            .resource-link-card { margin: 0 18px 10px; }
+            .menu-card { margin: 0 18px 12px; }
+            .work-card { margin: 0 18px 12px; }
+            .bags-folders-grid { padding: 0 18px 10px; }
+            .bag-new-folder-btn { margin: 0 18px 10px; }
+            .github-settings-bar { margin: 0 18px 8px; }
+            .works-hero { margin: 0 18px 14px; }
+            .profile-hero { margin: 0 18px 14px; }
+        }
+
+        /* تحسين منطقة الأزرار في صفوف الخدمات على الشاشات الصغيرة */
+        @media (max-width: 380px) {
+            .service-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .service-row .actions-group {
+                width: 100%;
+                justify-content: flex-start;
+            }
+        }
+
+        /* تحسين Modal للجوال */
+        .modal-box {
+            padding: 16px;
+            max-height: 90vh;
+            border-radius: var(--radius-sm);
+        }
+        .modal-overlay {
+            padding: 12px;
+            align-items: flex-end;
+        }
+        @media (max-width: 480px) {
+            .modal-overlay {
+                padding: 0;
+                align-items: flex-end;
+            }
+            .modal-box {
+                border-radius: var(--radius-md) var(--radius-md) 0 0;
+                max-height: 92vh;
+                padding: 20px 16px;
+            }
+            .works-modal-box {
+                border-radius: var(--radius-md) var(--radius-md) 0 0;
+                max-height: 92vh;
+            }
+            .works-modal-overlay {
+                align-items: flex-end;
+                padding: 0;
+            }
+            .modal-box textarea.html-code-area {
+                min-height: 220px;
+            }
+        }
+
+        /* تحسين حجم الأزرار الصغيرة للمس */
+        .btn-danger-sm,
+        .btn-outline-sm,
+        .btn-copy-url,
+        .btn-open-url {
+            min-height: 36px;
+            padding: 6px 12px;
+            font-size: 0.7rem;
+        }
+        .btn-primary {
+            min-height: 40px;
+            padding: 10px 20px;
+        }
+
+        /* تحسين الـ FAB للجوالات التي بها شريط جيستشر */
+        .whatsapp-fab {
+            bottom: calc(var(--nav-height) + env(safe-area-inset-bottom, 16px) + 16px);
+        }
+
+        /* منع التكبير التلقائي عند الضغط على الإدخالات */
+        input[type="text"],
+        input[type="search"],
+        textarea,
+        select {
+            font-size: 16px !important;
+        }
+        @media (min-width: 360px) {
+            .search-input,
+            .works-search-input {
+                font-size: 16px;
+            }
+        }
+
+        /* تحسين النص والقراءة على الشاشات عالية الكثافة */
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+            .tag { font-size: 0.62rem; }
+        }
+
+        /* تحسين الـ bottom nav لشاشات الـ notch و Dynamic Island */
+        .bottom-nav-wrapper {
+            padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+        }
+
+        /* ضمان عدم قطع المحتوى خلف شريط التنقل */
+        .screen {
+            padding-bottom: calc(var(--nav-height) + env(safe-area-inset-bottom, 8px) + 28px);
+        }
+
+        /* تحسين أداء التمرير */
+        .screen,
+        .modal-box,
+        .search-suggestions {
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+        }
+
+        /* إيقاف تأثير التحديد النصي أثناء اللمس */
+        .nav-item,
+        .quick-btn,
+        .service-row,
+        .menu-item,
+        .bag-folder-header,
+        .resource-link-card {
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        /* تحسين قراءة العناوين الطويلة */
+        .r-name,
+        .bag-folder-name,
+        .work-name {
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+
+        /* تحسين التوافق مع iPhone SE (375px) */
+        @media (max-width: 375px) {
+            :root {
+                --nav-height: 65px;
+            }
+            .app-header {
+                padding: 10px 12px 12px;
+            }
+            .quick-btn {
+                flex: 1 1 20%;
+                min-width: 58px;
+            }
+        }
+
+        /* ==================== Ripple + 3D Press Effect ==================== */
+        .btn-primary,
+        .btn-danger-sm,
+        .btn-outline-sm,
+        .btn-github-upload,
+        .btn-copy-url,
+        .btn-open-url,
+        .plus-tag,
+        .preview-btn-newtab,
+        .preview-btn-close,
+        .preview-scale-btn,
+        .preview-device-btn,
+        .back-button,
+        .home-button,
+        .search-icon-btn,
+        .eye-btn,
+        .quick-btn,
+        .nav-item,
+        .bag-new-folder-btn {
+            position: relative;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .goo-ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.35);
+            transform: scale(0);
+            pointer-events: none;
+            animation: goo-ripple-anim 0.55s linear forwards;
+        }
+        .btn-danger-sm .goo-ripple,
+        .btn-outline-sm .goo-ripple { background: rgba(42,100,150,0.15); }
+        .quick-btn .goo-ripple { background: rgba(42,100,150,0.12); }
+        .nav-item .goo-ripple { background: rgba(255,255,255,0.25); }
+        @keyframes goo-ripple-anim {
+            to { transform: scale(4); opacity: 0; }
+        }
+        .btn-primary {
+            box-shadow: 0 5px 0 var(--primary-dark), 0 8px 16px rgba(42,100,150,0.25);
+            transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.2s;
+        }
+        .btn-primary:active {
+            transform: translateY(4px) !important;
+            box-shadow: 0 1px 0 var(--primary-dark), 0 3px 8px rgba(42,100,150,0.15) !important;
+        }
+        .btn-danger-sm {
+            box-shadow: 0 4px 0 #f5a0a0, 0 6px 12px rgba(224,60,60,0.15);
+            transition: transform 0.08s ease, box-shadow 0.08s ease;
+        }
+        .btn-danger-sm:active {
+            transform: translateY(3px) !important;
+            box-shadow: 0 1px 0 #f5a0a0, 0 2px 6px rgba(224,60,60,0.1) !important;
+        }
+        .btn-outline-sm {
+            box-shadow: 0 4px 0 rgba(42,100,150,0.2), 0 6px 12px rgba(42,100,150,0.08);
+            transition: transform 0.08s ease, box-shadow 0.08s ease;
+        }
+        .btn-outline-sm:active {
+            transform: translateY(3px) !important;
+            box-shadow: 0 1px 0 rgba(42,100,150,0.15), 0 2px 6px rgba(42,100,150,0.05) !important;
+        }
+        .plus-tag {
+            box-shadow: 0 4px 0 var(--primary-dark), 0 8px 14px rgba(42,100,150,0.3);
+            transition: transform 0.08s ease, box-shadow 0.08s ease;
+        }
+        .plus-tag:active {
+            transform: translateY(3px) scale(0.97) !important;
+            box-shadow: 0 1px 0 var(--primary-dark), 0 3px 8px rgba(42,100,150,0.15) !important;
+        }
+        .quick-btn {
+            box-shadow: 0 6px 0 #c8d8ea, 0 10px 18px rgba(42,100,150,0.08);
+            transition: transform 0.08s ease, box-shadow 0.08s ease;
+        }
+        .quick-btn:active {
+            transform: translateY(5px) !important;
+            box-shadow: 0 1px 0 #c8d8ea, 0 4px 8px rgba(42,100,150,0.06) !important;
+        }
+        .back-button, .home-button {
+            box-shadow: 0 4px 0 rgba(0,0,0,0.2), 0 6px 14px rgba(0,0,0,0.15);
+            transition: transform 0.08s ease, box-shadow 0.08s ease;
+        }
+        .back-button:active, .home-button:active {
+            transform: translateY(3px) !important;
+            box-shadow: 0 1px 0 rgba(0,0,0,0.15), 0 2px 6px rgba(0,0,0,0.1) !important;
+        }
+        .preview-btn-newtab {
+            box-shadow: 0 4px 0 rgba(10,127,97,0.3), 0 6px 14px rgba(10,127,97,0.15);
+            transition: transform 0.08s ease, box-shadow 0.08s ease;
+        }
+        .preview-btn-newtab:active {
+            transform: translateY(3px) !important;
+            box-shadow: 0 1px 0 rgba(10,127,97,0.2), 0 2px 6px rgba(10,127,97,0.1) !important;
+        }
+        .preview-btn-close {
+            box-shadow: 0 4px 0 rgba(0,0,0,0.25), 0 6px 14px rgba(0,0,0,0.12);
+            transition: transform 0.08s ease, box-shadow 0.08s ease;
+        }
+        .preview-btn-close:active {
+            transform: translateY(3px) !important;
+            box-shadow: 0 1px 0 rgba(0,0,0,0.15), 0 2px 6px rgba(0,0,0,0.08) !important;
+        }
+        .preview-scale-btn {
+            box-shadow: 0 3px 0 rgba(0,0,0,0.3), 0 5px 10px rgba(0,0,0,0.15);
+            transition: transform 0.08s ease, box-shadow 0.08s ease;
+        }
+        .preview-scale-btn:active {
+            transform: translateY(2px) !important;
+            box-shadow: 0 1px 0 rgba(0,0,0,0.2), 0 2px 5px rgba(0,0,0,0.1) !important;
+        }
+        .preview-device-btn {
+            box-shadow: 0 3px 0 rgba(0,0,0,0.25), 0 5px 10px rgba(0,0,0,0.1);
+            transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.2s, border-color 0.2s, color 0.2s;
+        }
+        .preview-device-btn:active {
+            transform: translateY(2px) !important;
+            box-shadow: 0 1px 0 rgba(0,0,0,0.15), 0 2px 5px rgba(0,0,0,0.08) !important;
+        }
+        .btn-copy-url {
+            box-shadow: 0 3px 0 rgba(42,100,150,0.2), 0 5px 10px rgba(42,100,150,0.08);
+            transition: transform 0.08s ease, box-shadow 0.08s ease;
+        }
+        .btn-copy-url:active {
+            transform: translateY(2px) !important;
+            box-shadow: 0 1px 0 rgba(42,100,150,0.1) !important;
+        }
+        .btn-open-url {
+            box-shadow: 0 3px 0 rgba(37,211,102,0.3), 0 5px 10px rgba(37,211,102,0.12);
+            transition: transform 0.08s ease, box-shadow 0.08s ease;
+        }
+        .btn-open-url:active {
+            transform: translateY(2px) !important;
+            box-shadow: 0 1px 0 rgba(37,211,102,0.2) !important;
+        }
+        .search-icon-btn {
+            box-shadow: 0 4px 0 var(--primary-dark), 0 6px 14px rgba(42,100,150,0.25);
+            transition: transform 0.08s ease, box-shadow 0.08s ease;
+        }
+        .search-icon-btn:active {
+            transform: translateY(3px) !important;
+            box-shadow: 0 1px 0 var(--primary-dark), 0 2px 6px rgba(42,100,150,0.15) !important;
+        }
+        .bag-new-folder-btn {
+            box-shadow: 0 4px 0 #c8d8ea, 0 6px 12px rgba(42,100,150,0.08);
+            transition: transform 0.08s ease, box-shadow 0.08s ease;
+        }
+        .bag-new-folder-btn:active {
+            transform: translateY(3px) !important;
+            box-shadow: 0 1px 0 #c8d8ea, 0 2px 6px rgba(42,100,150,0.05) !important;
+        }
+        .eye-btn {
+            box-shadow: 0 3px 0 rgba(0,0,0,0.15), 0 5px 10px rgba(0,0,0,0.08);
+            transition: transform 0.08s ease, box-shadow 0.08s ease;
+        }
+        .eye-btn:active {
+            transform: translateY(2px) !important;
+            box-shadow: 0 1px 0 rgba(0,0,0,0.1) !important;
+        }
+        .btn-github-upload {
+            box-shadow: 0 3px 0 #111, 0 5px 10px rgba(0,0,0,0.2);
+            transition: transform 0.08s ease, box-shadow 0.08s ease;
+        }
+        .btn-github-upload:active {
+            transform: translateY(2px) !important;
+            box-shadow: 0 1px 0 #111, 0 2px 5px rgba(0,0,0,0.1) !important;
+        }
+
+
     </style>
 </head>
 <body>
+
+    <!-- ==================== Splash Screen (يظهر أثناء تحميل التطبيق) ==================== -->
+    <div class="app-splash" id="app-splash">
+        <div class="app-splash-badge"><i class="fas fa-graduation-cap"></i></div>
+        <div class="app-splash-title">نظام GOO</div>
+        <div class="app-splash-sub">إدارة المحتوى التعليمي</div>
+        <div class="app-splash-spinner"></div>
+    </div>
+
+    <!-- ==================== شاشة قفل التطبيق (PIN) — تظهر فقط إذا كان القفل مُفعّلاً ==================== -->
+    <div class="app-lock-overlay" id="app-lock-overlay">
+        <div class="app-lock-box">
+            <div class="app-lock-icon"><i class="fas fa-lock"></i></div>
+            <h3>أدخل رمز الدخول (PIN)</h3>
+            <p style="font-size:0.72rem;color:var(--text-sec);">لحماية بيانات المزامنة السحابية</p>
+            <input type="password" inputmode="numeric" maxlength="8" id="app-lock-pin" class="app-lock-input" placeholder="••••" onkeydown="if(event.key==='Enter')submitAppLockPin()">
+            <p class="app-lock-error" id="app-lock-error"></p>
+            <button class="btn-primary" style="width:100%;margin-top:6px;" onclick="submitAppLockPin()">دخول</button>
+        </div>
+    </div>
 
     <div class="screen" id="main-screen">
         <div class="app-header">
@@ -1386,7 +2133,7 @@
                     <i class="fas fa-arrow-right"></i>
                 </div>
                 <div class="home-button" id="global-home-btn" onclick="navigateTo('home')" title="الصفحة الرئيسية">
-                    <i class="fas fa-home"></i> 
+                    <i class="fas fa-home"></i>
                 </div>
                 <div class="greeting"><h2>أهلاً وسهلاً <span class="star">★</span></h2><p id="app-title">نظام GOO</p></div>
             </div>
@@ -1396,6 +2143,7 @@
         <div class="content">
             <div id="page-home" class="screen-page active">
                 <div class="search-container" style="position:relative;">
+
                     <input type="text" class="search-input" id="global-search" placeholder="🔍 بحث عن أي شيء... طلبات، خطط، اختبارات، ألعاب..." oninput="handleGlobalSearch()" onfocus="handleGlobalSearch()">
                     <button class="search-icon-btn"><i class="fas fa-search"></i></button>
                     <div class="search-suggestions" id="search-suggestions"></div>
@@ -1417,7 +2165,7 @@
                 </div></div>
                 <div class="report-stat" style="margin-top:6px;"><div class="stat-row">
                         <div class="stat-item" style="background:#e8f0ff;border-color:#b3cef5;"><div class="num" id="stat-wordwall" style="color:var(--primary);">0</div><div class="lbl">Wordwall</div></div>
-                        <div class="stat-item" style="background:#e6faf4;border-color:#b3f0d8;"><div class="num" id="stat-forms" style="color:#00a87a;">0</div><div class="lbl">Forms</div></div>
+                        <div class="stat-item" style="background:#e6faf4;border-color:#b3f0d8;"><div class="num" id="stat-forms" style="color:#0a7f61;">0</div><div class="lbl">Forms</div></div>
                         <div class="stat-item" style="background:#fde8e8;border-color:#f5b3b3;"><div class="num" id="stat-curriculum" style="color:#c43b1a;">0</div><div class="lbl">المنهج</div></div>
                 </div></div>
                 <div class="section-title"><i class="fas fa-fire"></i> الأكثر استخداماً</div>
@@ -1466,7 +2214,7 @@
                     <div class="section-title" style="font-size:0.8rem;flex-wrap:wrap;gap:6px;">
                         <span>Wordwall - ألعاب تفاعلية</span>
                         <span style="display:flex;gap:5px;margin-right:auto;flex-wrap:wrap;">
-                            <span class="plus-tag" style="background:linear-gradient(135deg,#e07000,#ff9a00);" onclick="validateAndCleanWordwall()"><i class="fas fa-broom"></i> تنظيف</span>
+                            <span class="plus-tag" style="background:linear-gradient(135deg,#b8862a,#ff9a00);" onclick="validateAndCleanWordwall()"><i class="fas fa-broom"></i> تنظيف</span>
                             <span class="plus-tag" onclick="openJsonModal('wordwall')"><i class="fas fa-upload"></i> رفع JSON</span>
                         </span>
                     </div>
@@ -1585,7 +2333,7 @@
                 </div>
 
                 <!-- PDF template hidden -->
-                <div id="invoice-pdf-template" style="display:none;padding:30px;font-family:'Tajawal',sans-serif;direction:rtl;background:#fff;color:#333;"><div style="display:flex;justify-content:space-between;border-bottom:2px solid #0062cc;padding-bottom:15px;margin-bottom:20px;"><div><h1 style="color:#0062cc;margin:0;font-size:22px;">نظام GOO</h1></div><div style="text-align:left;"><div id="pdf-invoice-number" style="font-weight:bold;">#INV-0000</div><div id="pdf-invoice-date" style="color:#666;">-</div></div></div><div style="margin-bottom:20px;"><p><strong>العميل:</strong> <span id="pdf-customer-name">-</span></p><p><strong>الوسيط:</strong> <span id="pdf-broker-name">-</span></p><p><strong>المصمم:</strong> <span id="pdf-designer-name">-</span></p></div><table style="width:100%;border-collapse:collapse;margin-bottom:20px;"><thead><tr style="background:#f4f8fd;"><th style="padding:10px;border:1px solid #e2ecf7;">الوصف</th><th style="padding:10px;border:1px solid #e2ecf7;">المبلغ الإجمالي</th><th style="padding:10px;border:1px solid #e2ecf7;">حصة المصمم (50%)</th></tr></thead><tbody><tr><td style="padding:10px;border:1px solid #e2ecf7;">خدمات تصميم</td><td style="padding:10px;border:1px solid #e2ecf7;text-align:left;"><span id="pdf-amount">0</span> ر.س</td><td style="padding:10px;border:1px solid #e2ecf7;text-align:left;"><span id="pdf-designer-share">0</span> ر.س</td></tr></tbody></table><div style="display:flex;justify-content:flex-end;"><div style="width:240px;"><div style="display:flex;justify-content:space-between;padding:6px 0;"><span>إجمالي الفاتورة:</span><span id="pdf-total">0</span></div><div style="display:flex;justify-content:space-between;padding:6px 0;"><span>حصة المصمم (50%):</span><span id="pdf-paid">0</span></div><div style="display:flex;justify-content:space-between;padding:6px 0;"><span>المستلم من الوسيط:</span><span id="pdf-broker-received">0</span></div><div style="display:flex;justify-content:space-between;padding:6px 0;font-weight:bold;color:#0062cc;"><span>المتبقي على الوسيط:</span><span id="pdf-debt">0</span></div></div></div></div>
+                <div id="invoice-pdf-template" style="display:none;padding:30px;font-family:'Tajawal',sans-serif;direction:rtl;background:#fff;color:#333;"><div style="display:flex;justify-content:space-between;border-bottom:2px solid #2a6496;padding-bottom:15px;margin-bottom:20px;"><div><h1 style="color:#2a6496;margin:0;font-size:22px;">نظام GOO</h1></div><div style="text-align:left;"><div id="pdf-invoice-number" style="font-weight:bold;">#INV-0000</div><div id="pdf-invoice-date" style="color:#666;">-</div></div></div><div style="margin-bottom:20px;"><p><strong>العميل:</strong> <span id="pdf-customer-name">-</span></p><p><strong>الوسيط:</strong> <span id="pdf-broker-name">-</span></p><p><strong>المصمم:</strong> <span id="pdf-designer-name">-</span></p></div><table style="width:100%;border-collapse:collapse;margin-bottom:20px;"><thead><tr style="background:#f8fafc;"><th style="padding:10px;border:1px solid #dde8f0;">الوصف</th><th style="padding:10px;border:1px solid #dde8f0;">المبلغ الإجمالي</th><th style="padding:10px;border:1px solid #dde8f0;">حصة المصمم (50%)</th></tr></thead><tbody><tr><td style="padding:10px;border:1px solid #dde8f0;">خدمات تصميم</td><td style="padding:10px;border:1px solid #dde8f0;text-align:left;"><span id="pdf-amount">0</span> ر.س</td><td style="padding:10px;border:1px solid #dde8f0;text-align:left;"><span id="pdf-designer-share">0</span> ر.س</td></tr></tbody></table><div style="display:flex;justify-content:flex-end;"><div style="width:240px;"><div style="display:flex;justify-content:space-between;padding:6px 0;"><span>إجمالي الفاتورة:</span><span id="pdf-total">0</span></div><div style="display:flex;justify-content:space-between;padding:6px 0;"><span>حصة المصمم (50%):</span><span id="pdf-paid">0</span></div><div style="display:flex;justify-content:space-between;padding:6px 0;"><span>المستلم من الوسيط:</span><span id="pdf-broker-received">0</span></div><div style="display:flex;justify-content:space-between;padding:6px 0;font-weight:bold;color:#2a6496;"><span>المتبقي على الوسيط:</span><span id="pdf-debt">0</span></div></div></div></div>
             </div>
 
             <div id="page-works" class="screen-page">
@@ -1616,7 +2364,7 @@
             </div>
 
             <div id="page-admin" class="screen-page">
-                <div class="profile-hero"><div class="avatar"><i class="fas fa-user-tie"></i></div><div class="profile-info-text"><h3>م/فيصل الصوفي</h3><div class="iban">قائد الفريق | مدير النظام</div></div></div>
+                <div class="profile-hero"><div class="avatar"><i class="fas fa-user-tie"></i></div><div class="profile-info-text"><h3>فيصل الصوفي</h3><div class="iban">قائد الفريق | مدير النظام</div></div></div>
                 <div id="admin-users-section" class="sub-section active"><div class="section-title"><i class="fas fa-users"></i>المستخدمين</div><div id="users-container" class="service-card"><div class="empty-state" style="margin:0;border:none;"><h3>لا يوجد مستخدمين</h3></div></div></div>
                 <div id="admin-customers-section" class="sub-section"><div class="section-title"><i class="fas fa-user-tag"></i>العملاء والوسطاء</div><div id="customers-container2" class="service-card"><div class="empty-state" style="margin:0;border:none;"><h3>لا يوجد عملاء</h3></div></div></div>
                 <div id="admin-analytics-section" class="sub-section"><div class="section-title"><i class="fas fa-chart-bar"></i>الإحصائيات</div><div class="chart-container"><canvas id="revenueChart"></canvas></div></div>
@@ -1624,16 +2372,17 @@
                     <div class="section-title"><i class="fas fa-cog"></i>الإعدادات</div>
                     <div class="menu-card">
                         <div class="menu-item" onclick="openGithubSettings()"><div class="menu-icon"><i class="fas fa-cloud"></i></div><span class="menu-label">إعدادات التزامن السحابي</span><i class="fas fa-chevron-left menu-arrow"></i></div>
+                        <div class="menu-item" onclick="isAppLockEnabled() ? disableAppLockPin() : setupAppLockPin()"><div class="menu-icon"><i class="fas fa-lock"></i></div><span class="menu-label" id="app-lock-menu-label">تأمين رمز GitHub بـ PIN</span><i class="fas fa-chevron-left menu-arrow"></i></div>
                         <div class="menu-item" onclick="exportAllData()"><div class="menu-icon"><i class="fas fa-download"></i></div><span class="menu-label">تصدير جميع البيانات (JSON)</span><i class="fas fa-chevron-left menu-arrow"></i></div>
                         <div class="menu-item" onclick="importAllData()"><div class="menu-icon"><i class="fas fa-upload"></i></div><span class="menu-label">استيراد البيانات</span><i class="fas fa-chevron-left menu-arrow"></i></div>
                         <div class="menu-item" onclick="syncNow()"><div class="menu-icon"><i class="fas fa-sync-alt"></i></div><span class="menu-label">مزامنة الآن</span><i class="fas fa-chevron-left menu-arrow"></i></div>
                         <div class="menu-item" onclick="clearAllData()"><div class="menu-icon" style="background:#fff0f0;"><i class="fas fa-trash" style="color:#e03c3c;"></i></div><span class="menu-label" style="color:#e03c3c;">مسح جميع البيانات</span><i class="fas fa-chevron-left menu-arrow"></i></div>
                     </div>
 
-                    <div class="section-title" style="margin-top:14px;"><i class="fas fa-broom" style="background:#e07000;"></i>تنظيف وتحقق</div>
+                    <div class="section-title" style="margin-top:14px;"><i class="fas fa-broom" style="background:#b8862a;"></i>تنظيف وتحقق</div>
                     <div class="menu-card">
                         <div class="menu-item" onclick="validateAndCleanWordwall()">
-                            <div class="menu-icon" style="background:#fff5ea;"><i class="fas fa-link" style="color:#e07000;"></i></div>
+                            <div class="menu-icon" style="background:#fff5ea;"><i class="fas fa-link" style="color:#b8862a;"></i></div>
                             <span class="menu-label">فحص روابط Wordwall وحذف المعطوب</span>
                             <i class="fas fa-chevron-left menu-arrow"></i>
                         </div>
@@ -1643,12 +2392,12 @@
                             <i class="fas fa-chevron-left menu-arrow"></i>
                         </div>
                         <div class="menu-item" onclick="fixBrokenUrls()">
-                            <div class="menu-icon" style="background:#e8f0ff;"><i class="fas fa-wrench" style="color:#0062cc;"></i></div>
+                            <div class="menu-icon" style="background:#e8f0ff;"><i class="fas fa-wrench" style="color:#2a6496;"></i></div>
                             <span class="menu-label">إصلاح الروابط الناقصة تلقائياً</span>
                             <i class="fas fa-chevron-left menu-arrow"></i>
                         </div>
                         <div class="menu-item" onclick="showDataReport()">
-                            <div class="menu-icon" style="background:#e6faf4;"><i class="fas fa-clipboard-check" style="color:#00a87a;"></i></div>
+                            <div class="menu-icon" style="background:#e6faf4;"><i class="fas fa-clipboard-check" style="color:#0a7f61;"></i></div>
                             <span class="menu-label">تقرير صحة البيانات</span>
                             <i class="fas fa-chevron-left menu-arrow"></i>
                         </div>
@@ -1664,7 +2413,6 @@
                     <div class="section-title" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
                         <span><i class="fas fa-file-powerpoint" style="background:#c43b1a;"></i>عروض بوربوينت</span>
                         <span style="display:flex;gap:6px;flex-wrap:wrap;">
-                            <span class="plus-tag" style="background:linear-gradient(135deg,#6c757d,#868e96);" onclick="navigateTo('home')"><i class="fas fa-home"></i> الرئيسية</span>
                             <span class="plus-tag" onclick="openCurriculumJsonModal('ppt')"><i class="fas fa-upload"></i> رفع JSON</span>
                         </span>
                     </div>
@@ -1685,9 +2433,8 @@
                 <!-- أوراق عمل -->
                 <div id="curriculum-worksheets-section" class="sub-section">
                     <div class="section-title" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
-                        <span><i class="fas fa-file-alt" style="background:#00a87a;"></i>أوراق عمل</span>
+                        <span><i class="fas fa-file-alt" style="background:#0a7f61;"></i>أوراق عمل</span>
                         <span style="display:flex;gap:6px;flex-wrap:wrap;">
-                            <span class="plus-tag" style="background:linear-gradient(135deg,#6c757d,#868e96);" onclick="navigateTo('home')"><i class="fas fa-home"></i> الرئيسية</span>
                             <span class="plus-tag" onclick="openCurriculumJsonModal('worksheets')"><i class="fas fa-upload"></i> رفع JSON</span>
                         </span>
                     </div>
@@ -1710,7 +2457,6 @@
                     <div class="section-title" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
                         <span><i class="fas fa-book" style="background:#7c3aed;"></i>المواد</span>
                         <span style="display:flex;gap:6px;flex-wrap:wrap;">
-                            <span class="plus-tag" style="background:linear-gradient(135deg,#6c757d,#868e96);" onclick="navigateTo('home')"><i class="fas fa-home"></i> الرئيسية</span>
                             <span class="plus-tag" onclick="openCurriculumJsonModal('materials')"><i class="fas fa-upload"></i> رفع JSON</span>
                         </span>
                     </div>
@@ -1730,9 +2476,8 @@
                 <!-- أخرى -->
                 <div id="curriculum-other-section" class="sub-section">
                     <div class="section-title" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
-                        <span><i class="fas fa-ellipsis-h" style="background:#8aaac8;"></i>أخرى</span>
+                        <span><i class="fas fa-ellipsis-h" style="background:#9bbdd0;"></i>أخرى</span>
                         <span style="display:flex;gap:6px;flex-wrap:wrap;">
-                            <span class="plus-tag" style="background:linear-gradient(135deg,#6c757d,#868e96);" onclick="navigateTo('home')"><i class="fas fa-home"></i> الرئيسية</span>
                             <span class="plus-tag" onclick="openCurriculumJsonModal('other')"><i class="fas fa-upload"></i> رفع JSON</span>
                         </span>
                     </div>
@@ -1774,7 +2519,7 @@
 
             <label style="font-size:0.75rem;font-weight:700;color:var(--text-sec);"><i class="fas fa-paste" style="color:var(--primary);"></i> الصق بياناتك هنا</label>
             <textarea class="json-textarea" id="json-textarea" placeholder="الصق بيانات JSON هنا..." style="min-height:180px;margin-top:4px;"></textarea>
-            <div id="upload-progress" style="display:none; margin:10px 0; padding:8px; background:#f4f8fd; border-radius:10px; font-weight:bold; color:var(--primary); text-align:center;"></div>
+            <div id="upload-progress" style="display:none; margin:10px 0; padding:8px; background:#f8fafc; border-radius:10px; font-weight:bold; color:var(--primary); text-align:center;"></div>
             <div class="modal-actions">
                 <button class="btn-primary" onclick="submitJsonData()"><i class="fas fa-cloud-upload-alt"></i> رفع إلى السحابة</button>
                 <button onclick="closeJsonModal()" style="background:#ccc;border:none;padding:8px 16px;border-radius:20px;cursor:pointer;font-family:'Tajawal',sans-serif;">إلغاء</button>
@@ -1819,15 +2564,53 @@
 
     <!-- ==================== Template Preview Modal ==================== -->
     <div class="modal-overlay" id="template-preview-modal">
-        <div class="modal-box" style="max-width:95vw;max-height:90vh;">
-            <h3 style="justify-content:space-between;">
-                <span><i class="fas fa-eye"></i> معاينة: <span id="preview-template-name"></span></span>
-                <button onclick="closeTemplatePreviewModal()" style="background:#ccc;border:none;padding:6px 12px;border-radius:16px;cursor:pointer;font-size:0.7rem;">✕ إغلاق</button>
-            </h3>
-            <iframe id="template-preview-iframe" class="template-preview-iframe" sandbox="allow-scripts allow-same-origin" title="معاينة القالب"></iframe>
-            <div class="modal-actions" style="margin-top:10px;">
-                <button class="btn-outline-sm" onclick="openTemplateInNewTab()"><i class="fas fa-external-link-alt"></i> فتح في نافذة جديدة</button>
-                <button onclick="closeTemplatePreviewModal()" style="background:#ccc;border:none;padding:8px 16px;border-radius:20px;cursor:pointer;">إغلاق</button>
+        <div class="preview-fullscreen-box">
+            <!-- شريط الأدوات -->
+            <div class="preview-toolbar">
+                <div class="preview-toolbar-title">
+                    <i class="fas fa-eye"></i>
+                    <span id="preview-template-name">معاينة</span>
+                </div>
+
+                <!-- أزرار الجهاز -->
+                <div class="preview-device-btns">
+                    <button class="preview-device-btn" id="prev-btn-mobile" onclick="setPreviewMode('mobile')">
+                        <i class="fas fa-mobile-alt"></i> جوال
+                    </button>
+                    <button class="preview-device-btn" id="prev-btn-tablet" onclick="setPreviewMode('tablet')">
+                        <i class="fas fa-tablet-alt"></i> تابلت
+                    </button>
+                    <button class="preview-device-btn active" id="prev-btn-desktop" onclick="setPreviewMode('desktop')">
+                        <i class="fas fa-desktop"></i> كمبيوتر
+                    </button>
+                </div>
+
+                <!-- تحكم التكبير -->
+                <div class="preview-scale-controls">
+                    <button class="preview-scale-btn" onclick="changePreviewScale(-10)">−</button>
+                    <span id="preview-scale-label">100%</span>
+                    <button class="preview-scale-btn" onclick="changePreviewScale(10)">+</button>
+                </div>
+
+                <!-- أزرار الإجراء -->
+                <div class="preview-action-btns">
+                    <button class="preview-btn-newtab" onclick="printPreviewTemplate()" title="طباعة الملف"><i class="fas fa-print"></i> طباعة</button>
+                    <button class="preview-btn-newtab" onclick="openTemplateInNewTab()">
+                        <i class="fas fa-external-link-alt"></i> نافذة جديدة
+                    </button>
+                    <button class="preview-btn-close" onclick="closeTemplatePreviewModal()">
+                        <i class="fas fa-times"></i> إغلاق
+                    </button>
+                </div>
+            </div>
+
+            <!-- منطقة العرض -->
+            <div class="preview-viewport-wrapper" id="preview-viewport-wrapper">
+                <div class="preview-iframe-scaler" id="preview-iframe-scaler">
+                    <iframe id="template-preview-iframe" class="template-preview-iframe"
+                        sandbox="allow-scripts allow-same-origin allow-forms allow-modals allow-popups allow-popups-to-escape-sandbox allow-downloads"
+                        title="معاينة القالب"></iframe>
+                </div>
             </div>
         </div>
     </div>
@@ -1953,13 +2736,114 @@
         }
 
         // ---- GitHub Settings ----
+        // التوكن إن كان القفل (PIN) مُفعّلاً يُقرأ من الذاكرة فقط (بعد فك التشفير عند فتح التطبيق)
+        // وليس من localStorage كنص صريح — هذا يمنع استخراجه بسهولة من ملفات تطبيق الـ APK
+        let _ghTokenMemory = null;
         function getGHSettings() {
             return {
-                token: localStorage.getItem('gh_token') || '',
+                token: isAppLockEnabled() ? (_ghTokenMemory || '') : (localStorage.getItem('gh_token') || ''),
                 repo:  localStorage.getItem('gh_repo')  || 'goo',
                 user:  localStorage.getItem('gh_user')  || 'fa78383012736al-a11y',
                 folder: localStorage.getItem('gh_folder') || 'database'
             };
+        }
+
+        // ==================== قفل PIN لرمز GitHub (تشفير AES-GCM + PBKDF2) ====================
+        function isAppLockEnabled() {
+            return !!localStorage.getItem('gh_lock_salt');
+        }
+        function _bufToB64(buf) { return btoa(String.fromCharCode(...new Uint8Array(buf))); }
+        function _b64ToBuf(b64) { return Uint8Array.from(atob(b64), c => c.charCodeAt(0)); }
+        async function _deriveLockKey(pin, saltB64) {
+            const enc = new TextEncoder();
+            const salt = _b64ToBuf(saltB64);
+            const keyMaterial = await crypto.subtle.importKey('raw', enc.encode(pin), { name: 'PBKDF2' }, false, ['deriveKey']);
+            return crypto.subtle.deriveKey(
+                { name: 'PBKDF2', salt, iterations: 150000, hash: 'SHA-256' },
+                keyMaterial,
+                { name: 'AES-GCM', length: 256 },
+                false,
+                ['encrypt', 'decrypt']
+            );
+        }
+        // يُشفّر رمز GitHub برمز PIN ويُخزّنه؛ يُستدعى عند تفعيل القفل أو تغيير الرمز لاحقاً
+        async function lockEncryptToken(pin, plainToken) {
+            const salt = crypto.getRandomValues(new Uint8Array(16));
+            const saltB64 = _bufToB64(salt);
+            const key = await _deriveLockKey(pin, saltB64);
+            const iv = crypto.getRandomValues(new Uint8Array(12));
+            const enc = new TextEncoder();
+            const cipher = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, enc.encode(plainToken));
+            localStorage.setItem('gh_lock_salt', saltB64);
+            localStorage.setItem('gh_token_iv', _bufToB64(iv));
+            localStorage.setItem('gh_token_enc', _bufToB64(cipher));
+            localStorage.removeItem('gh_token'); // إزالة النص الصريح القديم نهائياً
+            _ghTokenMemory = plainToken;
+        }
+        // يحاول فك تشفير الرمز برمز PIN المُدخل؛ يُرجع null إذا كان الرمز خاطئاً
+        async function lockDecryptToken(pin) {
+            const saltB64 = localStorage.getItem('gh_lock_salt');
+            const ivB64 = localStorage.getItem('gh_token_iv');
+            const encB64 = localStorage.getItem('gh_token_enc');
+            if (!saltB64 || !ivB64 || !encB64) return null;
+            try {
+                const key = await _deriveLockKey(pin, saltB64);
+                const iv = _b64ToBuf(ivB64);
+                const cipherBuf = _b64ToBuf(encB64);
+                const plainBuf = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, cipherBuf);
+                const plain = new TextDecoder().decode(plainBuf);
+                _ghTokenMemory = plain;
+                return plain;
+            } catch (e) {
+                return null; // PBKDF2/AES-GCM يفشل تلقائياً مع رمز PIN خاطئ
+            }
+        }
+        function updateAppLockMenuLabel() {
+            const el = document.getElementById('app-lock-menu-label');
+            if (el) el.textContent = isAppLockEnabled() ? 'إلغاء قفل PIN عن رمز GitHub' : 'تأمين رمز GitHub بـ PIN';
+        }
+        // تفعيل القفل لأول مرة (أو إعادة ضبطه) من قائمة الإعدادات
+        async function setupAppLockPin() {
+            if (isAppLockEnabled()) {
+                if (!confirm('سيتم تغيير رمز PIN الحالي. هل تريد المتابعة؟')) return;
+            }
+            const currentToken = (isAppLockEnabled() ? _ghTokenMemory : localStorage.getItem('gh_token'))
+                || document.getElementById('gh-token-inline')?.value.trim() || '';
+            if (!currentToken) { alert('أدخل رمز GitHub Token أولاً قبل تفعيل القفل.'); return; }
+            const pin1 = prompt('أدخل رمز PIN جديد (4 أرقام على الأقل):');
+            if (!pin1 || pin1.length < 4) { alert('يجب أن يكون الرمز 4 خانات على الأقل.'); return; }
+            const pin2 = prompt('أعد إدخال الرمز للتأكيد:');
+            if (pin1 !== pin2) { alert('الرمزان غير متطابقين، حاول مرة أخرى.'); return; }
+            await lockEncryptToken(pin1, currentToken);
+            updateAppLockMenuLabel();
+            alert('✅ تم تفعيل قفل PIN. سيُطلب الرمز عند كل تشغيل للتطبيق.');
+        }
+        function disableAppLockPin() {
+            if (!isAppLockEnabled()) return;
+            if (!confirm('سيتم إلغاء القفل وحفظ الرمز كنص عادي محلياً. هل تريد المتابعة؟')) return;
+            if (_ghTokenMemory) localStorage.setItem('gh_token', _ghTokenMemory);
+            localStorage.removeItem('gh_lock_salt');
+            localStorage.removeItem('gh_token_iv');
+            localStorage.removeItem('gh_token_enc');
+            updateAppLockMenuLabel();
+            alert('تم إلغاء قفل PIN.');
+        }
+        // شاشة القفل عند بدء التطبيق
+        async function submitAppLockPin() {
+            const pinEl = document.getElementById('app-lock-pin');
+            const errEl = document.getElementById('app-lock-error');
+            const pin = (pinEl?.value || '').trim();
+            if (!pin) return;
+            const plain = await lockDecryptToken(pin);
+            if (plain === null) {
+                errEl.textContent = '❌ رمز غير صحيح، حاول مرة أخرى';
+                pinEl.value = '';
+                pinEl.focus();
+                return;
+            }
+            errEl.textContent = '';
+            document.getElementById('app-lock-overlay').classList.remove('active');
+            continueInit();
         }
 
         // SHA cache: avoids extra GET before every PUT
@@ -1971,21 +2855,48 @@
 
         function schedulePush(collectionName) {
             _dirtyCollections.add(collectionName);
+            _persistDirtyQueue();
             clearTimeout(_syncTimer);
             _syncTimer = setTimeout(flushDirty, 1500); // batch writes within 1.5s
         }
 
+        // ---- طابور المزامنة دون اتصال: يحفظ أسماء المجموعات التي لم تُرفع بعد ----
+        function _persistDirtyQueue() {
+            try { localStorage.setItem('_gh_dirty_queue', JSON.stringify([..._dirtyCollections])); }
+            catch (e) {}
+        }
+        function restoreDirtyQueue() {
+            try {
+                const saved = JSON.parse(localStorage.getItem('_gh_dirty_queue') || '[]');
+                saved.forEach(c => _dirtyCollections.add(c));
+                if (_dirtyCollections.size > 0) setSyncBadge(navigator.onLine ? 'saving' : 'offline');
+            } catch (e) {}
+        }
+
         async function flushDirty() {
+            if (!navigator.onLine) {
+                // لا اتصال: نُبقي الطابور كما هو، وسيُعاد المحاولة تلقائياً عند رجوع الاتصال (حدث 'online')
+                setSyncBadge('offline');
+                _persistDirtyQueue();
+                return;
+            }
             const cols = [..._dirtyCollections];
-            _dirtyCollections.clear();
             for (const col of cols) {
-                await pushCollectionToGithub(col);
+                const ok = await pushCollectionToGithub(col);
+                if (ok) _dirtyCollections.delete(col);
+            }
+            _persistDirtyQueue();
+            if (_dirtyCollections.size > 0) {
+                // بعض المجموعات فشلت (خطأ مؤقت من الخادم) — أعد المحاولة بعد قليل
+                clearTimeout(_syncTimer);
+                _syncTimer = setTimeout(flushDirty, 8000);
             }
         }
 
         async function pushCollectionToGithub(collectionName) {
             const s = getGHSettings();
-            if (!s.token) return;
+            if (!s.token) return true; // لا يوجد توكن: لا شيء لمزامنته، لا تُبقِ العنصر بالطابور
+            if (!navigator.onLine) return false;
 
             // For template collections: only save locally-created items (not github-sourced)
             const templateCols = ['t_files','t_records','t_exams','t_reports','t_plans'];
@@ -2023,14 +2934,17 @@
                     const j = await res.json();
                     _ghSha[cacheKey] = j.content?.sha;
                     setSyncBadge('ok');
+                    return true;
                 } else {
                     delete _ghSha[cacheKey]; // stale SHA – clear cache
                     setSyncBadge('error');
                     console.warn('GitHub push failed:', res.status, collectionName);
+                    return false;
                 }
             } catch(e) {
-                setSyncBadge('error');
+                setSyncBadge(navigator.onLine ? 'error' : 'offline');
                 console.warn('GitHub push error:', e.message, collectionName);
+                return false;
             }
         }
 
@@ -2053,10 +2967,11 @@
             const badge = document.getElementById('sync-status');
             if (!badge) return;
             const states = {
-                ok:     { html: '<i class="fas fa-cloud"></i> GitHub ✓',        bg: '#e8f0ff', color: '#0062cc' },
-                saving: { html: '<i class="fas fa-spinner fa-spin"></i> حفظ...', bg: '#fff5ea', color: '#e07000' },
-                error:  { html: '<i class="fas fa-exclamation-triangle"></i> خطأ',bg: '#fff0f0', color: '#e03c3c' },
-                local:  { html: '<i class="fas fa-hdd"></i> محلي فقط',           bg: '#f4f8fd', color: '#8aaac8' }
+                ok:      { html: '<i class="fas fa-cloud"></i> GitHub ✓',                  bg: '#e8f0ff', color: '#2a6496' },
+                saving:  { html: '<i class="fas fa-spinner fa-spin"></i> حفظ...',           bg: '#fff5ea', color: '#b8862a' },
+                error:   { html: '<i class="fas fa-exclamation-triangle"></i> خطأ',         bg: '#fff0f0', color: '#e03c3c' },
+                local:   { html: '<i class="fas fa-hdd"></i> محلي فقط',                     bg: '#f8fafc', color: '#9bbdd0' },
+                offline: { html: '<i class="fas fa-plug"></i> غير متصل (سيُحفظ تلقائياً)',   bg: '#fff5ea', color: '#b8862a' }
             };
             const st = states[state] || states.local;
             badge.innerHTML = st.html;
@@ -2065,8 +2980,18 @@
         }
         function updateSyncStatus() {
             const s = getGHSettings();
+            if (!navigator.onLine) { setSyncBadge('offline'); return; }
             setSyncBadge(s.token ? 'ok' : 'local');
         }
+        // ---- إعادة المزامنة تلقائياً عند رجوع الاتصال بالإنترنت ----
+        window.addEventListener('online', () => {
+            showToast('✅ تم استرجاع الاتصال — جاري المزامنة...');
+            flushDirty();
+        });
+        window.addEventListener('offline', () => {
+            setSyncBadge('offline');
+            showToast('⚠️ لا يوجد اتصال بالإنترنت — سيتم الحفظ تلقائياً عند رجوع الاتصال');
+        });
 
         // ---- CRUD: save locally then push to GitHub ----
         async function getCollectionSorted(collectionName, field = 'usageCount', limitCount = 2000) {
@@ -2117,66 +3042,60 @@
             } catch (e) { console.error('incrementUsage error:', e); }
         }
         // ==================== App Version & GitHub Auto-Update ====================
-        const APP_VERSION = '1.1.1';
-        const GITHUB_RAW = 'https://raw.githubusercontent.com/fa78383012736al-a11y/goo/main';
+        const APP_VERSION = '1.0.0';
+        const GITHUB_RAW = 'https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main';
 
         async function checkForUpdates() {
             try {
                 const res = await fetch(GITHUB_RAW + '/version.json?t=' + Date.now(), { cache: 'no-store' });
                 if (!res.ok) return;
-                const data = await res.json();
-                if (data.version && data.version !== APP_VERSION) {
-                    console.log('🔄 New version detected, updating automatically...');
-                    applyUpdate();
+                const { version, changelog } = await res.json();
+                if (version && version !== APP_VERSION) {
+                    showUpdateBanner(version, changelog || '');
                 }
-            } catch(e) { console.log('Update check failed'); }
+            } catch(e) { /* offline or repo not configured */ }
         }
 
         function showUpdateBanner(newVer, changelog) {
-            if (document.getElementById('update-banner')) return;
+            const existing = document.getElementById('update-banner');
+            if (existing) existing.remove();
             const banner = document.createElement('div');
             banner.id = 'update-banner';
-            banner.style.cssText = `position:fixed;bottom:20px;left:20px;right:20px;z-index:99999;
-                background:var(--surface);color:var(--text-main);padding:15px;border-radius:15px;
-                display:flex;align-items:center;gap:12px;box-shadow:0 10px 30px rgba(0,0,0,0.2);
-                border:1px solid var(--primary);animation:slideUp 0.5s ease;`;
+            banner.style.cssText = `position:fixed;top:0;left:0;right:0;z-index:99999;
+                background:linear-gradient(135deg,#2a6496,#4a90b8);
+                color:#fff;padding:10px 16px;display:flex;align-items:center;
+                gap:10px;font-family:Tajawal,sans-serif;font-size:0.8rem;
+                box-shadow:0 4px 20px rgba(42,100,150,0.4);`;
             banner.innerHTML = `
-                <div style="background:var(--primary);color:#fff;width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;">
-                    <i class="fas fa-sync-alt fa-spin"></i>
-                </div>
-                <div style="flex:1">
-                    <div style="font-weight:700;font-size:0.9rem;">تحديث جديد متوفر v${newVer}</div>
-                    <div style="font-size:0.75rem;color:var(--text-sec);">${changelog || 'تحسينات وإصلاحات عامة'}</div>
-                </div>
-                <button onclick="applyUpdate()" style="background:var(--primary);color:#fff;border:none;padding:8px 15px;border-radius:10px;font-weight:700;cursor:pointer;font-family:Tajawal;">تحديث</button>
-            `;
-            document.body.appendChild(banner);
+                <i class="fas fa-arrow-circle-up" style="font-size:1.1rem;flex-shrink:0;"></i>
+                <span style="flex:1;">يتوفر تحديث جديد <strong>v${newVer}</strong>${changelog ? ' — ' + changelog : ''}</span>
+                <button onclick="applyUpdate()" style="background:#fff;color:#2a6496;border:none;
+                    padding:6px 14px;border-radius:20px;font-weight:700;cursor:pointer;
+                    font-family:Tajawal,sans-serif;font-size:0.75rem;">تحديث الآن</button>
+                <button onclick="this.closest('#update-banner').remove()" style="background:rgba(255,255,255,0.2);
+                    color:#fff;border:none;padding:6px 10px;border-radius:20px;cursor:pointer;
+                    font-family:Tajawal,sans-serif;font-size:0.75rem;">لاحقاً</button>`;
+            document.body.prepend(banner);
         }
 
         async function applyUpdate() {
-            const btn = document.querySelector('#update-banner button');
-            if (btn) btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-            
-            if ('serviceWorker' in navigator) {
-                const registrations = await navigator.serviceWorker.getRegistrations();
-                for (let registration of registrations) {
-                    await registration.update();
-                }
-                // إرسال رسالة لتفعيل الـ SW الجديد فوراً
-                if (navigator.serviceWorker.controller) {
-                    navigator.serviceWorker.controller.postMessage('skipWaiting');
-                }
+            const banner = document.getElementById('update-banner');
+            if (banner) banner.innerHTML = `<i class="fas fa-spinner fa-spin"></i> <span>جاري تحميل التحديث...</span>`;
+            try {
+                const res = await fetch(GITHUB_RAW + '/accounting_system.html?t=' + Date.now(), { cache: 'no-store' });
+                if (!res.ok) throw new Error('fetch failed');
+                const html = await res.text();
+                // حفظ في localStorage كـ cache
+                localStorage.setItem('goo_app_html', html);
+                localStorage.setItem('goo_app_version', APP_VERSION);
+                // إعادة تحميل من الكاش
+                document.open();
+                document.write(html);
+                document.close();
+            } catch(e) {
+                if (banner) banner.innerHTML = `<span style="color:#ffcccc;">❌ فشل التحديث، تحقق من الاتصال</span>`;
+                setTimeout(() => banner?.remove(), 3000);
             }
-            setTimeout(() => {
-                window.location.reload(true);
-            }, 1000);
-            
-            // مسح كاش localStorage القديم إن وجد لضمان التحميل من SW الجديد
-            localStorage.removeItem('goo_app_html');
-            
-            setTimeout(() => {
-                window.location.reload(true);
-            }, 1000);
         }
 
         // ==================== Collection Names ====================
@@ -2373,8 +3292,25 @@
                 updateBackButtonVisibility();
                 return;
             }
+            // ابحث عن آخر حالة بصفحة مختلفة عن الحالية
+            let prevState = null;
+            while (navHistory.length > 0) {
+                const candidate = navHistory.pop();
+                if (candidate.page !== currentPage) {
+                    prevState = candidate;
+                    break;
+                }
+            }
+            if (!prevState) {
+                // كل السجل نفس الصفحة، ارجع للرئيسية
+                isRestoring = true;
+                currentPage = 'home';
+                navigateTo('home');
+                isRestoring = false;
+                updateBackButtonVisibility();
+                return;
+            }
             isRestoring = true;
-            const prevState = navHistory.pop();
             currentPage = prevState.page;
             currentTemplateTab = prevState.templateTab;
             currentResourceTab = prevState.resourceTab;
@@ -2394,6 +3330,49 @@
             if (btn) btn.style.display = notHome ? 'flex' : 'none';
             if (homeBtn) homeBtn.style.display = notHome ? 'flex' : 'none';
         }
+
+        // ==================== زر الرجوع الفعلي (Android/WebView/TWA) ====================
+        // بدون هذا، أول ضغطة على زر الرجوع في الجوال تُغلق التطبيق فوراً
+        // بدل الرجوع داخل شاشات التطبيق (لأن goBack() أعلاه تنقل داخلية فقط ولا ترتبط بسجل المتصفح)
+        let _exitArmed = false;
+        function _trapNativeHistory() {
+            // نضيف دائماً حالة وهمية في سجل المتصفح بحيث يبقى للزر شيء "يرجع" إليه
+            history.pushState({ gooNav: true }, '', location.href);
+        }
+        function initBackButtonTrap() {
+            _trapNativeHistory();
+            window.addEventListener('popstate', function() {
+                const atHome = (currentPage === 'home' && navHistory.length === 0);
+                if (atHome) {
+                    if (_exitArmed) {
+                        // ضغطة ثانية ضمن المهلة: نسمح للنظام بإغلاق التطبيق فعلياً (لا نعيد فرض الحالة)
+                        return;
+                    }
+                    _exitArmed = true;
+                    _trapNativeHistory();
+                    showToast('اضغط رجوع مرة أخرى للخروج');
+                    setTimeout(() => { _exitArmed = false; }, 2000);
+                    return;
+                }
+                // لسنا في الرئيسية: نُعيد فرض الحالة فوراً، ثم نُنقّل داخلياً عبر منطق التطبيق
+                _trapNativeHistory();
+                goBack();
+            });
+        }
+
+        // ==================== تمرير الحقول فوق لوحة المفاتيح ====================
+        // يمنع اختفاء حقل الإدخال خلف الكيبورد عند فتحه داخل التطبيق المُغلّف (WebView/TWA)
+        function setupKeyboardAwareScroll() {
+            document.addEventListener('focusin', function(e) {
+                const t = e.target;
+                if (!t || !['INPUT', 'TEXTAREA', 'SELECT'].includes(t.tagName)) return;
+                setTimeout(() => {
+                    try { t.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (_) {}
+                }, 300);
+            });
+        }
+
+
 
         function hideAllNavs() { document.querySelectorAll('.bottom-nav-wrapper').forEach(n => n.classList.remove(
                 'active')); }
@@ -2679,21 +3658,19 @@
             // --- عرض واجهة المواد بشكل مبسط (صف + فصل + مادة) ---
             if (tab === 'materials') {
                 container.innerHTML = '<div class="service-card">' + data.map(item => `
-                    <div class="service-row">
-                        <span class="right">
-                            <span class="srv-icon ${CURR_COLOR_MAP[tab] || 'si-purple'}"><i class="fas ${CURR_ICON_MAP[tab]}"></i></span>
-                            <span style="flex:1;min-width:0;">
-                                <span style="display:block;font-weight:600;">${item.subject || item.title || item.name || 'بدون عنوان'}</span>
-                                <span style="display:block;font-size:0.62rem;margin-top:2px;flex-wrap:wrap;display:flex;gap:3px;">
-                                    ${item.grade ? `<span class="tag tag-grade">${item.grade}</span>` : ''}
-                                    ${item.semester ? `<span class="tag tag-semester">ف${item.semester === 'الأول' ? '١' : '٢'}</span>` : ''}
-                                    ${item.subject ? `<span class="tag tag-subject">${item.subject}</span>` : ''}
-                                </span>
+                    <div class="file-row-compact">
+                        <span class="file-icon-compact ${CURR_COLOR_MAP[tab] || 'si-purple'}"><i class="fas ${CURR_ICON_MAP[tab]}"></i></span>
+                        <span class="file-info-compact">
+                            <span class="file-title-compact" title="${item.subject || item.title || item.name || 'بدون عنوان'}">${item.subject || item.title || item.name || 'بدون عنوان'}</span>
+                            <span class="file-tags-compact">
+                                ${item.grade ? `<span class="tag tag-grade">${item.grade}</span>` : ''}
+                                ${item.semester ? `<span class="tag tag-semester">ف${item.semester === 'الأول' ? '١' : '٢'}</span>` : ''}
+                                ${item.subject ? `<span class="tag tag-subject">${item.subject}</span>` : ''}
                             </span>
                         </span>
-                        <span class="actions-group">
-                            ${item.url ? `<a href="${item.url}" target="_blank" rel="noopener" class="btn-outline-sm" onclick="event.stopPropagation();" style="text-decoration:none;"><i class="fas fa-external-link-alt"></i> فتح</a>` : ''}
-                            <button class="btn-danger-sm" onclick="deleteCurriculumItem('${tab}','${item.id}')"><i class="fas fa-trash"></i></button>
+                        <span class="file-actions-compact">
+                            ${item.url ? `<a href="${item.url}" target="_blank" rel="noopener" class="btn-outline-sm file-action-btn" onclick="event.stopPropagation();" title="فتح"><i class="fas fa-external-link-alt"></i></a>` : ''}
+                            <button class="btn-danger-sm file-action-btn" onclick="deleteCurriculumItem('${tab}','${item.id}')" title="حذف"><i class="fas fa-trash"></i></button>
                         </span>
                     </div>`).join('') + '</div>';
                 return;
@@ -2701,23 +3678,21 @@
 
             const semesterColors = { 'الأول': 'tag-semester', 'الثاني': 'tag-semester' };
             container.innerHTML = '<div class="service-card">' + data.map(item => `
-                <div class="service-row">
-                    <span class="right">
-                        <span class="srv-icon ${CURR_COLOR_MAP[tab] || 'si-blue'}"><i class="fas ${CURR_ICON_MAP[tab]}"></i></span>
-                        <span style="flex:1;min-width:0;">
-                            <span style="display:block;font-weight:600;">${item.title || item.name || 'بدون عنوان'}</span>
-                            <span style="display:block;font-size:0.62rem;margin-top:2px;flex-wrap:wrap;display:flex;gap:3px;">
-                                ${item.semester ? `<span class="tag tag-semester">ف${item.semester === 'الأول' ? '١' : '٢'}</span>` : ''}
-                                ${item.grade ? `<span class="tag tag-grade">${item.grade}</span>` : ''}
-                                ${item.subject ? `<span class="tag tag-subject">${item.subject}</span>` : ''}
-                                ${item.unit ? `<span class="tag" style="background:#f0f4ff;color:#4a6a8a;">و: ${item.unit}</span>` : ''}
-                                ${item.lesson ? `<span class="tag" style="background:#f9f0ff;color:#7c3aed;">د: ${item.lesson}</span>` : ''}
-                            </span>
+                <div class="file-row-compact">
+                    <span class="file-icon-compact ${CURR_COLOR_MAP[tab] || 'si-blue'}"><i class="fas ${CURR_ICON_MAP[tab]}"></i></span>
+                    <span class="file-info-compact">
+                        <span class="file-title-compact" title="${item.title || item.name || 'بدون عنوان'}">${item.title || item.name || 'بدون عنوان'}</span>
+                        <span class="file-tags-compact">
+                            ${item.semester ? `<span class="tag tag-semester">ف${item.semester === 'الأول' ? '١' : '٢'}</span>` : ''}
+                            ${item.grade ? `<span class="tag tag-grade">${item.grade}</span>` : ''}
+                            ${item.subject ? `<span class="tag tag-subject">${item.subject}</span>` : ''}
+                            ${item.unit ? `<span class="tag" style="background:#f0f4ff;color:#5a8aaa;">و: ${item.unit}</span>` : ''}
+                            ${item.lesson ? `<span class="tag" style="background:#f9f0ff;color:#7c3aed;">د: ${item.lesson}</span>` : ''}
                         </span>
                     </span>
-                    <span class="actions-group">
-                        ${item.url ? `<a href="${item.url}" target="_blank" rel="noopener" class="btn-outline-sm" onclick="event.stopPropagation();" style="text-decoration:none;"><i class="fas fa-external-link-alt"></i> فتح</a>` : ''}
-                        <button class="btn-danger-sm" onclick="deleteCurriculumItem('${tab}','${item.id}')"><i class="fas fa-trash"></i></button>
+                    <span class="file-actions-compact">
+                        ${item.url ? `<a href="${item.url}" target="_blank" rel="noopener" class="btn-outline-sm file-action-btn" onclick="event.stopPropagation();" title="فتح"><i class="fas fa-external-link-alt"></i></a>` : ''}
+                        <button class="btn-danger-sm file-action-btn" onclick="deleteCurriculumItem('${tab}','${item.id}')" title="حذف"><i class="fas fa-trash"></i></button>
                     </span>
                 </div>`).join('') + '</div>';
         }
@@ -2804,7 +3779,7 @@
                 const btn = document.getElementById('copy-ref-btn');
                 if (btn) {
                     btn.innerHTML = '<i class="fas fa-check"></i> تم النسخ!';
-                    btn.style.background = '#00a87a';
+                    btn.style.background = '#0a7f61';
                     setTimeout(() => {
                         btn.innerHTML = '<i class="fas fa-copy"></i> نسخ';
                         btn.style.background = 'var(--primary)';
@@ -2823,7 +3798,7 @@
                 const btn = document.getElementById('copy-ref-btn');
                 if (btn) {
                     btn.innerHTML = '<i class="fas fa-check"></i> تم النسخ!';
-                    btn.style.background = '#00a87a';
+                    btn.style.background = '#0a7f61';
                     setTimeout(() => { btn.innerHTML = '<i class="fas fa-copy"></i> نسخ'; btn.style.background = 'var(--primary)'; }, 2000);
                 }
             });
@@ -2901,7 +3876,7 @@
                     const res = await fetch(url, { method: 'PUT', headers: { 'Authorization': `token ${settings.token}`, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
                     if (!res.ok) { const err = await res.json(); throw new Error(err.message || 'فشل الرفع'); }
 
-                    statusMsg.innerHTML = '<i class="fas fa-check-circle" style="color:#00c896;"></i> تم رفع <strong>' + file.name + '</strong> بنجاح ✓';
+                    statusMsg.innerHTML = '<i class="fas fa-check-circle" style="color:#c9965a;"></i> تم رفع <strong>' + file.name + '</strong> بنجاح ✓';
                     await addActivityCloud('رفع مباشر لـ GitHub: ' + fileName);
                     // Refresh GitHub files to show the new one
                     await fetchGithubFiles();
@@ -2972,6 +3947,52 @@
 
         document.getElementById('template-html-textarea')?.addEventListener('input', updateTemplateCharCount);
 
+        // ===== متغيرات المعاينة =====
+        let previewScale = 100;
+        let previewMode = 'desktop'; // desktop | tablet | mobile
+
+        const PREVIEW_WIDTHS = { desktop: 1280, tablet: 768, mobile: 375 };
+
+        function setPreviewMode(mode) {
+            previewMode = mode;
+            // تحديث الأزرار
+            ['mobile','tablet','desktop'].forEach(m => {
+                document.getElementById('prev-btn-' + m)?.classList.toggle('active', m === mode);
+            });
+            applyPreviewScale();
+        }
+
+        function applyPreviewScale() {
+            const scaler = document.getElementById('preview-iframe-scaler');
+            const iframe = document.getElementById('template-preview-iframe');
+            const wrapper = document.getElementById('preview-viewport-wrapper');
+            if (!scaler || !iframe || !wrapper) return;
+
+            const targetW = PREVIEW_WIDTHS[previewMode];
+
+            // حساب المقياس الذي يجعل المحتوى يملأ العرض كاملاً بدون قطع
+            const wrapperW = wrapper.clientWidth - 32; // padding
+            const fitScale = Math.min(1, wrapperW / targetW);
+            const finalScale = fitScale * (previewScale / 100);
+
+            iframe.style.width = targetW + 'px';
+            iframe.style.height = Math.round(wrapper.clientHeight / finalScale) + 'px';
+            scaler.style.width = targetW + 'px';
+            scaler.style.transform = 'scale(' + finalScale + ')';
+            scaler.style.transformOrigin = 'top center';
+
+            // تعويض الحجم المصغّر حتى لا يبقى فراغ فوق
+            const scaledH = (wrapper.clientHeight / finalScale) * finalScale;
+            scaler.style.marginBottom = (scaledH - (wrapper.clientHeight / finalScale) * finalScale) + 'px';
+
+            document.getElementById('preview-scale-label').textContent = Math.round(finalScale * 100) + '%';
+        }
+
+        function changePreviewScale(delta) {
+            previewScale = Math.min(150, Math.max(30, previewScale + delta));
+            applyPreviewScale();
+        }
+
         function previewTemplateInModal() {
             const htmlContent = document.getElementById('template-html-textarea').value;
             const name = document.getElementById('template-name-input').value || 'معاينة';
@@ -2981,10 +4002,16 @@
             const iframe = document.getElementById('template-preview-iframe');
             iframe.srcdoc = htmlContent;
             document.getElementById('template-preview-modal').classList.add('active');
+            previewScale = 100;
+            setPreviewMode('desktop');
+            // تطبيق المقياس بعد ظهور النافذة
+            requestAnimationFrame(() => requestAnimationFrame(() => applyPreviewScale()));
         }
 
         function closeTemplatePreviewModal() {
             document.getElementById('template-preview-modal').classList.remove('active');
+            const iframe = document.getElementById('template-preview-iframe');
+            iframe.srcdoc = '';
             currentPreviewItem = null;
         }
 
@@ -3005,6 +4032,31 @@
                 win.document.close();
             } else {
                 alert('تعذر فتح نافذة جديدة. تأكد من السماح بالنوافذ المنبثقة.');
+            }
+        }
+
+        function printPreviewTemplate() {
+            let htmlContent = "";
+            if (currentPreviewItem && currentPreviewItem.htmlContent) {
+                htmlContent = currentPreviewItem.htmlContent;
+            } else {
+                htmlContent = document.getElementById("template-html-textarea").value;
+            }
+            if (!htmlContent || !htmlContent.trim()) return alert("لا يوجد محتوى للطباعة");
+            const win = window.open("", "_blank");
+            if (win) {
+                win.document.write(htmlContent);
+                win.document.close();
+                win.focus();
+                setTimeout(function() { try { win.print(); } catch(e) {} }, 600);
+            } else {
+                const iframe = document.getElementById("template-preview-iframe");
+                if (iframe && iframe.contentWindow) {
+                    iframe.contentWindow.focus();
+                    iframe.contentWindow.print();
+                } else {
+                    alert("تعذر الطباعة. تأكد من السماح بالنوافذ المنبثقة.");
+                }
             }
         }
 
@@ -3031,13 +4083,13 @@
                     if (idx >= 0) { appData.templates[currentTemplateTab][idx] = { id: editId, ...appData.templates[
                                 currentTemplateTab][idx], ...data }; }
                     statusEl.textContent = '✅ تم تحديث القالب بنجاح';
-                    statusEl.style.color = '#00a87a';
+                    statusEl.style.color = '#0a7f61';
                     await addActivityCloud('تم تحديث ' + getTabLabel(currentTemplateTab) + ': ' + name);
                 } else {
                     const newItem = await addDocument(collectionName, data);
                     if (newItem) { appData.templates[currentTemplateTab].unshift(newItem);
                         statusEl.textContent = '✅ تم حفظ القالب بنجاح';
-                        statusEl.style.color = '#00a87a';
+                        statusEl.style.color = '#0a7f61';
                         await addActivityCloud('تمت إضافة ' + getTabLabel(currentTemplateTab) + ': ' + name); } else {
                         throw new Error('فشل الحفظ'); }
                 }
@@ -3134,6 +4186,9 @@
             const iframe = document.getElementById('template-preview-iframe');
             iframe.srcdoc = item.htmlContent || '<div>لا يوجد محتوى</div>';
             document.getElementById('template-preview-modal').classList.add('active');
+            previewScale = 100;
+            setPreviewMode('desktop');
+            requestAnimationFrame(() => requestAnimationFrame(() => applyPreviewScale()));
             renderCurrentTemplateTab();
         }
 
@@ -3329,12 +4384,12 @@
             overlay.innerHTML = `
                 <div style="background:#fff;border-radius:22px;padding:22px;width:100%;max-width:420px;text-align:center;">
                     <div style="font-size:1.4rem;margin-bottom:8px;">🧹</div>
-                    <h3 style="color:#0a2540;margin-bottom:6px;font-size:0.95rem;">جاري فحص الروابط...</h3>
-                    <p id="clean-status" style="font-size:0.78rem;color:#4a6a8a;margin-bottom:12px;">يتم فحص ${data.length} رابط</p>
-                    <div style="background:#e2ecf7;border-radius:20px;height:10px;overflow:hidden;margin-bottom:12px;">
-                        <div id="clean-bar" style="background:linear-gradient(135deg,#0062cc,#1a8cff);height:100%;width:0%;transition:width 0.3s;border-radius:20px;"></div>
+                    <h3 style="color:#1a3a52;margin-bottom:6px;font-size:0.95rem;">جاري فحص الروابط...</h3>
+                    <p id="clean-status" style="font-size:0.78rem;color:#5a8aaa;margin-bottom:12px;">يتم فحص ${data.length} رابط</p>
+                    <div style="background:#dde8f0;border-radius:20px;height:10px;overflow:hidden;margin-bottom:12px;">
+                        <div id="clean-bar" style="background:linear-gradient(135deg,#2a6496,#4a90b8);height:100%;width:0%;transition:width 0.3s;border-radius:20px;"></div>
                     </div>
-                    <div id="clean-log" style="font-size:0.68rem;color:#8aaac8;max-height:120px;overflow-y:auto;text-align:right;background:#f4f8fd;border-radius:12px;padding:8px;"></div>
+                    <div id="clean-log" style="font-size:0.68rem;color:#9bbdd0;max-height:120px;overflow-y:auto;text-align:right;background:#f8fafc;border-radius:12px;padding:8px;"></div>
                 </div>`;
             document.body.appendChild(overlay);
 
@@ -3379,7 +4434,7 @@
 
                 if (isValid) {
                     valid.push(item);
-                    logEl.innerHTML = `<span style="color:#00a87a;">✅ ${item.name || item.lesson || url}</span><br>` + logEl.innerHTML;
+                    logEl.innerHTML = `<span style="color:#0a7f61;">✅ ${item.name || item.lesson || url}</span><br>` + logEl.innerHTML;
                 } else {
                     invalid.push(item);
                     logEl.innerHTML = `<span style="color:#e03c3c;">❌ ${item.name || item.lesson || url}</span><br>` + logEl.innerHTML;
@@ -3390,7 +4445,7 @@
 
             // عرض النتيجة
             barEl.style.width = '100%';
-            barEl.style.background = invalid.length > 0 ? 'linear-gradient(135deg,#e07000,#ff9a00)' : 'linear-gradient(135deg,#00a87a,#00c896)';
+            barEl.style.background = invalid.length > 0 ? 'linear-gradient(135deg,#b8862a,#ff9a00)' : 'linear-gradient(135deg,#0a7f61,#c9965a)';
             statusEl.innerHTML = `<strong>✅ صالح: ${valid.length}</strong> &nbsp;|&nbsp; <strong style="color:#e03c3c;">❌ تالف: ${invalid.length}</strong>`;
 
             if (invalid.length === 0) {
@@ -3408,7 +4463,7 @@
                 <button onclick="confirmClean()" style="background:linear-gradient(135deg,#e03c3c,#ff6b6b);color:#fff;border:none;padding:9px 20px;border-radius:20px;font-weight:700;font-size:0.8rem;cursor:pointer;font-family:Tajawal,sans-serif;">
                     <i class="fas fa-trash"></i> حذف ${invalid.length} رابط تالف
                 </button>
-                <button onclick="document.body.removeChild(document.getElementById('clean-overlay'))" style="background:#e2ecf7;color:#0a2540;border:none;padding:9px 16px;border-radius:20px;font-weight:700;font-size:0.8rem;cursor:pointer;font-family:Tajawal,sans-serif;">
+                <button onclick="document.body.removeChild(document.getElementById('clean-overlay'))" style="background:#dde8f0;color:#1a3a52;border:none;padding:9px 16px;border-radius:20px;font-weight:700;font-size:0.8rem;cursor:pointer;font-family:Tajawal,sans-serif;">
                     إلغاء
                 </button>`;
             overlay.querySelector('div').appendChild(btnWrap);
@@ -3437,7 +4492,7 @@
                 }
             }
 
-            statusEl.innerHTML = `<strong style="color:#00a87a;">✅ تم حذف ${deleted} رابط تالف بنجاح</strong>`;
+            statusEl.innerHTML = `<strong style="color:#0a7f61;">✅ تم حذف ${deleted} رابط تالف بنجاح</strong>`;
             await addActivityCloud('تنظيف Wordwall: حذف ' + deleted + ' رابط تالف');
             renderWordwall();
             updateStats();
@@ -3668,10 +4723,10 @@
                     '<div class="empty-state"><div class="empty-icon"><i class="fas fa-shopping-cart"></i></div><h3>لا توجد طلبات</h3><p>أضف طلباً جديداً</p></div>'; return; }
             container.innerHTML = data.map(o => {
                 const statusBadge = o.status === 'تم التسليم' ?
-                    '<span style="color:#00a87a;font-weight:700;">✅ تم التسليم</span>' : o.status === 'مكتمل' ?
-                    '<span style="color:#0062cc;font-weight:700;">✔️ مكتمل</span>' : o.status === 'قيد التصميم' ?
-                    '<span style="color:#e07000;font-weight:700;">🔄 قيد التصميم</span>' :
-                    '<span style="color:#8aaac8;font-weight:700;">🆕 جديد</span>';
+                    '<span style="color:#0a7f61;font-weight:700;">✅ تم التسليم</span>' : o.status === 'مكتمل' ?
+                    '<span style="color:#2a6496;font-weight:700;">✔️ مكتمل</span>' : o.status === 'قيد التصميم' ?
+                    '<span style="color:#b8862a;font-weight:700;">🔄 قيد التصميم</span>' :
+                    '<span style="color:#9bbdd0;font-weight:700;">🆕 جديد</span>';
                 return '<div class="service-row" onclick="editOrder(\'' + o.id + '\')"><span class="right"><span class="srv-icon si-orange"><i class="fas fa-tasks"></i></span>' +
                     (o.description || 'طلب') +
                     '</span><span style="display:flex;gap:10px;align-items:center;">' + statusBadge +
@@ -3769,11 +4824,11 @@
                 
                 let statusHtml = '';
                 if (inv.brokerSettled) {
-                    statusHtml = '<span style="color:#00a87a;font-size:0.65rem;font-weight:700;">✅ مسوية</span>';
+                    statusHtml = '<span style="color:#0a7f61;font-size:0.65rem;font-weight:700;">✅ مسوية</span>';
                 } else if (inv.receiptReceived) {
-                    statusHtml = `<span style="color:#e07000;font-size:0.65rem;font-weight:700;">📋 إيصال✓ | متبقي ${brokerOwed.toLocaleString('ar-SA')} ر.س</span>`;
+                    statusHtml = `<span style="color:#b8862a;font-size:0.65rem;font-weight:700;">📋 إيصال✓ | متبقي ${brokerOwed.toLocaleString('ar-SA')} ر.س</span>`;
                 } else {
-                    statusHtml = '<span style="color:#8aaac8;font-size:0.65rem;">⏳ لم يُستلم الإيصال</span>';
+                    statusHtml = '<span style="color:#9bbdd0;font-size:0.65rem;">⏳ لم يُستلم الإيصال</span>';
                 }
 
                 const receiptBtn = !inv.receiptReceived
@@ -3887,15 +4942,15 @@
                     </div>
                     <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;">
                         <div class="stat-item" style="flex:1;min-width:70px;"><div class="num" style="font-size:0.9rem;">${info.total.toLocaleString('ar-SA')}</div><div class="lbl">إجمالي حصتي</div></div>
-                        <div class="stat-item green" style="flex:1;min-width:70px;"><div class="num" style="font-size:0.9rem;color:#00a87a;">${info.paid.toLocaleString('ar-SA')}</div><div class="lbl">مستلم</div></div>
-                        <div class="stat-item orange" style="flex:1;min-width:70px;"><div class="num" style="font-size:0.9rem;color:#e07000;">${owed.toLocaleString('ar-SA')}</div><div class="lbl">متبقي</div></div>
+                        <div class="stat-item green" style="flex:1;min-width:70px;"><div class="num" style="font-size:0.9rem;color:#0a7f61;">${info.paid.toLocaleString('ar-SA')}</div><div class="lbl">مستلم</div></div>
+                        <div class="stat-item orange" style="flex:1;min-width:70px;"><div class="num" style="font-size:0.9rem;color:#b8862a;">${owed.toLocaleString('ar-SA')}</div><div class="lbl">متبقي</div></div>
                     </div>
-                    <div style="background:#f4f8fd;border-radius:8px;height:8px;overflow:hidden;margin-bottom:8px;">
+                    <div style="background:#f8fafc;border-radius:8px;height:8px;overflow:hidden;margin-bottom:8px;">
                         <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,var(--primary),var(--accent));border-radius:8px;transition:width 0.5s;"></div>
                     </div>
                     <div style="display:flex;justify-content:space-between;font-size:0.65rem;color:var(--text-muted);">
                         <span>${pct}% تم الاستلام</span>
-                        ${info.pendingReceipt > 0 ? `<span style="color:#e07000;">⚠️ ${info.pendingReceipt} فاتورة بانتظار الإيصال</span>` : '<span style="color:#00a87a;">✅ جميع الإيصالات مستلمة</span>'}
+                        ${info.pendingReceipt > 0 ? `<span style="color:#b8862a;">⚠️ ${info.pendingReceipt} فاتورة بانتظار الإيصال</span>` : '<span style="color:#0a7f61;">✅ جميع الإيصالات مستلمة</span>'}
                     </div>
                 </div>`;
             }).join('');
@@ -3992,12 +5047,12 @@
                         </span>
                         ${p.notes ? `<span style="padding-right:36px;font-size:0.62rem;color:var(--text-muted);">${p.notes}</span>` : ''}
                         <span style="padding-right:36px;width:120px;">
-                            <div style="background:#f4f8fd;border-radius:4px;height:4px;overflow:hidden;margin-top:3px;">
+                            <div style="background:#f8fafc;border-radius:4px;height:4px;overflow:hidden;margin-top:3px;">
                                 <div style="height:100%;width:${pct}%;background:var(--accent);border-radius:4px;"></div>
                             </div>
                         </span>
                     </span>
-                    <span style="font-size:0.7rem;color:${pct>=100?'#00a87a':'#e07000'};font-weight:700;">${pct}%</span>
+                    <span style="font-size:0.7rem;color:${pct>=100?'#0a7f61':'#b8862a'};font-weight:700;">${pct}%</span>
                 </div>`;
             }).join('');
         }
@@ -4045,8 +5100,8 @@
                 <div class="stat-item" style="flex:1;min-width:60px;"><div class="num" style="font-size:0.85rem;">${invoices.length}</div><div class="lbl">الفواتير</div></div>
                 <div class="stat-item" style="flex:1;min-width:60px;"><div class="num" style="font-size:0.85rem;">${totalAmount.toLocaleString('ar-SA')}</div><div class="lbl">الإجمالي</div></div>
                 ${type==='broker' ? `
-                <div class="stat-item green" style="flex:1;min-width:60px;"><div class="num" style="font-size:0.85rem;color:#00a87a;">${totalBrokerPaid.toLocaleString('ar-SA')}</div><div class="lbl">مستلم</div></div>
-                <div class="stat-item orange" style="flex:1;min-width:60px;"><div class="num" style="font-size:0.85rem;color:#e07000;">${totalOwed.toLocaleString('ar-SA')}</div><div class="lbl">متبقي</div></div>` : ''}
+                <div class="stat-item green" style="flex:1;min-width:60px;"><div class="num" style="font-size:0.85rem;color:#0a7f61;">${totalBrokerPaid.toLocaleString('ar-SA')}</div><div class="lbl">مستلم</div></div>
+                <div class="stat-item orange" style="flex:1;min-width:60px;"><div class="num" style="font-size:0.85rem;color:#b8862a;">${totalOwed.toLocaleString('ar-SA')}</div><div class="lbl">متبقي</div></div>` : ''}
             </div>`;
             
             html += `<div style="padding:8px 14px;">`;
@@ -4055,9 +5110,9 @@
                 const paid = inv.brokerPaid||0;
                 const owed = share - paid;
                 let badge = '';
-                if (inv.brokerSettled) badge = '<span style="color:#00a87a;font-weight:700;font-size:0.6rem;">✅ مسوية</span>';
-                else if (inv.receiptReceived) badge = `<span style="color:#e07000;font-size:0.6rem;">متبقي ${owed.toLocaleString('ar-SA')}</span>`;
-                else badge = '<span style="color:#8aaac8;font-size:0.6rem;">⏳ بانتظار الإيصال</span>';
+                if (inv.brokerSettled) badge = '<span style="color:#0a7f61;font-weight:700;font-size:0.6rem;">✅ مسوية</span>';
+                else if (inv.receiptReceived) badge = `<span style="color:#b8862a;font-size:0.6rem;">متبقي ${owed.toLocaleString('ar-SA')}</span>`;
+                else badge = '<span style="color:#9bbdd0;font-size:0.6rem;">⏳ بانتظار الإيصال</span>';
                 html += `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f0f5fc;font-size:0.75rem;">
                     <span>
                         <span style="font-weight:600;">${inv.customer||''}</span>
@@ -4076,11 +5131,11 @@
                 const bPayments = (appData.brokerPayments||[]).filter(p=>p.broker===name);
                 if (bPayments.length > 0) {
                     html += `<div style="margin:0 14px 10px;background:var(--surface);border-radius:var(--radius-md);border:1px solid var(--border);overflow:hidden;box-shadow:var(--shadow-sm);">
-                        <div style="padding:10px 14px;font-weight:700;font-size:0.8rem;border-bottom:1px solid var(--border);"><i class="fas fa-money-bill-wave" style="color:#00a87a;margin-left:6px;"></i>الدفعات المستلمة</div>`;
+                        <div style="padding:10px 14px;font-weight:700;font-size:0.8rem;border-bottom:1px solid var(--border);"><i class="fas fa-money-bill-wave" style="color:#0a7f61;margin-left:6px;"></i>الدفعات المستلمة</div>`;
                     bPayments.forEach(p => {
                         html += `<div style="display:flex;justify-content:space-between;padding:9px 14px;border-bottom:1px solid #f0f5fc;font-size:0.75rem;">
                             <span>${p.date||''} ${p.notes?'— '+p.notes:''}</span>
-                            <span style="font-weight:700;color:#00a87a;">${(p.amount||0).toLocaleString('ar-SA')} ر.س</span>
+                            <span style="font-weight:700;color:#0a7f61;">${(p.amount||0).toLocaleString('ar-SA')} ر.س</span>
                         </div>`;
                     });
                     html += '</div>';
@@ -4472,18 +5527,25 @@
             return '';
         }
         
-        function loadGithubSettings() { const token = localStorage.getItem('gh_token') || '';
+        function loadGithubSettings() { const token = isAppLockEnabled() ? (_ghTokenMemory || '') : (localStorage.getItem('gh_token') || '');
             const repo = localStorage.getItem('gh_repo') || 'goo';
             const folder = localStorage.getItem('gh_folder') || 'database';
             document.getElementById('gh-token-inline').value = token;
             document.getElementById('gh-repo-inline').value = repo;
             document.getElementById('gh-folder-inline').value = folder; }
-        function saveCloudInlineSettings() {
+        async function saveCloudInlineSettings() {
             const token = document.getElementById('gh-token-inline').value.trim();
             const repo = document.getElementById('gh-repo-inline').value.trim() || 'goo';
             const folder = document.getElementById('gh-folder-inline').value.trim() || 'database';
             if (!token) { document.getElementById('cloud-inline-status').textContent = 'يجب إدخال Token'; return; }
-            localStorage.setItem('gh_token', token);
+            if (isAppLockEnabled()) {
+                // التوكن مشفّر برمز PIN — نحتاج الرمز لإعادة التشفير بعد أي تعديل
+                const pin = prompt('أدخل رمز PIN لحفظ Token المشفّر:');
+                if (!pin) { document.getElementById('cloud-inline-status').textContent = 'تم الإلغاء'; return; }
+                await lockEncryptToken(pin, token);
+            } else {
+                localStorage.setItem('gh_token', token);
+            }
             localStorage.setItem('gh_repo', repo);
             localStorage.setItem('gh_user', 'fa78383012736al-a11y');
             localStorage.setItem('gh_folder', folder);
@@ -4604,8 +5666,8 @@
                 data: {
                     labels,
                     datasets: [
-                        { label: 'إجمالي الفواتير (ر.س)', data: totalData, backgroundColor: 'rgba(0,98,204,0.5)', borderColor: '#0062cc', borderWidth: 2, borderRadius: 6 },
-                        { label: 'المستلم (ر.س)', data: receivedData, backgroundColor: 'rgba(0,200,150,0.5)', borderColor: '#00c896', borderWidth: 2, borderRadius: 6 }
+                        { label: 'إجمالي الفواتير (ر.س)', data: totalData, backgroundColor: 'rgba(42,100,150,0.5)', borderColor: '#2a6496', borderWidth: 2, borderRadius: 6 },
+                        { label: 'المستلم (ر.س)', data: receivedData, backgroundColor: 'rgba(10,127,97,0.5)', borderColor: '#c9965a', borderWidth: 2, borderRadius: 6 }
                     ]
                 },
                 options: {
@@ -4801,7 +5863,7 @@
             const fe = appData.formsExams.length;
             const tmpl = Object.values(appData.templates).reduce((s,a) => s+a.length, 0);
 
-            const statusColor = (n) => n > 0 ? '#e03c3c' : '#00a87a';
+            const statusColor = (n) => n > 0 ? '#e03c3c' : '#0a7f61';
             const statusIcon = (n) => n > 0 ? '⚠️' : '✅';
 
             showCleanStatus(`
@@ -4884,9 +5946,17 @@
         }
 
         function showCopyToast() {
+            showToast('✅ تم نسخ الرابط!');
+        }
+
+        // ==================== Toast عام (يُستخدم لرسائل الرجوع/الأوفلاين/إلخ) ====================
+        function showToast(message, duration = 2000) {
             const toast = document.getElementById('copy-toast');
+            if (!toast) return;
+            toast.textContent = message;
             toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 2000);
+            clearTimeout(window._toastTimer);
+            window._toastTimer = setTimeout(() => toast.classList.remove('show'), duration);
         }
 
         function renderWorks() {
@@ -4942,22 +6012,56 @@
         }
 
         // ==================== Initialization ====================
-        async function init() { 
-            showMainNav(); 
+        async function init() {
+            showMainNav();
             updateSyncStatus();
+            restoreDirtyQueue();      // استعادة طابور المزامنة غير المكتملة من جلسة سابقة دون اتصال
+            initBackButtonTrap();     // اعتراض زر الرجوع الفعلي (Android/WebView/TWA)
+            setupKeyboardAwareScroll(); // منع اختفاء الحقول خلف لوحة المفاتيح
+            updateAppLockMenuLabel();
+
+            if (isAppLockEnabled()) {
+                // التطبيق مؤمّن بـ PIN — نوقف هنا وننتظر إدخال الرمز الصحيح في submitAppLockPin()
+                document.getElementById('app-splash')?.classList.add('hidden');
+                document.getElementById('app-lock-overlay')?.classList.add('active');
+                setTimeout(() => document.getElementById('app-lock-pin')?.focus(), 300);
+                return;
+            }
+            await continueInit();
+        }
+
+        // يُستدعى مباشرة إذا كان القفل غير مُفعّل، أو بعد إدخال PIN صحيح
+        async function continueInit() {
             // تحميل البيانات من GitHub أولاً (أو الكاش المحلي)
             await loadAllData();
             navigateTo('home');
             initChart();
             updateBackButtonVisibility();
             loadGithubSettings();
-            
+
             // جلب ملفات HTML من مجلدات templates في GitHub
             fetchGithubFiles().catch(console.error);
-            
-            console.log('🚀 نظام GOO - GitHub Sync جاهز'); 
+
+            document.getElementById('app-splash')?.classList.add('hidden');
+            console.log('🚀 نظام GOO - GitHub Sync جاهز');
         }
-        document.addEventListener('DOMContentLoaded', () => init().catch(console.error));
+
+        // إعادة حساب مقياس المعاينة عند تغيير اتجاه الجهاز أو حجم النافذة
+        window.addEventListener('resize', () => {
+            if (document.getElementById('template-preview-modal')?.classList.contains('active')) {
+                applyPreviewScale();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            init().catch(e => {
+                console.error(e);
+                // حتى لو فشل التحميل، لا نُبقي المستخدم عالقاً خلف شاشة البداية
+                document.getElementById('app-splash')?.classList.add('hidden');
+            });
+            // شبكة أمان: إخفاء شاشة البداية بعد 10 ثوانٍ كحد أقصى بكل الأحوال
+            setTimeout(() => document.getElementById('app-splash')?.classList.add('hidden'), 10000);
+        });
         document.addEventListener('click', function(e) { if (!e.target.closest('.search-container')) { document
                 .getElementById('search-suggestions')?.classList.remove('active'); } });
         document.getElementById('json-modal')?.addEventListener('click', function(e) { if (e.target === this)
@@ -4973,9 +6077,6 @@
             navigator.serviceWorker.register('sw.js')
                 .then(reg => {
                     console.log('✅ SW registered');
-                    // فحص التحديثات فور التسجيل
-                    checkForUpdates();
-                    
                     reg.addEventListener('updatefound', () => {
                         const newWorker = reg.installing;
                         newWorker.addEventListener('statechange', () => {
@@ -4992,5 +6093,71 @@
         // فحص دوري كل 30 دقيقة
         setInterval(checkForUpdates, 30 * 60 * 1000);
     </script>
+
+    <script>
+        // ==================== Ripple Effect for All Buttons ====================
+        (function() {
+            const SELECTORS = [
+                '.btn-primary', '.btn-danger-sm', '.btn-outline-sm',
+                '.btn-github-upload', '.btn-copy-url', '.btn-open-url',
+                '.plus-tag', '.preview-btn-newtab', '.preview-btn-close',
+                '.preview-scale-btn', '.preview-device-btn',
+                '.back-button', '.home-button', '.search-icon-btn',
+                '.eye-btn', '.quick-btn', '.nav-item', '.bag-new-folder-btn'
+            ].join(',');
+
+            function createRipple(e) {
+                const btn = e.currentTarget;
+                const existing = btn.querySelector('.goo-ripple');
+                if (existing) existing.remove();
+
+                const rect = btn.getBoundingClientRect();
+                const diameter = Math.max(btn.clientWidth, btn.clientHeight);
+                const radius = diameter / 2;
+
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+                const ripple = document.createElement('span');
+                ripple.classList.add('goo-ripple');
+                ripple.style.width  = ripple.style.height = diameter + 'px';
+                ripple.style.left   = (clientX - rect.left - radius) + 'px';
+                ripple.style.top    = (clientY - rect.top  - radius) + 'px';
+
+                btn.appendChild(ripple);
+                ripple.addEventListener('animationend', () => ripple.remove());
+            }
+
+            function attachRipple(root) {
+                root.querySelectorAll(SELECTORS).forEach(btn => {
+                    if (btn.dataset.rippleAttached) return;
+                    btn.dataset.rippleAttached = '1';
+                    btn.addEventListener('pointerdown', createRipple);
+                });
+            }
+
+            // Initial attach
+            document.addEventListener('DOMContentLoaded', () => attachRipple(document));
+
+            // Watch for dynamic elements (renderCurrentTemplateTab, renderWordwall, etc.)
+            const observer = new MutationObserver(mutations => {
+                mutations.forEach(m => {
+                    m.addedNodes.forEach(node => {
+                        if (node.nodeType === 1) {
+                            if (node.matches && node.matches(SELECTORS)) {
+                                if (!node.dataset.rippleAttached) {
+                                    node.dataset.rippleAttached = '1';
+                                    node.addEventListener('pointerdown', createRipple);
+                                }
+                            }
+                            attachRipple(node);
+                        }
+                    });
+                });
+            });
+            observer.observe(document.body, { childList: true, subtree: true });
+        })();
+    </script>
+
 </body>
 </html>
