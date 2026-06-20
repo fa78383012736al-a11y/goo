@@ -1,50 +1,37 @@
-name: Build Android APK
-on:
-  push:
-    branches: [ main, master ]
-  workflow_dispatch:
+name: Build APK
+on: [push, workflow_dispatch]
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Install Capacitor
+      - name: Build
         run: |
           npm init -y
           npm install @capacitor/core @capacitor/cli @capacitor/android
-      - name: Setup Android Project
-        run: |
           npx cap init "GooApp" "com.goo.app" --web-dir .
           cat <<EOC > capacitor.config.json
           {
             "appId": "com.goo.app",
             "appName": "GooApp",
             "webDir": ".",
-            "server": {
-              "url": "https://fa78383012736al-a11y.github.io/goo/",
-              "cleartext": true
-            }
+            "server": { "url": "https://fa78383012736al-a11y.github.io/goo/", "cleartext": true }
           }
           EOC
           npx cap add android
-      - name: Set up Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'zulu'
-          java-version: '17'
-      - name: Build APK
-        run: |
           cd android
-          # Disable toolchain to use setup-java version
-          echo "org.gradle.java.installations.auto-detect=false" >> gradle.properties
-          echo "org.gradle.java.installations.auto-download=false" >> gradle.properties
           chmod +x gradlew
           ./gradlew assembleDebug
-      - name: Upload APK
+      - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: GooApp-Live-Update
+          name: GooApp-Final
           path: android/app/build/outputs/apk/debug/app-debug.apk
