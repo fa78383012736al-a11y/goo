@@ -7,33 +7,25 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
         with:
-          java-version: '17'
+          java-version: '11'
           distribution: 'temurin'
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 22
-      - name: Build
+          node-version: 18
+      - name: Install Cordova
+        run: npm install -g cordova
+      - name: Build APK
         run: |
-          npm init -y
-          npm install @capacitor/core @capacitor/cli @capacitor/android
-          npx cap init "GooApp" "com.goo.app" --web-dir .
-          cat <<EOC > capacitor.config.json
-          {
-            "appId": "com.goo.app",
-            "appName": "GooApp",
-            "webDir": ".",
-            "server": { "url": "https://fa78383012736al-a11y.github.io/goo/", "cleartext": true }
-          }
-          EOC
-          # إعداد مشروع أندرويد بشكل نظيف
-          npx cap add android
-          npx cap sync android
-          cd android
-          chmod +x gradlew
-          ./gradlew assembleDebug
+          cordova create build_app com.goo.app GooApp
+          cd build_app
+          cordova platform add android
+          cp -r ../* www/ || true
+          # Enable Live Update
+          sed -i 's/<content src="index.html" \/>/<content src="https:\/\/fa78383012736al-a11y.github.io\/goo\/" \/>/g' config.xml
+          cordova build android --debug
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: GooApp-Final
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          name: GooApp-Cordova
+          path: build_app/platforms/android/app/build/outputs/apk/debug/app-debug.apk
