@@ -12,7 +12,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
       - name: Build
         run: |
           npm init -y
@@ -26,7 +26,9 @@ jobs:
             "server": { "url": "https://fa78383012736al-a11y.github.io/goo/", "cleartext": true }
           }
           EOC
+          # إعداد مشروع أندرويد بشكل نظيف
           npx cap add android
+          npx cap sync android
           cd android
           chmod +x gradlew
           ./gradlew assembleDebug
