@@ -11,6 +11,21 @@
     "status": "جديد",
     "dueDate": "غدا",
     "notes": "",
+    "createdAt": "2026-06-20T02:00:04.654Z",
+    "usageCount": 0
+  },
+  {
+    "id": "mpy8765xwma0z",
+    "broker": "عدنان",
+    "customer": "..",
+    "description": "خطة نشاط لاصفي",
+    "amount": 100,
+    "designerShare": 50,
+    "brokerShare": 50,
+    "designer": "صخر",
+    "status": "جديد",
+    "dueDate": "غدا",
+    "notes": "",
     "createdAt": "2026-06-03T15:33:10.009Z",
     "usageCount": 0
   }
