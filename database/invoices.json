@@ -8,11 +8,12 @@
     "amount": 100,
     "designerShare": 50,
     "brokerPaid": 0,
-    "receiptReceived": false,
+    "receiptReceived": true,
     "brokerSettled": false,
     "status": "unpaid",
     "createdAt": "2026-06-20T02:16:36.433Z",
-    "usageCount": 0
+    "usageCount": 0,
+    "receiptDate": "٢٠‏/٦‏/٢٠٢٦"
   },
   {
     "id": "mpy8rw6h2yc85",
