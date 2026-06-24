@@ -1,5 +1,22 @@
 [
   {
+    "id": "mqsl1wraha0q0",
+    "customer": "...",
+    "amount": 1000,
+    "designerShare": 500,
+    "paid": 0,
+    "brokerPaid": 0,
+    "receiptReceived": false,
+    "brokerSettled": false,
+    "status": "unpaid",
+    "broker": "نواف",
+    "designer": "حمير",
+    "description": "سجل تجاري",
+    "orderId": "mqsl1gw3g1ftd",
+    "createdAt": "2026-06-24T21:26:04.822Z",
+    "usageCount": 0
+  },
+  {
     "id": "mqlq89qp4wugf",
     "customer": "اؤتر",
     "broker": "تب",
