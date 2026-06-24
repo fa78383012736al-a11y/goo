@@ -1,5 +1,20 @@
 [
   {
+    "id": "mqsl1gw3g1ftd",
+    "broker": "نواف",
+    "customer": "...",
+    "description": "سجل تجاري",
+    "amount": 1000,
+    "designerShare": 500,
+    "brokerShare": 500,
+    "designer": "حمير",
+    "status": "تم التسليم",
+    "dueDate": "غدوه",
+    "notes": "",
+    "createdAt": "2026-06-24T21:25:44.259Z",
+    "usageCount": 0
+  },
+  {
     "id": "mpy8765xwma0z",
     "broker": "عدنان",
     "customer": "..",
