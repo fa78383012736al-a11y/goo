@@ -6,7 +6,7 @@
     "designerShare": 500,
     "paid": 0,
     "brokerPaid": 0,
-    "receiptReceived": false,
+    "receiptReceived": true,
     "brokerSettled": false,
     "status": "unpaid",
     "broker": "نواف",
@@ -14,7 +14,8 @@
     "description": "سجل تجاري",
     "orderId": "mqsl1gw3g1ftd",
     "createdAt": "2026-06-24T21:26:04.822Z",
-    "usageCount": 0
+    "usageCount": 0,
+    "receiptDate": "٣٠‏/٧‏/٢٠٢٦"
   },
   {
     "id": "mqlq89qp4wugf",
