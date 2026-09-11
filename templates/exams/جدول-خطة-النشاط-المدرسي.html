@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>خطة جدول حصص النشاط الأسبوعية</title>
+  
+  <!-- Google Fonts: Cairo for crisp Arabic typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            cairo: ['Cairo', 'sans-serif'],
+          },
+          colors: {
+            scheduleNavy: '#123b53',
+            scheduleNavyDark: '#0c2838',
+            scheduleHeaderBg: '#f8fafc',
+            tagOrange: '#d97706',
+            tagPurple: '#6d28d9',
+            tagGreen: '#059669',
+            tagPink: '#e11d48',
+            tagCyan: '#0284c7',
+            badgeCovered: '#0e7054'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      background-color: #f1f5f9;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Custom print media styles */
+    @media print {
+      body {
+        background-color: #ffffff;
+        padding: 0;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .page-container {
+        max-width: 100% !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+      }
+      .week-card {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+    }
+
+    /* Clean subtle borders */
+    .schedule-cell {
+      border-bottom: 1px solid #edf2f7;
+      border-left: 1px solid #f1f5f9;
+    }
+    .schedule-cell:last-child {
+      border-left: none;
+    }
+  </style>
+</head>
+<body class="text-slate-800 antialiased p-2 sm:p-4 md:p-6 min-h-screen">
+
+  <div class="max-w-[1440px] mx-auto bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-6 lg:p-7 page-container">
+    
+    <!-- Action Bar (Print & Search Toolbar) -->
+    <div class="no-print flex flex-wrap items-center justify-between gap-3 pb-5 mb-5 border-b border-slate-100">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center font-bold text-lg shadow-sm border border-teal-100">
+          <i class="fa-solid fa-calendar-check"></i>
+        </div>
+        <div>
+          <h1 class="text-lg sm:text-xl font-black text-slate-800 leading-tight">خطة توزيع حصص النشاط المدرسي</h1>
+          <p class="text-xs text-slate-500 font-medium">الفصل الدراسي الأول • عرض تفصيلي لجميع الأسابيع (1 - 18)</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 flex-wrap">
+        <!-- Live Teacher Filter -->
+        <div class="relative">
+          <i class="fa-solid fa-filter absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+          <select id="teacherFilter" onchange="filterWeeks()" class="pl-8 pr-8 py-1.5 text-xs font-semibold rounded-lg border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-500 transition">
+            <option value="ALL">جميع المنفّذين</option>
+            <option value="موضي الحربي">موضي الحربي</option>
+            <option value="منيرة الحربي">منيرة الحربي</option>
+            <option value="ريم الجابري">ريم الجابري</option>
+            <option value="حلا الحربي">حلا الحربي</option>
+            <option value="منى الصقر">منى الصقر</option>
+            <option value="حصة الجابري">حصة الجابري</option>
+            <option value="عهود العتيبي">عهود العتيبي</option>
+            <option value="مها الجمعة">مها الجمعة</option>
+            <option value="مزنه الحربي">مزنه الحربي</option>
+          </select>
+        </div>
+
+        <!-- Print Button -->
+        <button onclick="window.print()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition shadow-sm">
+          <i class="fa-solid fa-print"></i>
+          <span>طباعة</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Top Statistics Banner (Matching the visual layout in screenshot) -->
+    <div class="border border-slate-200 rounded-xl p-3 sm:p-3.5 bg-white mb-3 text-xs sm:text-[13px] font-semibold text-slate-700 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+      <div class="flex flex-wrap items-center justify-between gap-y-2.5 gap-x-4">
+        
+        <!-- Right stats section -->
+        <div class="flex flex-wrap items-center gap-x-3 sm:gap-x-4">
+          <div class="flex items-center gap-1.5">
+            <i class="fa-solid fa-chart-simple text-teal-600"></i>
+            <span class="text-slate-600">حصص النشاط الأسبوعية:</span>
+            <span class="font-bold text-slate-900">3 أسبوعياً • 54 للفصل</span>
+          </div>
+
+          <span class="text-slate-300 hidden sm:inline">|</span>
+
+          <div class="flex items-center gap-1">
+            <span class="text-slate-600">حصص النشاط الرسمية:</span>
+            <span class="font-bold text-slate-900">0</span>
+          </div>
+
+          <span class="text-slate-300 hidden sm:inline">|</span>
+
+          <div class="flex items-center gap-1">
+            <span class="text-slate-600">الفجوة على المواد:</span>
+            <span class="font-bold text-slate-900">54</span>
+          </div>
+
+          <span class="text-slate-300 hidden sm:inline">|</span>
+
+          <!-- Green covered badge -->
+          <div class="inline-flex items-center gap-1 bg-[#0e7054] text-white px-2.5 py-0.5 rounded text-xs font-bold shadow-sm">
+            <span>غطّى 55%</span>
+            <i class="fa-solid fa-check text-[10px]"></i>
+          </div>
+
+          <span class="text-slate-300 hidden sm:inline">|</span>
+
+          <div class="text-slate-700 font-bold">
+            14 برنامجاً <span class="font-medium text-slate-500">(9 نشاط + 5 مناسبات)</span>
+          </div>
+        </div>
+
+        <!-- Left summary tags -->
+        <div class="flex items-center gap-3 pr-2 border-r sm:border-r-0 border-slate-200">
+          <div class="text-slate-700 font-bold">6 مجالات</div>
+          <span class="text-slate-300">|</span>
+          <div class="text-teal-700 font-bold bg-teal-50 px-2 py-0.5 rounded border border-teal-100">
+            المستهدفات 7/7
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Sub-info Bar: Teacher and Student Count -->
+    <div class="border border-slate-200 rounded-xl px-4 py-2 bg-slate-50/50 mb-3.5 flex items-center justify-between text-xs sm:text-[13px] font-semibold text-slate-700">
+      <div class="flex items-center gap-2">
+        <span class="text-slate-600">معلم حصة النشاط:</span>
+        <span class="text-slate-400 font-normal tracking-widest">ــــــــــــــــــــــــــــــ</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-slate-600">عدد الطالبات:</span>
+        <span class="bg-white border border-slate-200 px-2.5 py-0.5 rounded font-bold text-slate-900 shadow-sm">8</span>
+      </div>
+    </div>
+
+    <!-- Categories Legend -->
+    <div class="flex flex-wrap items-center justify-center sm:justify-start gap-x-4 sm:gap-x-5 gap-y-2 px-2 py-2 mb-5 text-[11px] sm:text-xs font-bold text-slate-700">
+      
+      <!-- المواطنة والحياة -->
+      <div class="flex items-center gap-1.5">
+        <span class="w-3.5 h-3.5 rounded-full bg-rose-600 flex items-center justify-center text-white text-[8px]">
+          <i class="fa-solid fa-heart"></i>
+        </span>
+        <span>المواطنة والحياة</span>
+      </div>
+
+      <!-- الثقافة والفنون -->
+      <div class="flex items-center gap-1.5">
+        <span class="w-3.5 h-3.5 rounded-full bg-amber-600 flex items-center justify-center text-white text-[8px]">
+          <i class="fa-solid fa-palette"></i>
+        </span>
+        <span>الثقافة والفنون</span>
+      </div>
+
+      <!-- الرياضة والصحة -->
+      <div class="flex items-center gap-1.5">
+        <span class="w-3.5 h-3.5 rounded-full bg-emerald-600 flex items-center justify-center text-white text-[8px]">
+          <i class="fa-solid fa-leaf"></i>
+        </span>
+        <span>الرياضة والصحة</span>
+      </div>
+
+      <!-- العلوم والتقنية -->
+      <div class="flex items-center gap-1.5">
+        <span class="w-3.5 h-3.5 rounded-full bg-cyan-600 flex items-center justify-center text-white text-[8px]">
+          <i class="fa-solid fa-flask"></i>
+        </span>
+        <span>العلوم والتقنية</span>
+      </div>
+
+      <!-- النشاط الكشفي -->
+      <div class="flex items-center gap-1.5">
+        <span class="w-3.5 h-3.5 rounded-full bg-purple-700 flex items-center justify-center text-white text-[8px]">
+          <i class="fa-solid fa-compass"></i>
+        </span>
+        <span>النشاط الكشفي</span>
+      </div>
+
+      <!-- الأيام والمناسبات -->
+      <div class="flex items-center gap-1.5">
+        <span class="w-3.5 h-3.5 rounded-full bg-amber-700 flex items-center justify-center text-white text-[8px]">
+          <i class="fa-solid fa-calendar-days"></i>
+        </span>
+        <span>الأيام والمناسبات</span>
+      </div>
+
+    </div>
+
+    <!-- 
+      Grid of 18 Weeks:
+      Ordered in standard RTL layout (3 columns per row on large screens):
+      Row 1: Week 1 (Right), Week 2 (Middle), Week 3 (Left)
+      Row 2: Week 4 (Right), Week 5 (Middle), Week 6 (Left)
+      ...
+    -->
+    <div id="scheduleGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4">
+
+      <!-- ================== ROW 1 ================== -->
+
+      <!-- الأسبوع 1 -->
+      <div class="week-card border border-slate-300 rounded-xl overflow-hidden bg-white shadow-sm flex flex-col justify-between" data-teachers="موضي الحربي,منيرة الحربي,ريم الجابري">
+        <div>
+          <div class="bg-scheduleNavy text-white py-2 px-3 text-center">
+            <h3 class="font-bold text-sm">الأسبوع 1</h3>
+            <p class="text-[11px] text-slate-200 font-medium">1448/3/10 - 1448/3/14هـ</p>
+          </div>
+          <table class="w-full text-right text-[11px] sm:text-xs">
+            <thead>
+              <tr class="bg-slate-100/90 text-slate-600 font-bold border-b border-slate-200 text-center">
+                <th class="py-1.5 px-2 w-[18%]">اليوم</th>
+                <th class="py-1.5 px-2 text-right">البرنامج</th>
+                <th class="py-1.5 px-1.5 w-[14%]">الحصة</th>
+                <th class="py-1.5 px-2 w-[26%]">المنفّذ</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الأحد</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">الفن التراثي المعا...</span>
+                    <span class="bg-amber-600 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">2</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">موضي الحربي</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الأحد</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">الفنون البصرية والـ...</span>
+                    <span class="bg-amber-600 text-white text-[9px] px-1 py-0.2 rounded font-bold">5%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">5</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">منيرة الحربي</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الثلاثاء</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">سواعد الكشفية</span>
+                    <span class="bg-purple-700 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">6</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">ريم الجابري</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- الأسبوع 2 -->
+      <div class="week-card border border-slate-300 rounded-xl overflow-hidden bg-white shadow-sm flex flex-col justify-between" data-teachers="موضي الحربي,منيرة الحربي,ريم الجابري">
+        <div>
+          <div class="bg-scheduleNavy text-white py-2 px-3 text-center">
+            <h3 class="font-bold text-sm">الأسبوع 2</h3>
+            <p class="text-[11px] text-slate-200 font-medium">1448/3/17 - 1448/3/21هـ</p>
+          </div>
+          <table class="w-full text-right text-[11px] sm:text-xs">
+            <thead>
+              <tr class="bg-slate-100/90 text-slate-600 font-bold border-b border-slate-200 text-center">
+                <th class="py-1.5 px-2 w-[18%]">اليوم</th>
+                <th class="py-1.5 px-2 text-right">البرنامج</th>
+                <th class="py-1.5 px-1.5 w-[14%]">الحصة</th>
+                <th class="py-1.5 px-2 w-[26%]">المنفّذ</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الأحد</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">الفن التراثي المعا...</span>
+                    <span class="bg-amber-600 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">2</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">موضي الحربي</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الأحد</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">الفنون البصرية والـ...</span>
+                    <span class="bg-amber-600 text-white text-[9px] px-1 py-0.2 rounded font-bold">5%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">5</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">منيرة الحربي</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الثلاثاء</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">سواعد الكشفية</span>
+                    <span class="bg-purple-700 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">6</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">ريم الجابري</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- الأسبوع 3 -->
+      <div class="week-card border border-slate-300 rounded-xl overflow-hidden bg-white shadow-sm flex flex-col justify-between" data-teachers="موضي الحربي,منيرة الحربي,ريم الجابري">
+        <div>
+          <div class="bg-scheduleNavy text-white py-2 px-3 text-center">
+            <h3 class="font-bold text-sm">الأسبوع 3</h3>
+            <p class="text-[11px] text-slate-200 font-medium">1448/3/24 - 1448/3/28هـ</p>
+          </div>
+          <table class="w-full text-right text-[11px] sm:text-xs">
+            <thead>
+              <tr class="bg-slate-100/90 text-slate-600 font-bold border-b border-slate-200 text-center">
+                <th class="py-1.5 px-2 w-[18%]">اليوم</th>
+                <th class="py-1.5 px-2 text-right">البرنامج</th>
+                <th class="py-1.5 px-1.5 w-[14%]">الحصة</th>
+                <th class="py-1.5 px-2 w-[26%]">المنفّذ</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الأحد</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">الفن التراثي المعا...</span>
+                    <span class="bg-amber-600 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">2</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">موضي الحربي</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الأحد</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">الفنون البصرية والـ...</span>
+                    <span class="bg-amber-600 text-white text-[9px] px-1 py-0.2 rounded font-bold">5%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">5</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">منيرة الحربي</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الثلاثاء</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">سواعد الكشفية</span>
+                    <span class="bg-purple-700 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">6</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">ريم الجابري</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ================== ROW 2 ================== -->
+
+      <!-- الأسبوع 4 -->
+      <div class="week-card border border-slate-300 rounded-xl overflow-hidden bg-white shadow-sm flex flex-col justify-between" data-teachers="موضي الحربي,حلا الحربي,ريم الجابري">
+        <div>
+          <div class="bg-scheduleNavy text-white py-2 px-3 text-center">
+            <h3 class="font-bold text-sm">الأسبوع 4</h3>
+            <p class="text-[11px] text-slate-200 font-medium">1448/4/2 - 1448/4/6هـ</p>
+          </div>
+          <table class="w-full text-right text-[11px] sm:text-xs">
+            <thead>
+              <tr class="bg-slate-100/90 text-slate-600 font-bold border-b border-slate-200 text-center">
+                <th class="py-1.5 px-2 w-[18%]">اليوم</th>
+                <th class="py-1.5 px-2 text-right">البرنامج</th>
+                <th class="py-1.5 px-1.5 w-[14%]">الحصة</th>
+                <th class="py-1.5 px-2 w-[26%]">المنفّذ</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الأحد</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">الفن التراثي المعا...</span>
+                    <span class="bg-amber-600 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">2</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">موضي الحربي</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الثلاثاء</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">اليوم الوطني السـ...</span>
+                    <span class="bg-amber-600 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">3</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">حلا الحربي</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الثلاثاء</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">سواعد الكشفية</span>
+                    <span class="bg-purple-700 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">6</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">ريم الجابري</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- الأسبوع 5 -->
+      <div class="week-card border border-slate-300 rounded-xl overflow-hidden bg-white shadow-sm flex flex-col justify-between" data-teachers="موضي الحربي,حلا الحربي">
+        <div>
+          <div class="bg-scheduleNavy text-white py-2 px-3 text-center">
+            <h3 class="font-bold text-sm">الأسبوع 5</h3>
+            <p class="text-[11px] text-slate-200 font-medium">1448/4/9 - 1448/4/13هـ</p>
+          </div>
+          <table class="w-full text-right text-[11px] sm:text-xs">
+            <thead>
+              <tr class="bg-slate-100/90 text-slate-600 font-bold border-b border-slate-200 text-center">
+                <th class="py-1.5 px-2 w-[18%]">اليوم</th>
+                <th class="py-1.5 px-2 text-right">البرنامج</th>
+                <th class="py-1.5 px-1.5 w-[14%]">الحصة</th>
+                <th class="py-1.5 px-2 w-[26%]">المنفّذ</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
+              <tr>
+                <td class="py-1.5 px-2 text-center text-slate-500">الأحد</td>
+                <td class="py-1.5 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">الفن التراثي المعا...</span>
+                    <span class="bg-amber-600 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-1.5 px-1.5 text-center font-bold text-slate-900">2</td>
+                <td class="py-1.5 px-2 text-slate-800 text-[11px]">موضي الحربي</td>
+              </tr>
+              <tr>
+                <td class="py-1.5 px-2 text-center text-slate-500">الاثنين</td>
+                <td class="py-1.5 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">اليوم الوطني السـ...</span>
+                    <span class="bg-amber-600 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-1.5 px-1.5 text-center font-bold text-slate-900">4</td>
+                <td class="py-1.5 px-2 text-slate-800 text-[11px]">موضي الحربي</td>
+              </tr>
+              <tr>
+                <td class="py-1.5 px-2 text-center text-slate-500">الثلاثاء</td>
+                <td class="py-1.5 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">اليوم الوطني السـ...</span>
+                    <span class="bg-amber-600 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-1.5 px-1.5 text-center font-bold text-slate-900">1</td>
+                <td class="py-1.5 px-2 text-slate-800 text-[11px]">موضي الحربي</td>
+              </tr>
+              <tr>
+                <td class="py-1.5 px-2 text-center text-slate-500">الثلاثاء</td>
+                <td class="py-1.5 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">اليوم الوطني السـ...</span>
+                    <span class="bg-amber-600 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-1.5 px-1.5 text-center font-bold text-slate-900">3</td>
+                <td class="py-1.5 px-2 text-slate-800 text-[11px]">حلا الحربي</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- الأسبوع 6 -->
+      <div class="week-card border border-slate-300 rounded-xl overflow-hidden bg-white shadow-sm flex flex-col justify-between" data-teachers="منيرة الحربي,منى الصقر,ريم الجابري">
+        <div>
+          <div class="bg-scheduleNavy text-white py-2 px-3 text-center">
+            <h3 class="font-bold text-sm">الأسبوع 6</h3>
+            <p class="text-[11px] text-slate-200 font-medium">1448/4/16 - 1448/4/20هـ</p>
+          </div>
+          <table class="w-full text-right text-[11px] sm:text-xs">
+            <thead>
+              <tr class="bg-slate-100/90 text-slate-600 font-bold border-b border-slate-200 text-center">
+                <th class="py-1.5 px-2 w-[18%]">اليوم</th>
+                <th class="py-1.5 px-2 text-right">البرنامج</th>
+                <th class="py-1.5 px-1.5 w-[14%]">الحصة</th>
+                <th class="py-1.5 px-2 w-[26%]">المنفّذ</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الأحد</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">الفنون البصرية والـ...</span>
+                    <span class="bg-amber-600 text-white text-[9px] px-1 py-0.2 rounded font-bold">5%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">5</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">منيرة الحربي</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الاثنين</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">سفير البيئة والمجـ...</span>
+                    <span class="bg-purple-700 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">1</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">منى الصقر</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الثلاثاء</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">سواعد الكشفية</span>
+                    <span class="bg-purple-700 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">6</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">ريم الجابري</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ================== ROW 3 ================== -->
+
+      <!-- الأسبوع 7 -->
+      <div class="week-card border border-slate-300 rounded-xl overflow-hidden bg-white shadow-sm flex flex-col justify-between" data-teachers="منى الصقر,موضي الحربي,حلا الحربي">
+        <div>
+          <div class="bg-scheduleNavy text-white py-2 px-3 text-center">
+            <h3 class="font-bold text-sm">الأسبوع 7</h3>
+            <p class="text-[11px] text-slate-200 font-medium">1448/4/23 - 1448/4/27هـ</p>
+          </div>
+          <table class="w-full text-right text-[11px] sm:text-xs">
+            <thead>
+              <tr class="bg-slate-100/90 text-slate-600 font-bold border-b border-slate-200 text-center">
+                <th class="py-1.5 px-2 w-[18%]">اليوم</th>
+                <th class="py-1.5 px-2 text-right">البرنامج</th>
+                <th class="py-1.5 px-1.5 w-[14%]">الحصة</th>
+                <th class="py-1.5 px-2 w-[26%]">المنفّذ</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الاثنين</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">سفير البيئة والمجـ...</span>
+                    <span class="bg-purple-700 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">1</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">منى الصقر</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الاثنين</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">يوم المعلم العالمي</span>
+                    <span class="bg-amber-600 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">4</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">موضي الحربي</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الاثنين</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">يوم المعلم العالمي</span>
+                    <span class="bg-amber-600 text-white text-[9px] px-1 py-0.2 rounded font-bold">5%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">5</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">حلا الحربي</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- الأسبوع 8 -->
+      <div class="week-card border border-slate-300 rounded-xl overflow-hidden bg-white shadow-sm flex flex-col justify-between" data-teachers="منيرة الحربي,منى الصقر,ريم الجابري">
+        <div>
+          <div class="bg-scheduleNavy text-white py-2 px-3 text-center">
+            <h3 class="font-bold text-sm">الأسبوع 8</h3>
+            <p class="text-[11px] text-slate-200 font-medium">1448/4/30 - 1448/5/4هـ</p>
+          </div>
+          <table class="w-full text-right text-[11px] sm:text-xs">
+            <thead>
+              <tr class="bg-slate-100/90 text-slate-600 font-bold border-b border-slate-200 text-center">
+                <th class="py-1.5 px-2 w-[18%]">اليوم</th>
+                <th class="py-1.5 px-2 text-right">البرنامج</th>
+                <th class="py-1.5 px-1.5 w-[14%]">الحصة</th>
+                <th class="py-1.5 px-2 w-[26%]">المنفّذ</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الأحد</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">الفنون البصرية والـ...</span>
+                    <span class="bg-amber-600 text-white text-[9px] px-1 py-0.2 rounded font-bold">5%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">5</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">منيرة الحربي</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الاثنين</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">سفير البيئة والمجـ...</span>
+                    <span class="bg-purple-700 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">1</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">منى الصقر</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الثلاثاء</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">سواعد الكشفية</span>
+                    <span class="bg-purple-700 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">6</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">ريم الجابري</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- الأسبوع 9 -->
+      <div class="week-card border border-slate-300 rounded-xl overflow-hidden bg-white shadow-sm flex flex-col justify-between" data-teachers="منيرة الحربي,منى الصقر,حصة الجابري">
+        <div>
+          <div class="bg-scheduleNavy text-white py-2 px-3 text-center">
+            <h3 class="font-bold text-sm">الأسبوع 9</h3>
+            <p class="text-[11px] text-slate-200 font-medium">1448/5/7 - 1448/5/11هـ</p>
+          </div>
+          <table class="w-full text-right text-[11px] sm:text-xs">
+            <thead>
+              <tr class="bg-slate-100/90 text-slate-600 font-bold border-b border-slate-200 text-center">
+                <th class="py-1.5 px-2 w-[18%]">اليوم</th>
+                <th class="py-1.5 px-2 text-right">البرنامج</th>
+                <th class="py-1.5 px-1.5 w-[14%]">الحصة</th>
+                <th class="py-1.5 px-2 w-[26%]">المنفّذ</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الأحد</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">الفنون البصرية والـ...</span>
+                    <span class="bg-amber-600 text-white text-[9px] px-1 py-0.2 rounded font-bold">5%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">5</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">منيرة الحربي</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الاثنين</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">سفير البيئة والمجـ...</span>
+                    <span class="bg-purple-700 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">1</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">منى الصقر</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الخميس</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">أُغامر وأكتشف</span>
+                    <span class="bg-purple-700 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">1</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">حصة الجابري</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ================== ROW 4 ================== -->
+
+      <!-- الأسبوع 10 -->
+      <div class="week-card border border-slate-300 rounded-xl overflow-hidden bg-white shadow-sm flex flex-col justify-between" data-teachers="منى الصقر,عهود العتيبي,حصة الجابري">
+        <div>
+          <div class="bg-scheduleNavy text-white py-2 px-3 text-center">
+            <h3 class="font-bold text-sm">الأسبوع 10</h3>
+            <p class="text-[11px] text-slate-200 font-medium">1448/5/14 - 1448/5/18هـ</p>
+          </div>
+          <table class="w-full text-right text-[11px] sm:text-xs">
+            <thead>
+              <tr class="bg-slate-100/90 text-slate-600 font-bold border-b border-slate-200 text-center">
+                <th class="py-1.5 px-2 w-[18%]">اليوم</th>
+                <th class="py-1.5 px-2 text-right">البرنامج</th>
+                <th class="py-1.5 px-1.5 w-[14%]">الحصة</th>
+                <th class="py-1.5 px-2 w-[26%]">المنفّذ</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الاثنين</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">سفير البيئة والمجـ...</span>
+                    <span class="bg-purple-700 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">1</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">منى الصقر</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الاثنين</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">الأزياء السعودية</span>
+                    <span class="bg-amber-600 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">3</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">عهود العتيبي</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الخميس</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">أُغامر وأكتشف</span>
+                    <span class="bg-purple-700 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">1</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">حصة الجابري</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- الأسبوع 11 -->
+      <div class="week-card border border-slate-300 rounded-xl overflow-hidden bg-white shadow-sm flex flex-col justify-between" data-teachers="عهود العتيبي,حلا الحربي,حصة الجابري">
+        <div>
+          <div class="bg-scheduleNavy text-white py-2 px-3 text-center">
+            <h3 class="font-bold text-sm">الأسبوع 11</h3>
+            <p class="text-[11px] text-slate-200 font-medium">1448/5/21 - 1448/5/25هـ</p>
+          </div>
+          <table class="w-full text-right text-[11px] sm:text-xs">
+            <thead>
+              <tr class="bg-slate-100/90 text-slate-600 font-bold border-b border-slate-200 text-center">
+                <th class="py-1.5 px-2 w-[18%]">اليوم</th>
+                <th class="py-1.5 px-2 text-right">البرنامج</th>
+                <th class="py-1.5 px-1.5 w-[14%]">الحصة</th>
+                <th class="py-1.5 px-2 w-[26%]">المنفّذ</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الاثنين</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">الأزياء السعودية</span>
+                    <span class="bg-amber-600 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">3</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">عهود العتيبي</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الأربعاء</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">واحة الإبداع الكشـ...</span>
+                    <span class="bg-purple-700 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">1</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">حلا الحربي</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الخميس</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">أُغامر وأكتشف</span>
+                    <span class="bg-purple-700 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">1</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">حصة الجابري</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- الأسبوع 12 -->
+      <div class="week-card border border-slate-300 rounded-xl overflow-hidden bg-white shadow-sm flex flex-col justify-between" data-teachers="عهود العتيبي,حلا الحربي,حصة الجابري">
+        <div>
+          <div class="bg-scheduleNavy text-white py-2 px-3 text-center">
+            <h3 class="font-bold text-sm">الأسبوع 12</h3>
+            <p class="text-[11px] text-slate-200 font-medium">1448/5/28 - 1448/6/2هـ</p>
+          </div>
+          <table class="w-full text-right text-[11px] sm:text-xs">
+            <thead>
+              <tr class="bg-slate-100/90 text-slate-600 font-bold border-b border-slate-200 text-center">
+                <th class="py-1.5 px-2 w-[18%]">اليوم</th>
+                <th class="py-1.5 px-2 text-right">البرنامج</th>
+                <th class="py-1.5 px-1.5 w-[14%]">الحصة</th>
+                <th class="py-1.5 px-2 w-[26%]">المنفّذ</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الاثنين</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">الأزياء السعودية</span>
+                    <span class="bg-amber-600 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">3</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">عهود العتيبي</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الأربعاء</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">واحة الإبداع الكشـ...</span>
+                    <span class="bg-purple-700 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">1</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">حلا الحربي</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الخميس</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">أُغامر وأكتشف</span>
+                    <span class="bg-purple-700 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">1</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">حصة الجابري</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ================== ROW 5 ================== -->
+
+      <!-- الأسبوع 13 -->
+      <div class="week-card border border-slate-300 rounded-xl overflow-hidden bg-white shadow-sm flex flex-col justify-between" data-teachers="منى الصقر,حلا الحربي,حصة الجابري">
+        <div>
+          <div class="bg-scheduleNavy text-white py-2 px-3 text-center">
+            <h3 class="font-bold text-sm">الأسبوع 13</h3>
+            <p class="text-[11px] text-slate-200 font-medium">1448/6/5 - 1448/6/9هـ</p>
+          </div>
+          <table class="w-full text-right text-[11px] sm:text-xs">
+            <thead>
+              <tr class="bg-slate-100/90 text-slate-600 font-bold border-b border-slate-200 text-center">
+                <th class="py-1.5 px-2 w-[18%]">اليوم</th>
+                <th class="py-1.5 px-2 text-right">البرنامج</th>
+                <th class="py-1.5 px-1.5 w-[14%]">الحصة</th>
+                <th class="py-1.5 px-2 w-[26%]">المنفّذ</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الاثنين</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">يوم التسامح العالـ...</span>
+                    <span class="bg-amber-600 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">1</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">منى الصقر</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الأربعاء</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">واحة الإبداع الكشـ...</span>
+                    <span class="bg-purple-700 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">1</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">حلا الحربي</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الخميس</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">أُغامر وأكتشف</span>
+                    <span class="bg-purple-700 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">1</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">حصة الجابري</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- الأسبوع 14 -->
+      <div class="week-card border border-slate-300 rounded-xl overflow-hidden bg-white shadow-sm flex flex-col justify-between" data-teachers="حلا الحربي,حصة الجابري,موضي الحربي">
+        <div>
+          <div class="bg-scheduleNavy text-white py-2 px-3 text-center">
+            <h3 class="font-bold text-sm">الأسبوع 14</h3>
+            <p class="text-[11px] text-slate-200 font-medium">1448/6/19 - 1448/6/23هـ</p>
+          </div>
+          <table class="w-full text-right text-[11px] sm:text-xs">
+            <thead>
+              <tr class="bg-slate-100/90 text-slate-600 font-bold border-b border-slate-200 text-center">
+                <th class="py-1.5 px-2 w-[18%]">اليوم</th>
+                <th class="py-1.5 px-2 text-right">البرنامج</th>
+                <th class="py-1.5 px-1.5 w-[14%]">الحصة</th>
+                <th class="py-1.5 px-2 w-[26%]">المنفّذ</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الأربعاء</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">واحة الإبداع الكشـ...</span>
+                    <span class="bg-purple-700 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">1</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">حلا الحربي</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الخميس</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">يوم ذوي الإعاقة</span>
+                    <span class="bg-amber-600 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">1</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">حصة الجابري</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الخميس</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">يوم ذوي الإعاقة</span>
+                    <span class="bg-amber-600 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">3</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">موضي الحربي</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- الأسبوع 15 -->
+      <div class="week-card border border-slate-300 rounded-xl overflow-hidden bg-white shadow-sm flex flex-col justify-between" data-teachers="عهود العتيبي,مها الجمعة,مزنه الحربي">
+        <div>
+          <div class="bg-scheduleNavy text-white py-2 px-3 text-center">
+            <h3 class="font-bold text-sm">الأسبوع 15</h3>
+            <p class="text-[11px] text-slate-200 font-medium">1448/6/26 - 1448/7/1هـ</p>
+          </div>
+          <table class="w-full text-right text-[11px] sm:text-xs">
+            <thead>
+              <tr class="bg-slate-100/90 text-slate-600 font-bold border-b border-slate-200 text-center">
+                <th class="py-1.5 px-2 w-[18%]">اليوم</th>
+                <th class="py-1.5 px-2 text-right">البرنامج</th>
+                <th class="py-1.5 px-1.5 w-[14%]">الحصة</th>
+                <th class="py-1.5 px-2 w-[26%]">المنفّذ</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الاثنين</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">الأزياء السعودية</span>
+                    <span class="bg-amber-600 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">3</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">عهود العتيبي</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الأربعاء</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">الإسعافات الأولية</span>
+                    <span class="bg-emerald-600 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">2</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">مها الجمعة</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الخميس</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">أُفقي الكشفي الـ...</span>
+                    <span class="bg-purple-700 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">2</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">مزنه الحربي</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ================== ROW 6 ================== -->
+
+      <!-- الأسبوع 16 -->
+      <div class="week-card border border-slate-300 rounded-xl overflow-hidden bg-white shadow-sm flex flex-col justify-between" data-teachers="مها الجمعة,مزنه الحربي,حلا الحربي">
+        <div>
+          <div class="bg-scheduleNavy text-white py-2 px-3 text-center">
+            <h3 class="font-bold text-sm">الأسبوع 16</h3>
+            <p class="text-[11px] text-slate-200 font-medium">1448/7/4 - 1448/7/8هـ</p>
+          </div>
+          <table class="w-full text-right text-[11px] sm:text-xs">
+            <thead>
+              <tr class="bg-slate-100/90 text-slate-600 font-bold border-b border-slate-200 text-center">
+                <th class="py-1.5 px-2 w-[18%]">اليوم</th>
+                <th class="py-1.5 px-2 text-right">البرنامج</th>
+                <th class="py-1.5 px-1.5 w-[14%]">الحصة</th>
+                <th class="py-1.5 px-2 w-[26%]">المنفّذ</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الأربعاء</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">الإسعافات الأولية</span>
+                    <span class="bg-emerald-600 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">2</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">مها الجمعة</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الخميس</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">أُفقي الكشفي الـ...</span>
+                    <span class="bg-purple-700 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">2</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">مزنه الحربي</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الخميس</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">يوم اللغة العربية ا...</span>
+                    <span class="bg-amber-600 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">4</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">حلا الحربي</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- الأسبوع 17 -->
+      <div class="week-card border border-slate-300 rounded-xl overflow-hidden bg-white shadow-sm flex flex-col justify-between" data-teachers="عهود العتيبي,مها الجمعة,مزنه الحربي">
+        <div>
+          <div class="bg-scheduleNavy text-white py-2 px-3 text-center">
+            <h3 class="font-bold text-sm">الأسبوع 17</h3>
+            <p class="text-[11px] text-slate-200 font-medium">1448/7/11 - 1448/7/15هـ</p>
+          </div>
+          <table class="w-full text-right text-[11px] sm:text-xs">
+            <thead>
+              <tr class="bg-slate-100/90 text-slate-600 font-bold border-b border-slate-200 text-center">
+                <th class="py-1.5 px-2 w-[18%]">اليوم</th>
+                <th class="py-1.5 px-2 text-right">البرنامج</th>
+                <th class="py-1.5 px-1.5 w-[14%]">الحصة</th>
+                <th class="py-1.5 px-2 w-[26%]">المنفّذ</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الاثنين</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">الأزياء السعودية</span>
+                    <span class="bg-amber-600 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">3</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">عهود العتيبي</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الأربعاء</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">الإسعافات الأولية</span>
+                    <span class="bg-emerald-600 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">2</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">مها الجمعة</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الخميس</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">أُفقي الكشفي الـ...</span>
+                    <span class="bg-purple-700 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">2</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">مزنه الحربي</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- الأسبوع 18 -->
+      <div class="week-card border border-slate-300 rounded-xl overflow-hidden bg-white shadow-sm flex flex-col justify-between" data-teachers="عهود العتيبي,مها الجمعة,مزنه الحربي">
+        <div>
+          <div class="bg-scheduleNavy text-white py-2 px-3 text-center">
+            <h3 class="font-bold text-sm">الأسبوع 18</h3>
+            <p class="text-[11px] text-slate-200 font-medium">1448/7/18 - 1448/7/22هـ</p>
+          </div>
+          <table class="w-full text-right text-[11px] sm:text-xs">
+            <thead>
+              <tr class="bg-slate-100/90 text-slate-600 font-bold border-b border-slate-200 text-center">
+                <th class="py-1.5 px-2 w-[18%]">اليوم</th>
+                <th class="py-1.5 px-2 text-right">البرنامج</th>
+                <th class="py-1.5 px-1.5 w-[14%]">الحصة</th>
+                <th class="py-1.5 px-2 w-[26%]">المنفّذ</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الاثنين</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">الأزياء السعودية</span>
+                    <span class="bg-amber-600 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">3</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">عهود العتيبي</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الأربعاء</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">الإسعافات الأولية</span>
+                    <span class="bg-emerald-600 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">2</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">مها الجمعة</td>
+              </tr>
+              <tr>
+                <td class="py-2 px-2 text-center text-slate-500">الخميس</td>
+                <td class="py-2 px-2">
+                  <div class="flex items-center gap-1.5">
+                    <span class="truncate font-semibold">أُفقي الكشفي الـ...</span>
+                    <span class="bg-purple-700 text-white text-[9px] px-1 py-0.2 rounded font-bold">10%</span>
+                  </div>
+                </td>
+                <td class="py-2 px-1.5 text-center font-bold text-slate-900">2</td>
+                <td class="py-2 px-2 text-slate-800 text-[11px]">مزنه الحربي</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="mt-6 pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-400 font-medium">
+      <div>تم توليد هذا الجدول الرقمي وفق متطلبات خطة النشاط الطلابي الرسمية</div>
+      <div class="flex items-center gap-1">
+        <span>الحالة:</span>
+        <span class="text-emerald-600 font-bold">معتمد ومكتمل التوزيع</span>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function filterWeeks() {
+      const selected = document.getElementById('teacherFilter').value;
+      const cards = document.querySelectorAll('.week-card');
+
+      cards.forEach(card => {
+        if (selected === 'ALL') {
+          card.style.display = 'flex';
+          // reset row highlighting
+          const rows = card.querySelectorAll('tbody tr');
+          rows.forEach(r => r.classList.remove('bg-teal-50', 'text-teal-900', 'font-bold'));
+        } else {
+          const teachers = card.getAttribute('data-teachers') || '';
+          if (teachers.includes(selected)) {
+            card.style.display = 'flex';
+            // highlight the specific row matching teacher
+            const rows = card.querySelectorAll('tbody tr');
+            rows.forEach(r => {
+              if (r.textContent.includes(selected)) {
+                r.classList.add('bg-teal-50', 'text-teal-900', 'font-bold');
+              } else {
+                r.classList.remove('bg-teal-50', 'text-teal-900', 'font-bold');
+              }
+            });
+          } else {
+            card.style.display = 'none';
+          }
+        }
+      });
+    }
+  </script>
+</body>
+</html>
